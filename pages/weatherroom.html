@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Weather Room</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="top-bar">
+  <div class="top-actions">
+    <a href="../index.html" class="nav-button gallery-button">Gallery</a>
+    <a href="../bio.html" class="nav-button bio-button">Bio</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button email-button">Email</a>
+  </div>
+  <div class="time">
+    <div id="londonClock" class="clock" aria-label="London UTC analog clock">
+      <span class="clock-hand hour-hand"></span>
+      <span class="clock-hand minute-hand"></span>
+      <span class="clock-hand second-hand"></span>
+      <span class="clock-center"></span>
+    </div>
+  </div>
+</div>
+
+<main class="gallery-detail gallery-detail--weatherroom">
+  <div class="gallery-detail__hero">
+    <div class="gallery-detail__stage">
+      <div class="gallery-detail__carousel" data-infinite-carousel aria-roledescription="carousel">
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--prev mobile-scroll-hint__btn" aria-label="Previous slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--left" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="gallery-detail__carousel-viewport">
+          <div class="gallery-detail__carousel-track">
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--weatherroom-sketch">
+              <div class="gallery-detail__carousel-media">
+                <div class="gallery-weatherroom pdf" role="img" aria-label="The Weather Room — projected light colour study (orange and blue)"></div>
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/weatherroom-01.png" alt="The Weather Room — view through a doorway into the installation, blue-lit space with equipment and ladder" width="1200" height="800" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/weatherroom-02.png" alt="The Weather Room — gallery space during install, projector above door, ladder and laptops" width="1200" height="800" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/weatherroom-03.png" alt="The Weather Room — visitor facing a large illuminated screen, green-amber wash over the room" width="1200" height="800" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/weatherroom-04.png" alt="The Weather Room — doorway view into blue-lit room with projection and ladder" width="1200" height="800" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/weatherroom-elevator.jpg" alt="The Weather Room — elevator interior, mirrored surfaces and ceiling lights" width="4032" height="3024" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--weatherroom-video">
+              <div class="gallery-detail__carousel-media">
+                <video class="gallery-detail__carousel-video" src="../files/weatherroom-video.mp4" controls playsinline preload="metadata" width="1920" height="1080" aria-label="The Weather Room — installation video">
+                  <a href="../files/weatherroom-video.mp4">Download video</a>
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--next mobile-scroll-hint__btn" aria-label="Next slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--right" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <section class="profile-content gallery-detail__headline">
+      <p><em>The Weather Room</em>, 2024, Processing, interactive installation</p>
+    </section>
+  </div>
+  <section class="profile-content gallery-detail__details">
+    <p>An interactive installation created in collaboration with <a href="https://www.isobellemccall.com/" class="hyperlink" rel="noopener noreferrer">Isobelle McCall</a> as part of a media art course at the University of Melbourne. In the exhibition space, viewers can influence the ambience through their presence. Projected light changes colour from dark blue tones to warm orange hues based on how loud it gets in the room. This creates an audio-visual representation of the human experience with the environment, inviting reflection of our relationship with nature.</p>
+    <p class="section-heading">References</p>
+    <div class="reference-list">
+      <p>Olafur Eliasson, <a href="https://olafureliasson.net/artwork/the-weather-project-2003/" class="hyperlink" rel="noopener noreferrer">The Weather Project</a>, 2003</p>
+      <p>James Turrell, <a href="https://www.pacegallery.com/exhibitions/james-turrell-elemental/" class="hyperlink" rel="noopener noreferrer">Elemental</a>, 2022</p>
+      <p>Julinka Ebhardt, Francesco Tacchini, Will Yates-Johnson, <a href="https://vimeo.com/87979136" class="hyperlink" rel="noopener noreferrer">Space Replay</a>, 2014</p>
+      <p>John Warwicker, <a href="https://www.johnwarwicker.com/sony-connected-identity-1/#itemId=5728c50d8a65e2a723f4f9f0" class="hyperlink" rel="noopener noreferrer">Sony Connected Identity</a>, 2001</p>
+    </div>
+  </section>
+</main>
+
+<script src="../script.js"></script>
+<script src="../surveillance-carousel.js"></script>
+<footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
+</body>
+</html>
