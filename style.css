@@ -1433,7 +1433,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     );
   }
 
-  /* Typeface detail (typeface.html): smaller PNG than default detail bounds on phones */
+  /* Nonsense detail (nonsense.html): smaller PNG than default detail bounds on phones */
   main.gallery-detail--typeface {
     --gallery-detail-media-max-w: min(74vw, 25rem);
     --gallery-detail-media-max-h: min(34vh, 21.25rem);
