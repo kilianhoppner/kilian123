@@ -948,6 +948,24 @@ main.gallery-detail--tshirt {
   }
 }
 
+/*
+ * Nonsense — spread specimen (slide 3): wider landscape artwork; bump the 3:2 frame on
+ * tablet/desktop so it doesn’t read small next to the other slides.
+ */
+@media (min-width: 769px) {
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-spread .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.14));
+    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.12);
+  }
+}
+
+@media (min-width: 1025px) {
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-spread .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.26));
+    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.2);
+  }
+}
+
 /* Weather Room detail: modestly larger media + frame than default detail caps so every slide scales up a touch. */
 main.gallery-detail--weatherroom {
   --gallery-detail-media-max-w: min(91vw, calc(var(--gallery-detail-art-max-w) * 1.05));
@@ -1590,6 +1608,12 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
       var(--gallery-detail-media-max-w),
       calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
     );
+  }
+
+  /* Take it slow — slide 1 (SLOW sign): slightly larger 3:2 frame on phone only */
+  main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-first .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.12));
+    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.1);
   }
 
   /*
