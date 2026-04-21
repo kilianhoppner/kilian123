@@ -24,25 +24,52 @@
   </div>
 </div>
 
-<main class="gallery-detail">
+<main class="gallery-detail gallery-detail--hammersmith-flyover-uv">
   <div class="gallery-detail__hero">
     <div class="gallery-detail__stage">
-    <img src="../files/handcable.png" alt="Cable" class="gallery-detail__image" decoding="async">
-  </div>
+      <div class="gallery-detail__carousel" data-infinite-carousel aria-roledescription="carousel">
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--prev mobile-scroll-hint__btn" aria-label="Previous slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--left" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="gallery-detail__carousel-viewport">
+          <div class="gallery-detail__carousel-track">
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/handcable.png" alt="UV print: cable detail" width="676" height="520" decoding="async" loading="eager">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/booty.png" alt="UV print: booty detail" width="524" height="385" decoding="async" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--next mobile-scroll-hint__btn" aria-label="Next slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--right" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
     <section class="profile-content gallery-detail__headline">
-      <p><em>The Birth of Hammersmith Flyover</em>, 2026, UV print on aluminium</p>
+      <p><em>The Birth of Hammersmith Flyover</em>, 2026, UV prints on aluminium</p>
     </section>
   </div>
   <section class="profile-content gallery-detail__details">
-    <p>Description</p>
+    <p>At night, I hear cars passing over the flyover. I wonder where people are going so late. I ask myself if my interest in container technologies is a compensation for my own relative deficiency in the container department. Upon waking, I salute the flyover along with the rising sun. It never rests. Its automated systems ensure a 24-hour facilitating environment to meet the demands of our metropolis: escorting hasty men to and from the other side, each striving to surmount that which is unsound in them. Similar to mothers, who nurture and provide for their infants. I can tell the structure is worn down. Rust and other imperfections have quietly settled onto its membrane. Perhaps, being porous enables intimacy with its surroundings. Can its embrace help me better understand my sexuality? More broadly, does perceiving architecture as an extension of our skin challenge views of gender roles?</p>
     <p class="section-heading">References</p>
     <div class="reference-list">
       <p>London's Screen Archives, <a href="https://www.londonsscreenarchives.org.uk/title/19773/" class="hyperlink" rel="noopener noreferrer">The Hammersmith Flyover, Hammersmith</a>, 1961</p>
+      <p>Zoë Sofía, <a href="https://www.researchgate.net/publication/227700296_Container_Technologies" class="hyperlink" rel="noopener noreferrer">Container Technologies</a>, 2000</p>
     </div>
   </section>
 </main>
 
 <script src="../script.js"></script>
+<script src="../carousel.js"></script>
 <footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
 </body>
 </html>
