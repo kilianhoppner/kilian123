@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<title>Image Viewer</title>
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+  }
+
+  .viewer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .viewer img {
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <main class="viewer">
+    <img id="viewerImage" alt="Linked image">
+  </main>
+
+  <script>
+    const img = document.getElementById("viewerImage");
+    const params = new URLSearchParams(window.location.search);
+    const src = params.get("img");
+    if (src) {
+      img.src = src;
+    }
+  </script>
+</body>
+</html>

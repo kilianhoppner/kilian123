@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery</title>
+<link rel="dns-prefetch" href="https://kilianhoppner.github.io">
+<link rel="preconnect" href="https://kilianhoppner.github.io" crossorigin>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+</head>
+
+
+
+<body>
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-bar__cluster">
+  <div class="top-actions">
+    <a href="index.html" class="nav-button gallery-button">Gallery</a>
+    <a href="bio.html" class="nav-button bio-button">Bio</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button email-button">Email</a>
+  </div>
+
+
+  <!-- Right-aligned London time -->
+  <div class="time">
+    <div id="londonClock" class="clock" aria-label="London UTC analog clock">
+      <span class="clock-hand hour-hand"></span>
+      <span class="clock-hand minute-hand"></span>
+      <span class="clock-hand second-hand"></span>
+      <span class="clock-center"></span>
+    </div>
+  </div>
+  </div>
+
+  <div class="mobile-scroll-hint" hidden>
+    <button type="button" class="mobile-scroll-hint__btn" aria-label="Scroll down">
+      <svg class="mobile-scroll-hint__icon" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+
+<section class="gallery">
+  <a href="pages/dollhouse.html" class="gallery-item-link"><img src="files/dollhouse.png" alt="dollhouse"></a>
+  <a href="pages/mensrights.html" class="gallery-item-link"><img src="files/mensrights.png" alt="men's rights" class="mens-rights"></a>
+  <a href="pages/handcable.html" class="gallery-item-link"><img src="files/handcable.png" alt="cable" class="cable"></a>
+  <a href="pages/daddysgirl.html" class="gallery-item-link"><img src="files/daddysgirl.png" alt="Daddy's Girl — DADDY'S GIRL on plywood" class="daddysgirl" width="2528" height="1700"></a>
+  <div class="gallery-iframe-slot gallery-iframe-slot--with-overlay face-track-slot" id="faceTrackSlot" aria-label="#Surveillancecore Pt.01">
+    <a href="pages/facetrack.html" class="gallery-tile-overlay-link" aria-label="Open #Surveillancecore Pt.01"></a>
+    <video class="face-track-video" playsinline muted aria-hidden="true"></video>
+    <div class="face-track-outline" aria-hidden="true"></div>
+  </div>
+  <a href="pages/vulnerability.html" class="gallery-item-link"><img src="files/vulnerability.png" alt="vulnerability is power" class="vulnerability"></a>
+  <a href="pages/valerie.html" class="gallery-item-link"><img src="files/valerie.png" alt="valerie solanas" class="valerie"></a>
+  <a href="pages/castrationanxiety.html" class="gallery-item-link"><img src="files/castration.png" alt="castration anxiety"></a>
+  <a href="pages/societyfor.html" class="gallery-item-link"><img src="files/societyfor.png" alt="society for cutting up men" class="societyfor"></a>
+  <a href="pages/ilovedaddy.html" class="gallery-item-link"><img src="files/ilovedaddy.png" alt="i love daddy" class="ilovedaddy"></a>
+  <div class="gallery-iframe-slot gallery-head-3d gallery-iframe-slot--with-overlay" aria-label="Head 3D">
+    <a href="pages/head.html" class="gallery-tile-overlay-link" aria-label="Open Head"></a>
+    <model-viewer
+      class="gallery-head-3d__viewer"
+      src="files/head.glb"
+      alt="3D model of a head"
+      loading="lazy"
+      auto-rotate
+      rotation-per-second="22deg"
+      interaction-prompt="none"
+      shadow-intensity="0"
+      exposure="1"
+      camera-orbit="93deg 85deg auto"
+    ></model-viewer>
+  </div>
+  <a href="pages/typeface.html" class="gallery-item-link"><img src="files/typeface.png" alt="typeface" class="typeface"></a>
+  <a href="pages/tshirt.html" class="gallery-item-link"><img src="files/tshirt.png" alt="tshirt" class="tshirt"></a>
+  <a href="pages/spinebeam.html" class="gallery-item-link"><img src="files/spinebeam.png" alt="spinebeam" class="spinebeam"></a>
+  <a href="pages/dollhouse.html#sketch" class="gallery-item-link"><img src="files/sketchhouse.png" alt="sketchhouse" class="sketchhouse"></a>
+  <a href="pages/steamroller.html" class="gallery-item-link"><img src="files/steamroller.png" alt="steamroller" class="steamroller"></a>
+  <a href="pages/humpbridge.html" class="gallery-item-link"><img src="files/humpbridge.svg" alt="bridge" class="bridge"></a>
+  <a href="pages/samegrass.html" class="gallery-item-link"><img src="files/samegrass.png" alt="samegrass" class="samegrass"></a>
+  <div class="gallery-iframe-slot gallery-toiletroll-3d gallery-iframe-slot--with-overlay" aria-label="Up your ass">
+    <a href="pages/upyourass.html" class="gallery-tile-overlay-link" aria-label="Open Up your ass"></a>
+    <div class="gallery-toiletroll-3d__viewer" data-toiletroll-init></div>
+  </div>
+  <a href="pages/hellokitty.html" class="gallery-item-link"><img src="files/hellokitty.png" alt="hellokitty" class="hellokitty"></a>
+  <a href="pages/listentoyourself.html" class="gallery-item-link"><img src="files/listentoyourself.png" alt="listen to yourself" class="listentoyourself"></a>
+  <a href="pages/booty.html" class="gallery-item-link"><img src="files/booty.png" alt="booty" class="booty"></a>
+  <a href="pages/daddyapplications.html" class="gallery-item-link"><img src="files/daddyapplications.png" alt="daddy applications" class="daddyapplications"></a>
+  <a href="pages/elena.html" class="gallery-item-link"><img src="files/elena.png" alt="elena" class="elena"></a>
+  <div class="gallery-iframe-slot spring-3d gallery-iframe-slot--with-overlay" aria-label="3D spring">
+    <a href="pages/spring3d.html" class="gallery-tile-overlay-link" aria-label="Open 3D spring"></a>
+    <iframe src="https://kilianhoppner.github.io/3Dspring-whitebackground-/" title="3D spring" loading="lazy"></iframe>
+  </div>
+  <a href="pages/buildbridgesnotwalls.html" class="gallery-item-link"><img src="files/buildbridgesnotwalls.png" alt="build bridges not walls" class="buildbridgesnotwalls"></a>
+  <a href="pages/eatdicksuckpussy.html" class="gallery-item-link"><img src="files/eatdicksuckpussy.png" alt="eat dicks suck pussy" class="eatdicksuckpussy"></a>
+  <a href="pages/weatherroom.html" class="gallery-item-link"><div class="gallery-weatherroom pdf" role="img" aria-label="Weather room"></div></a>
+  <a href="pages/jesusisgay.html" class="gallery-item-link"><img src="files/jesusisgay.png" alt="jesus is gay" class="jesusisgay"></a>
+  <a href="pages/extraordinarybeauty.html" class="gallery-item-link"><img src="files/extraordinarybeauty.png" alt="a young man of extra-ordinary beauty" class="extraordinarybeauty"></a>
+  <a href="pages/music.html" class="gallery-item-link"><img src="files/music.png" alt="music" class="music" width="64" height="64" decoding="async"></a>
+  <a href="pages/laptop.html" class="gallery-item-link"><img src="files/laptop.png" alt="laptop" class="laptop"></a>
+  <a href="pages/scissors.html" class="gallery-item-link"><img src="files/scissors.png" alt="scissors" class="scissors"></a>
+  <a href="pages/midnight.html" class="gallery-item-link"><div class="gallery-midnight-tile" aria-label="Time cycling between 23:59:00 and 23:59:59">
+    <time class="gallery-midnight-time" datetime="1970-01-01T23:59:00">23:59:00</time>
+  </div></a>
+  <div class="gallery-arrow-spin" aria-hidden="true">
+    <a href="pages/arrows.html" class="gallery-item-link gallery-arrow-spin__link">
+    <img
+      class="gallery-arrow-spin__img"
+      src="files/arrows.png"
+      alt=""
+      width="64"
+      height="64"
+      decoding="async"
+    />
+    </a>
+  </div>
+  <div class="gallery-video-slot gallery-video-slot--whitehorse" aria-label="White horse">
+    <a href="pages/whitehorse.html" class="gallery-tile-overlay-link" aria-label="Open white horse"></a>
+    <video
+      class="gallery-video-slot__video"
+      src="files/whitehorse.mp4"
+      muted
+      playsinline
+      autoplay
+      preload="auto"
+    ></video>
+    <video
+      class="gallery-video-slot__video"
+      src="files/whitehorse.mp4"
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+  </div>
+  <a href="pages/menarefrommars.html" class="gallery-item-link"
+    ><img
+      src="files/menarefrommars.svg"
+      alt="Men are from Mars, women are from Venus"
+      class="menarefrommars"
+      decoding="async"
+  /></a>
+  <div
+    class="gallery-globe-wireframe gallery-globe-wireframe--with-overlay"
+    role="img"
+    aria-label="3D sphere with graticule lines rotating on a vertical axis"
+  >
+    <a href="pages/globe.html" class="gallery-tile-overlay-link" aria-label="Open Sphere"></a>
+    <div class="gallery-globe-wireframe__canvas" data-globe-sphere-three></div>
+  </div>
+</section>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+<script type="module" src="toiletroll.js"></script>
+<script type="module" src="globe-sphere-three.js?v=44"></script>
+<script src="script.js"></script>
+<script src="face-track.js"></script>
+
+<footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
+</body>
+</html>
