@@ -3,7 +3,9 @@
  * .gallery-detail__carousel-track slides. Used on #Surveillancecore, Weather Room, dollhouse,
  * t-shirt, Nonsense, Take it slow, Hammersmith Flyover UV, etc. Clone last slide before first and first after last so wrap always
  * animates one step, then the track jumps invisibly to the real slide.
- * Dollhouse: #sketch opens on the ink-sketch slide.
+ * Dollhouse: #sketch opens on the ink-sketch slide (by class).
+ * Any carousel: #slide-1 … #slide-N (1-based) opens that slide — use from gallery index when
+ * multiple tiles share one detail URL.
  */
 (function () {
   function slideEls(track) {
@@ -75,7 +77,8 @@
 
     var trackIndex = 1;
     var isDollhouse = root.closest && root.closest('main.gallery-detail--dollhouse');
-    if (isDollhouse && typeof location !== 'undefined' && /^#sketch$/i.test(location.hash || '')) {
+    var hash = typeof location !== 'undefined' ? location.hash || '' : '';
+    if (isDollhouse && /^#sketch$/i.test(hash)) {
       var sketchSlideIdx = -1;
       for (var si = 0; si < originals.length; si++) {
         if (originals[si].classList.contains('gallery-detail__carousel-slide--dollhouse-sketch')) {
@@ -85,6 +88,14 @@
       }
       if (sketchSlideIdx >= 0) {
         trackIndex = sketchSlideIdx + 1;
+      }
+    } else {
+      var slideHash = /^#slide-(\d+)$/i.exec(hash);
+      if (slideHash) {
+        var slideNum = parseInt(slideHash[1], 10);
+        if (slideNum >= 1 && slideNum <= realN) {
+          trackIndex = slideNum;
+        }
       }
     }
     var locked = false;
