@@ -343,9 +343,7 @@ body {
   padding: 0.9375rem 0.75rem;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
-  text-shadow:
-    0 0.0625rem 0.125rem rgba(0, 0, 0, 0.36),
-    0 0 0.875rem rgba(0, 0, 0, 0.12);
+  text-shadow: 0 0.03125rem 0.0625rem rgba(0, 0, 0, 0.22);
   border: 0.0625rem solid rgba(255, 255, 255, 0.42);
   outline: none;
   background:
@@ -588,6 +586,44 @@ main.gallery-detail--menarefrommars {
   }
 }
 
+/*
+ * Triangle of masculinity + Take it slow — detail views: artwork a bit smaller than default caps
+ * (same idea as whitehorse / menarefrommars); tuned per breakpoint so phones stay balanced.
+ */
+main.gallery-detail--triangle-of-masculinity,
+main.gallery-detail--take-it-slow {
+  --gallery-detail-media-max-w: min(80vw, calc(var(--gallery-detail-art-max-w) * 0.84));
+  --gallery-detail-media-max-h: min(56vh, calc(var(--gallery-detail-art-max-h) * 0.84));
+  --gallery-detail-media-min-w: min(14rem, 88vw);
+  --gallery-detail-media-min-h: min(12.5rem, 36vh);
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--triangle-of-masculinity,
+  main.gallery-detail--take-it-slow {
+    --gallery-detail-media-max-w: min(74vw, calc(var(--gallery-detail-art-max-w) * 0.78));
+    --gallery-detail-media-max-h: min(50vh, calc(var(--gallery-detail-art-max-h) * 0.78));
+    --gallery-detail-media-min-w: min(12.5rem, 86vw);
+    --gallery-detail-media-min-h: min(11.5rem, 30vh);
+  }
+}
+
+@media (min-width: 769px) {
+  main.gallery-detail--triangle-of-masculinity,
+  main.gallery-detail--take-it-slow {
+    --gallery-detail-media-max-w: min(82vw, calc(var(--gallery-detail-art-max-w) * 0.86));
+    --gallery-detail-media-max-h: min(60vh, calc(var(--gallery-detail-art-max-h) * 0.86));
+  }
+}
+
+@media (min-width: 1025px) {
+  main.gallery-detail--triangle-of-masculinity,
+  main.gallery-detail--take-it-slow {
+    --gallery-detail-media-max-w: min(76vw, calc(var(--gallery-detail-art-max-w) * 0.82));
+    --gallery-detail-media-max-h: min(58vh, calc(var(--gallery-detail-art-max-h) * 0.82));
+  }
+}
+
 /* 3D detail pages (head, toilet roll, globe): calm gallery chrome — no frosted lift / clock nudge on hover */
 body:has(main.gallery-detail--head) .nav-button:hover,
 body:has(main.gallery-detail--toiletroll) .nav-button:hover,
@@ -599,16 +635,16 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
     0 0.25rem 1rem rgba(0, 0, 0, 0.1);
 }
 
-body:has(main.gallery-detail--head) .clock:hover,
-body:has(main.gallery-detail--toiletroll) .clock:hover,
-body:has(main.gallery-detail--globe-sphere) .clock:hover {
-  box-shadow:
-    inset 0 0.0625rem 0 rgba(255, 255, 255, 0.42),
-    0 0.25rem 1rem rgba(0, 0, 0, 0.1);
-  transform: scale(1.2);
-}
-
 @media (min-width: 769px) {
+  body:has(main.gallery-detail--head) .clock:hover,
+  body:has(main.gallery-detail--toiletroll) .clock:hover,
+  body:has(main.gallery-detail--globe-sphere) .clock:hover {
+    box-shadow:
+      inset 0 0.0625rem 0 rgba(255, 255, 255, 0.42),
+      0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+    transform: scale(1.2);
+  }
+
   body:has(main.gallery-detail--head) .clock:hover:not(.clock--expanded),
   body:has(main.gallery-detail--toiletroll) .clock:hover:not(.clock--expanded),
   body:has(main.gallery-detail--globe-sphere) .clock:hover:not(.clock--expanded) {
@@ -885,6 +921,17 @@ main.gallery-detail--facetrack {
   );
 }
 
+/* Nonsense typeface + Take it slow + Hammersmith Flyover UV prints: same 3:2 carousel caps as #Surveillancecore */
+main.gallery-detail--typeface,
+main.gallery-detail--take-it-slow,
+main.gallery-detail--hammersmith-flyover-uv {
+  --gallery-detail-carousel-cap-h: min(51vh, calc(var(--gallery-detail-media-max-h) * 1.12));
+  --gallery-detail-carousel-cap-w: min(
+    var(--gallery-detail-media-max-w),
+    calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
+  );
+}
+
 /* T-shirt detail: 3:2 carousel (larger frame + first slide on desktop vs default facetrack caps) */
 main.gallery-detail--tshirt {
   --gallery-detail-carousel-cap-h: min(56vh, calc(var(--gallery-detail-media-max-h) * 1.2));
@@ -929,6 +976,9 @@ main.gallery-detail--dollhouse {
 main.gallery-detail--facetrack .gallery-detail__stage,
 main.gallery-detail--weatherroom .gallery-detail__stage,
 main.gallery-detail--tshirt .gallery-detail__stage,
+main.gallery-detail--typeface .gallery-detail__stage,
+main.gallery-detail--take-it-slow .gallery-detail__stage,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__stage,
 main.gallery-detail--dollhouse .gallery-detail__stage {
   display: flex;
   flex-direction: column;
@@ -938,6 +988,9 @@ main.gallery-detail--dollhouse .gallery-detail__stage {
 main.gallery-detail--facetrack .gallery-detail__carousel,
 main.gallery-detail--weatherroom .gallery-detail__carousel,
 main.gallery-detail--tshirt .gallery-detail__carousel,
+main.gallery-detail--typeface .gallery-detail__carousel,
+main.gallery-detail--take-it-slow .gallery-detail__carousel,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel,
 main.gallery-detail--dollhouse .gallery-detail__carousel {
   display: flex;
   flex-direction: row;
@@ -953,6 +1006,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel {
 main.gallery-detail--facetrack .gallery-detail__carousel-viewport,
 main.gallery-detail--weatherroom .gallery-detail__carousel-viewport,
 main.gallery-detail--tshirt .gallery-detail__carousel-viewport,
+main.gallery-detail--typeface .gallery-detail__carousel-viewport,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-viewport,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-viewport,
 main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   flex: 1;
   min-width: 0;
@@ -966,6 +1022,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
 main.gallery-detail--facetrack .gallery-detail__carousel-track,
 main.gallery-detail--weatherroom .gallery-detail__carousel-track,
 main.gallery-detail--tshirt .gallery-detail__carousel-track,
+main.gallery-detail--typeface .gallery-detail__carousel-track,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-track,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-track,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track {
   display: flex;
   align-items: flex-start;
@@ -975,13 +1034,19 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-track {
 
 /* Shorter slides (e.g. notification strip) match 3:2 siblings’ track height; center vs flex-start so they sit between the chevrons. */
 main.gallery-detail--facetrack .gallery-detail__carousel-track,
-main.gallery-detail--tshirt .gallery-detail__carousel-track {
+main.gallery-detail--tshirt .gallery-detail__carousel-track,
+main.gallery-detail--typeface .gallery-detail__carousel-track,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-track,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-track {
   align-items: center;
 }
 
 main.gallery-detail--facetrack .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--weatherroom .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--tshirt .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--typeface .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track--no-transition {
   transition: none;
 }
@@ -989,6 +1054,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-track--no-transition {
 main.gallery-detail--facetrack .gallery-detail__carousel-slide,
 main.gallery-detail--weatherroom .gallery-detail__carousel-slide,
 main.gallery-detail--tshirt .gallery-detail__carousel-slide,
+main.gallery-detail--typeface .gallery-detail__carousel-slide,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-slide,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-slide,
 main.gallery-detail--dollhouse .gallery-detail__carousel-slide {
   flex: 0 0 100%;
   width: 100%;
@@ -1008,6 +1076,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-slide {
 main.gallery-detail--facetrack .gallery-detail__carousel-media,
 main.gallery-detail--weatherroom .gallery-detail__carousel-media,
 main.gallery-detail--tshirt .gallery-detail__carousel-media,
+main.gallery-detail--typeface .gallery-detail__carousel-media,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-media,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-media,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   box-sizing: border-box;
   position: relative;
@@ -1025,7 +1096,26 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   aspect-ratio: 3 / 4;
 }
 
+/*
+ * Take it slow — manual + Kilian: 2:3 frame vs default 3:2 so portraits aren’t tiny; caps tuned
+ * below the previous “large” pass so slides 2–3 stay balanced vs 1 + 4 at every width.
+ */
+main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
+  --tis-portrait-max-h: min(72svh, 66vh, calc(var(--gallery-detail-media-max-h) * 1.2));
+  aspect-ratio: 2 / 3;
+  max-height: var(--tis-portrait-max-h);
+  width: min(
+    100%,
+    var(--gallery-detail-media-max-w),
+    calc(var(--tis-portrait-max-h) * 2 / 3)
+  );
+}
+
 @media (min-width: 769px) {
+  main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
+    --tis-portrait-max-h: min(68vh, calc(var(--gallery-detail-media-max-h) * 1.22));
+  }
+
   main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-print .gallery-detail__carousel-media > img {
     transform: scale(0.99);
     transform-origin: center center;
@@ -1049,6 +1139,12 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media {
     aspect-ratio: 1 / 1;
     width: min(100%, var(--gallery-detail-media-max-w), var(--gallery-detail-carousel-cap-h));
     max-height: var(--gallery-detail-carousel-cap-h);
+  }
+}
+
+@media (min-width: 1025px) {
+  main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
+    --tis-portrait-max-h: min(70vh, calc(var(--gallery-detail-media-max-h) * 1.24));
   }
 }
 
@@ -1205,6 +1301,9 @@ main.gallery-detail--facetrack .face-track-slot--carousel-clone .face-track-outl
 main.gallery-detail--facetrack .gallery-detail__carousel-media > img,
 main.gallery-detail--weatherroom .gallery-detail__carousel-media > img,
 main.gallery-detail--tshirt .gallery-detail__carousel-media > img,
+main.gallery-detail--typeface .gallery-detail__carousel-media > img,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-media > img,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-media > img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media > img {
   display: block;
   width: 100%;
@@ -1229,6 +1328,9 @@ main.gallery-detail--weatherroom .gallery-detail__carousel-media > video {
 main.gallery-detail--facetrack .gallery-detail__carousel-media picture,
 main.gallery-detail--weatherroom .gallery-detail__carousel-media picture,
 main.gallery-detail--tshirt .gallery-detail__carousel-media picture,
+main.gallery-detail--typeface .gallery-detail__carousel-media picture,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-media picture,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-media picture,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture {
   display: flex;
   align-items: center;
@@ -1241,6 +1343,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media picture {
 main.gallery-detail--facetrack .gallery-detail__carousel-media picture img,
 main.gallery-detail--weatherroom .gallery-detail__carousel-media picture img,
 main.gallery-detail--tshirt .gallery-detail__carousel-media picture img,
+main.gallery-detail--typeface .gallery-detail__carousel-media picture img,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-media picture img,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-media picture img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture img {
   max-width: 100%;
   max-height: 100%;
@@ -1289,6 +1394,9 @@ main.gallery-detail--facetrack .gallery-detail__carousel-slide--motion img.galle
 main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__btn,
+main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__btn,
+main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__btn,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
   background: none;
   border: none;
@@ -1304,6 +1412,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__bt
 main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__btn:active,
+main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__btn:active,
+main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__btn:active,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn:active {
   opacity: 0.65;
 }
@@ -1311,6 +1422,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__bt
 main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__icon,
+main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__icon,
+main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__icon,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
   display: block;
   width: 3rem;
@@ -1321,6 +1435,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__ic
 main.gallery-detail--facetrack .gallery-detail__carousel-chevron--left,
 main.gallery-detail--weatherroom .gallery-detail__carousel-chevron--left,
 main.gallery-detail--tshirt .gallery-detail__carousel-chevron--left,
+main.gallery-detail--typeface .gallery-detail__carousel-chevron--left,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-chevron--left,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-chevron--left,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--left {
   transform: rotate(90deg);
 }
@@ -1328,6 +1445,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--left {
 main.gallery-detail--facetrack .gallery-detail__carousel-chevron--right,
 main.gallery-detail--weatherroom .gallery-detail__carousel-chevron--right,
 main.gallery-detail--tshirt .gallery-detail__carousel-chevron--right,
+main.gallery-detail--typeface .gallery-detail__carousel-chevron--right,
+main.gallery-detail--take-it-slow .gallery-detail__carousel-chevron--right,
+main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-chevron--right,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   transform: rotate(-90deg);
 }
@@ -1336,6 +1456,9 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     animation: none;
     opacity: 0.52;
@@ -1433,14 +1556,6 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     );
   }
 
-  /* Nonsense detail (nonsense.html): smaller PNG than default detail bounds on phones */
-  main.gallery-detail--typeface {
-    --gallery-detail-media-max-w: min(74vw, 25rem);
-    --gallery-detail-media-max-h: min(34vh, 21.25rem);
-    --gallery-detail-media-min-w: min(8.75rem, 64vw);
-    --gallery-detail-media-min-h: min(6.25rem, 20vh);
-  }
-
   /* Gallery detail on phone: no nav / clock — only work, copy, footer */
   body:has(main.gallery-detail) {
     --gallery-detail-chrome: 0rem;
@@ -1459,12 +1574,15 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   }
 
   /*
-   * 3:2 carousels — #Surveillancecore, Weather Room, t-shirt: same mobile bounds via :root
-   * --gallery-detail-carousel-mobile-* (viewport + art caps + 3:2 frame height).
+   * 3:2 carousels — #Surveillancecore, Weather Room, t-shirt, Nonsense, Take it slow, Hammersmith UV: same mobile bounds
+   * via :root --gallery-detail-carousel-mobile-* (viewport + art caps + 3:2 frame height).
    */
   main.gallery-detail--facetrack,
   main.gallery-detail--weatherroom,
-  main.gallery-detail--tshirt {
+  main.gallery-detail--tshirt,
+  main.gallery-detail--typeface,
+  main.gallery-detail--take-it-slow,
+  main.gallery-detail--hammersmith-flyover-uv {
     --gallery-detail-media-max-w: var(--gallery-detail-carousel-mobile-media-max-w);
     --gallery-detail-media-max-h: var(--gallery-detail-carousel-mobile-media-max-h);
     --gallery-detail-carousel-cap-h: var(--gallery-detail-carousel-mobile-cap-h);
@@ -1633,6 +1751,9 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--facetrack .gallery-detail__carousel,
   main.gallery-detail--weatherroom .gallery-detail__carousel,
   main.gallery-detail--tshirt .gallery-detail__carousel,
+  main.gallery-detail--typeface .gallery-detail__carousel,
+  main.gallery-detail--take-it-slow .gallery-detail__carousel,
+  main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel,
   main.gallery-detail--dollhouse .gallery-detail__carousel {
     width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
     max-width: 100vw;
@@ -1647,6 +1768,9 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--facetrack .gallery-detail__carousel-viewport,
   main.gallery-detail--weatherroom .gallery-detail__carousel-viewport,
   main.gallery-detail--tshirt .gallery-detail__carousel-viewport,
+  main.gallery-detail--typeface .gallery-detail__carousel-viewport,
+  main.gallery-detail--take-it-slow .gallery-detail__carousel-viewport,
+  main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel-viewport,
   main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
     max-width: none;
   }
@@ -1654,6 +1778,9 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
     box-sizing: border-box;
     padding: 0.125rem 0;
@@ -1669,6 +1796,9 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--facetrack .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--weatherroom .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--tshirt .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--typeface .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--take-it-slow .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--hammersmith-flyover-uv .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     width: 2.5rem;
     height: 2.5rem;
@@ -2497,6 +2627,26 @@ section.gallery:not(.facetrack-page-single) .face-track-outline {
 .gallery img.laptop { --img-max-height: 85%; }
 .gallery img.scissors { --img-max-height: 62%; }
 
+/* Triangle of masculinity + Take it slow — ~70% of default (100%) tile scale */
+.gallery img.triangle-of-masculinity,
+.gallery img.take-it-slow {
+  --img-max-height: 70%;
+  --img-max-width: 70%;
+}
+
+/* Desktop (5-column grid): triangle + SLOW sign (~5% under prior desktop scale) */
+@media (min-width: 1025px) {
+  .gallery img.triangle-of-masculinity {
+    --img-max-height: 69%;
+    --img-max-width: 69%;
+  }
+
+  .gallery img.take-it-slow {
+    --img-max-height: 58%;
+    --img-max-width: 58%;
+  }
+}
+
 /* Index only: hidden on desktop; shown on narrow viewports via JS + media query */
 .mobile-scroll-hint {
   display: none;
@@ -2688,6 +2838,12 @@ section.gallery:not(.facetrack-page-single) .face-track-outline {
   .gallery img.music {
     max-width: min(88%, 11rem);
     max-height: min(88%, 11rem);
+  }
+
+  /* Triangle tile: 10% larger than shared 70% phone scale */
+  .gallery img.triangle-of-masculinity {
+    --img-max-height: 77%;
+    --img-max-width: 77%;
   }
 
   .gallery .gallery-midnight-time {
