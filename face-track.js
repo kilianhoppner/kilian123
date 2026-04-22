@@ -59,6 +59,8 @@
   /** How much of the face offset from tile centre to apply (always ≤ 1). */
   function centerPullFactor() {
     if (isSubtleTrackingViewport()) return CENTER_PULL_PHONE;
+    /* Index gallery tile: full follow so the green square tracks the webcam face. Detail pages keep a calmer partial follow on large screens. */
+    if (!onGalleryDetail()) return 1;
     return CENTER_PULL_DESKTOP;
   }
 

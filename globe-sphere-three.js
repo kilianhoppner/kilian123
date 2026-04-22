@@ -8,10 +8,10 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 // EDIT BELOW — all defaults in one place
 // =============================================================================
 
-/** Equirectangular Earth texture map (`code/files/…`). */
-const TEXTURE_PATH = './files/earth-texture-map.png';
+/** Equirectangular Earth texture map (`files/index-globe-earth-texture-map.png`). */
+const TEXTURE_PATH = './files/index-globe-earth-texture-map.png';
 /** Full-body figure composited on top of the Earth map (same folder). Black background → transparent. */
-const FIGURE_OVERLAY_PATH = './files/globe-figure-overlay.png';
+const FIGURE_OVERLAY_PATH = './files/index-globe-figure-overlay.png';
 
 /** Max dimension when building composite canvas (higher = sharper figure, more GPU memory). */
 const COMPOSITE_TEXTURE_MAX_DIM = 8192;

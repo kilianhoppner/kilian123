@@ -1,7 +1,7 @@
 /**
  * Gallery detail carousels (infinite loop): any [data-infinite-carousel] with
  * .gallery-detail__carousel-track slides. Used on #Surveillancecore, Weather Room, dollhouse,
- * t-shirt, Nonsense, Take it slow, Hammersmith Flyover UV, etc. Clone last slide before first and first after last so wrap always
+ * t-shirt, Nonsense, Take it slow, Hammersmith Flyover UV, globe sphere + Triangle, TACO, I love daddy, Daddy's Girl, etc. Clone last slide before first and first after last so wrap always
  * animates one step, then the track jumps invisibly to the real slide.
  * Dollhouse: #sketch opens on the ink-sketch slide (by class).
  * Any carousel: #slide-1 … #slide-N (1-based) opens that slide — use from gallery index when
@@ -27,6 +27,26 @@
       v.removeAttribute('id');
       v.removeAttribute('autoplay');
     }
+  }
+
+  /** Infinite-loop clones must not re-run Three.js on [data-globe-sphere-three]. */
+  function stripGlobeSphereCarouselClone(cloneRoot) {
+    cloneRoot.querySelectorAll('[data-globe-sphere-three]').forEach(function (mount) {
+      mount.removeAttribute('data-globe-sphere-three');
+      mount.innerHTML = '';
+      mount.setAttribute('aria-hidden', 'true');
+      mount.classList.add('gallery-globe-sphere--carousel-clone');
+    });
+  }
+
+  /** Carousel loop clones must not instantiate a second model-viewer (self-portrait GLB). */
+  function stripModelViewerCarouselClone(cloneRoot) {
+    cloneRoot.querySelectorAll('model-viewer').forEach(function (mv) {
+      var ph = document.createElement('div');
+      ph.className = 'gallery-detail__model-viewer--carousel-clone-placeholder';
+      ph.setAttribute('aria-hidden', 'true');
+      mv.replaceWith(ph);
+    });
   }
 
   function syncSurveillanceEmbedForSlide(root, originals, logicalIndex) {
@@ -71,6 +91,10 @@
     var lastClone = originals[realN - 1].cloneNode(true);
     var firstClone = originals[0].cloneNode(true);
     stripFaceTrackClone(firstClone);
+    stripGlobeSphereCarouselClone(lastClone);
+    stripGlobeSphereCarouselClone(firstClone);
+    stripModelViewerCarouselClone(lastClone);
+    stripModelViewerCarouselClone(firstClone);
 
     track.insertBefore(lastClone, originals[0]);
     track.appendChild(firstClone);

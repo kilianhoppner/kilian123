@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Man at the centre of earth</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="top-bar">
+  <div class="top-actions">
+    <a href="../index.html" class="nav-button gallery-button">Gallery</a>
+    <a href="../bio.html" class="nav-button bio-button">Bio</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button email-button">Email</a>
+  </div>
+  <div class="time">
+    <div id="londonClock" class="clock" aria-label="London UTC analog clock">
+      <span class="clock-hand hour-hand"></span>
+      <span class="clock-hand minute-hand"></span>
+      <span class="clock-hand second-hand"></span>
+      <span class="clock-center"></span>
+    </div>
+  </div>
+</div>
+
+<main class="gallery-detail gallery-detail--globe-sphere">
+  <div class="gallery-detail__hero">
+    <div class="gallery-detail__stage">
+      <div class="gallery-detail__carousel" data-infinite-carousel aria-roledescription="carousel">
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--prev mobile-scroll-hint__btn" aria-label="Previous slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--left" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="gallery-detail__carousel-viewport">
+          <div class="gallery-detail__carousel-track">
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--globe-sphere">
+              <div class="gallery-detail__carousel-media">
+                <div class="gallery-detail__globe-slot" aria-label="Textured sphere">
+                  <div class="gallery-globe-wireframe__canvas" data-globe-sphere-three></div>
+                </div>
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--triangle-of-masculinity">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/man-at-the-centre-of-earth-1.png" alt="Triangle of masculinity — tiered pyramid from castration anxiety to God" width="587" height="668" decoding="async" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--next mobile-scroll-hint__btn" aria-label="Next slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--right" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <section class="profile-content gallery-detail__headline">
+      <p><em>Man at the centre of earth</em>, 2026, 3D model created with Three.js</p>
+    </section>
+  </div>
+  <section class="profile-content gallery-detail__details">
+    <p class="section-heading">References</p>
+    <p>Grayson Perry, <a href="https://www.penguin.co.uk/books/288084/the-descent-of-man-by-perry-grayson/9780141981741" class="hyperlink" rel="noopener noreferrer">The Descent of Man</a>, 2017</p>
+  </section>
+</main>
+
+<script>
+  window.GLOBE_SPHERE_CONFIG = {
+    radius: 0.45,
+    camera: { position: [0, 0.12, 1.48] },
+  };
+</script>
+<script type="module" src="../globe-sphere-three.js?v=44"></script>
+<script src="../script.js"></script>
+<script src="../carousel.js"></script>
+<footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
+</body>
+</html>
