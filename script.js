@@ -346,6 +346,14 @@ const HORSE_RATE_CROSSFADE = 1.08;
 /** First half of the clip plays a touch faster; second half a touch slower. */
 const HORSE_RATE_FIRST_HALF = 1.1;
 const HORSE_RATE_SECOND_HALF = 0.97;
+/** Last segment before the crossfade window: a bit slower so gallop cadence matches the rest. */
+const HORSE_RATE_TAIL = 0.68;
+const HORSE_TAIL_START_FRAC = 0.74;
+
+function horseRateSmoothstep(u) {
+  const x = Math.min(1, Math.max(0, u));
+  return x * x * (3 - 2 * x);
+}
 
 /**
  * Two stacked clips: next starts at 0 and snaps visible; previous fades out (no
@@ -356,13 +364,19 @@ function setupHorseVideoSeamlessLoop() {
     const videos = slot.querySelectorAll('video[src*="whitehorse"]');
     if (videos.length < 2) return;
 
-    const CROSSFADE_SEC = 0.22;
-    const fadeMs = 220;
+    /** Outgoing opacity transition + setTimeout cleanup stay aligned (see CSS). */
+    const CROSSFADE_SEC = 0.35;
+    const fadeMs = Math.round(CROSSFADE_SEC * 1000) + 40;
 
     let activeIdx = 0;
     let transitioning = false;
     /** rAF loop — timeupdate is too sparse, so we’d often start the crossfade late and the seam feels choppy. */
     let crossfadeMonitorId = null;
+
+    /** Blend second-half → tail and tail → crossfade rate so playbackRate doesn’t jump. */
+    const MID_BLEND_FRAC = 0.02;
+    const TAIL_IN_BLEND_FRAC = 0.04;
+    const TAIL_TO_CROSSFADE_SEC = 0.14;
 
     videos.forEach((v) => {
       v.removeAttribute('loop');
@@ -376,7 +390,7 @@ function setupHorseVideoSeamlessLoop() {
     }
 
     function crossfadeWindowSec(dur) {
-      return Math.min(CROSSFADE_SEC, Math.max(0.04, dur * 0.28));
+      return Math.min(CROSSFADE_SEC, Math.max(0.04, dur * 0.32));
     }
 
     function applyPlaybackRateForVideo(v) {
@@ -384,20 +398,51 @@ function setupHorseVideoSeamlessLoop() {
       if (!dur || Number.isNaN(dur)) return;
       const t = v.currentTime;
       const cf = crossfadeWindowSec(dur);
-      const nearEnd = t >= dur - cf || v.ended;
       const nearStart = t <= cf;
+      const inCrossfadeWindow = t >= dur - cf || v.ended;
       let rate;
-      if (transitioning) {
+
+      if (transitioning || nearStart) {
         rate = HORSE_RATE_CROSSFADE;
-      } else if (nearEnd || nearStart) {
+      } else if (inCrossfadeWindow) {
         rate = HORSE_RATE_CROSSFADE;
-      } else if (t < dur / 2) {
-        rate = HORSE_RATE_FIRST_HALF;
       } else {
-        rate = HORSE_RATE_SECOND_HALF;
+        const half = dur / 2;
+        const midW = dur * MID_BLEND_FRAC;
+        const tailStart = dur * HORSE_TAIL_START_FRAC;
+        const tailInLen = dur * TAIL_IN_BLEND_FRAC;
+        const tailInFrom = tailStart - tailInLen;
+        const rampEnd = dur - cf;
+        const rampStart = Math.max(tailStart, rampEnd - TAIL_TO_CROSSFADE_SEC);
+
+        if (t >= rampStart) {
+          const u = (t - rampStart) / Math.max(1e-6, rampEnd - rampStart);
+          rate =
+            HORSE_RATE_TAIL +
+            (HORSE_RATE_CROSSFADE - HORSE_RATE_TAIL) * horseRateSmoothstep(u);
+        } else if (t >= tailStart) {
+          rate = HORSE_RATE_TAIL;
+        } else if (t >= tailInFrom) {
+          const u = (t - tailInFrom) / Math.max(1e-6, tailStart - tailInFrom);
+          rate =
+            HORSE_RATE_SECOND_HALF +
+            (HORSE_RATE_TAIL - HORSE_RATE_SECOND_HALF) * horseRateSmoothstep(u);
+        } else if (t >= half + midW) {
+          rate = HORSE_RATE_SECOND_HALF;
+        } else if (t >= half - midW) {
+          const u = (t - (half - midW)) / Math.max(1e-6, 2 * midW);
+          rate =
+            HORSE_RATE_FIRST_HALF +
+            (HORSE_RATE_SECOND_HALF - HORSE_RATE_FIRST_HALF) * horseRateSmoothstep(u);
+        } else {
+          rate = HORSE_RATE_FIRST_HALF;
+        }
       }
-      v.defaultPlaybackRate = rate;
-      v.playbackRate = rate;
+
+      if (Math.abs(v.playbackRate - rate) > 0.0005) {
+        v.defaultPlaybackRate = rate;
+        v.playbackRate = rate;
+      }
     }
 
     function startCrossfadeMonitor() {
@@ -422,6 +467,10 @@ function setupHorseVideoSeamlessLoop() {
           }
         }
       }
+
+      videos.forEach((v) => {
+        if (!v.paused || transitioning) applyPlaybackRateForVideo(v);
+      });
 
       if (videos.some((v) => !v.paused) || transitioning) {
         crossfadeMonitorId = requestAnimationFrame(crossfadeMonitorTick);
