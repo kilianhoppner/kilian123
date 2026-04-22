@@ -2972,6 +2972,11 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     box-sizing: border-box;
   }
 
+  /* Index gallery only: nudge tile stack slightly closer to nav / first-screen cluster */
+  body:has(> section.gallery) > section.gallery {
+    padding-top: clamp(0.55rem, 2vw, 0.95rem);
+  }
+
   /* Man at the centre of Earth — globe tile + canvas slightly larger on phones */
   .gallery .gallery-globe-wireframe {
     --img-max-height: 94%;
@@ -3045,6 +3050,12 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     border-radius: 9999px;
     font-size: 1.5em;
     padding: 1.4375rem 1.125rem;
+  }
+
+  /* Footer ticker: same type size + line rhythm as bio (body already 1.3em / Diatype — inherit explicitly). */
+  .footer {
+    font: inherit;
+    line-height: 1.38;
   }
 
 }

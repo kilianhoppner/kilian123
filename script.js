@@ -250,6 +250,39 @@ function setupGalleryDetailBackButton() {
 
 registerGalleryScrollRestoreOnPageshow();
 
+/** Same distance as the mobile “scroll down” chevron under the nav (index + bio). */
+function scrollMobileGalleryHintDistance() {
+  const delta = Math.min(220, Math.max(100, window.innerHeight * 0.25));
+  window.scrollBy({ top: delta, behavior: 'smooth' });
+}
+
+/**
+ * Mobile: on index or bio, tapping the active nav label (Gallery / Bio) scrolls like the chevron.
+ */
+function setupMobileSamePageNavScrollDown() {
+  const galleryBtn = document.querySelector('a.gallery-button');
+  const bioBtn = document.querySelector('a.bio-button');
+  if (!galleryBtn && !bioBtn) return;
+
+  function isNarrow() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  galleryBtn?.addEventListener('click', (e) => {
+    if (!isNarrow()) return;
+    if (!document.querySelector('body > section.gallery')) return;
+    e.preventDefault();
+    scrollMobileGalleryHintDistance();
+  });
+
+  bioBtn?.addEventListener('click', (e) => {
+    if (!isNarrow()) return;
+    if (!document.querySelector('body > section.profile-content')) return;
+    e.preventDefault();
+    scrollMobileGalleryHintDistance();
+  });
+}
+
 /**
  * Mobile (index + bio): soft blinking arrow under the nav; tap scrolls a short way.
  * Fades out when main content (gallery or bio) enters view; fades back at top.
@@ -283,12 +316,7 @@ function setupMobileGalleryScrollHint() {
     wrap.classList.toggle(FADED, contentVisible);
   }
 
-  function onClick() {
-    const delta = Math.min(220, Math.max(100, window.innerHeight * 0.25));
-    window.scrollBy({ top: delta, behavior: 'smooth' });
-  }
-
-  btn.addEventListener('click', onClick);
+  btn.addEventListener('click', scrollMobileGalleryHintDistance);
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   mq.addEventListener('change', update);
@@ -556,6 +584,7 @@ if (document.readyState === 'loading') {
     setupGalleryScrollRestore();
     tryRestoreGalleryScrollOnIndex();
     setupMobileGalleryScrollHint();
+    setupMobileSamePageNavScrollDown();
     setupHorseVideoSeamlessLoop();
     setupFooterMarquee();
   });
@@ -568,6 +597,7 @@ if (document.readyState === 'loading') {
   setupGalleryScrollRestore();
   tryRestoreGalleryScrollOnIndex();
   setupMobileGalleryScrollHint();
+  setupMobileSamePageNavScrollDown();
   setupHorseVideoSeamlessLoop();
   setupFooterMarquee();
 }
