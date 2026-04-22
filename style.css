@@ -698,7 +698,7 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
   object-position: center;
   display: block;
   opacity: 0;
-  transition: opacity 0.22s ease;
+  transition: opacity 0.35s ease;
   z-index: 1;
 }
 
@@ -2093,7 +2093,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   display: block;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.22s ease;
+  transition: opacity 0.35s ease;
   z-index: 1;
 }
 
