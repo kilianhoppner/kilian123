@@ -1645,11 +1645,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media > img {
   vertical-align: middle;
 }
 
-/* Detail carousels: reuse the same img class hooks as the gallery grid (rotate, etc.). */
-main.gallery-detail--ilove-daddy .gallery-detail__carousel-media > img.ilovedaddy {
-  --img-rotate: 0.5deg;
-  rotate: var(--img-rotate, 0deg);
-}
+/* I love daddy — carousel first slide: no tilt (index grid .gallery img.ilovedaddy keeps subtle rotate). */
 
 main.gallery-detail--weatherroom .gallery-detail__carousel-media > video {
   display: block;
