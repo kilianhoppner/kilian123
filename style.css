@@ -748,8 +748,8 @@ main.gallery-detail--head .gallery-detail__carousel-slide--head-3d .gallery-deta
     aspect-ratio: 3 / 2;
     width: auto;
     max-width: 100%;
-    height: min(56vh, calc(var(--gallery-detail-carousel-cap-h) * 1.1));
-    max-height: min(56vh, calc(var(--gallery-detail-carousel-cap-h) * 1.1));
+    height: min(63vh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+    max-height: min(63vh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
   }
 }
 
