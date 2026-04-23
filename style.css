@@ -1396,6 +1396,22 @@ main.gallery-detail--taco .gallery-detail__carousel-media .gallery-midnight-time
   }
 }
 
+/* I love daddy — dad photograph (slide 3, 450×347): native aspect vs default 3:2 letterboxing */
+main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide--ilove-daddy-dad .gallery-detail__carousel-media {
+  aspect-ratio: 450 / 347;
+  width: auto;
+  max-width: 100%;
+  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide--ilove-daddy-dad .gallery-detail__carousel-media {
+    height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
+    max-height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
+  }
+}
+
 /*
  * Take it slow — manual + Kilian: 2:3 frame vs default 3:2 so portraits aren’t tiny; caps tuned
  * below the previous “large” pass so slides 2–3 stay balanced vs 1 + 4 at every width.
