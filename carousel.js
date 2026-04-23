@@ -3,6 +3,7 @@
  * .gallery-detail__carousel-track slides. Used on #Surveillancecore, Weather Room, dollhouse,
  * t-shirt, Nonsense, Take it slow, Hammersmith Flyover UV, globe sphere + Triangle, TACO, I love daddy, Daddy's Girl, etc. Clone last slide before first and first after last so wrap always
  * animates one step, then the track jumps invisibly to the real slide.
+ * Life Cycles: recycling arrows + White Book edit (images only).
  * Dollhouse: #sketch opens on the ink-sketch slide (by class).
  * Any carousel: #slide-1 … #slide-N (1-based) opens that slide — use from gallery index when
  * multiple tiles share one detail URL.

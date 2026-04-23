@@ -894,6 +894,17 @@ main.gallery-detail--facetrack {
   );
 }
 
+/* #Surveillancecore: slightly larger carousel frame on viewports wider than phone (mobile ≤768 unchanged). */
+@media (min-width: 769px) {
+  main.gallery-detail--facetrack {
+    --gallery-detail-carousel-cap-h: min(54vh, calc(var(--gallery-detail-media-max-h) * 1.18));
+    --gallery-detail-carousel-cap-w: min(
+      var(--gallery-detail-media-max-w),
+      calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
+    );
+  }
+}
+
 /* Nonsense typeface + Take it slow + globe detail: same 3:2 carousel caps as #Surveillancecore */
 main.gallery-detail--typeface,
 main.gallery-detail--take-it-slow,
@@ -903,12 +914,76 @@ main.gallery-detail--hump-bridge,
 main.gallery-detail--taco,
 main.gallery-detail--ilove-daddy,
 main.gallery-detail--head,
-main.gallery-detail--daddys-girl {
+main.gallery-detail--daddys-girl,
+main.gallery-detail--life-cycles {
   --gallery-detail-carousel-cap-h: min(51vh, calc(var(--gallery-detail-media-max-h) * 1.12));
   --gallery-detail-carousel-cap-w: min(
     var(--gallery-detail-media-max-w),
     calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
   );
+}
+
+/*
+ * Daddy's Girl — slide 2 (Hello Kitty, 500×530): the shared 3:2 frame uses width min(100%, cap_w),
+ * which is usually already the full slide width — so bumping cap_w/cap_h does nothing visible.
+ * Size this slide from height + native aspect ratio (cf. t-shirt first slide).
+ */
+main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second .gallery-detail__carousel-media {
+  aspect-ratio: 500 / 530;
+  width: auto;
+  max-width: 100%;
+  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.22));
+  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.22));
+}
+
+/* Life Cycles — slide 1 (recycling arrows): square frame; inner spin fills carousel cell (not full-stage .gallery-arrow-spin widths). */
+main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-arrows .gallery-detail__carousel-media {
+  aspect-ratio: 1 / 1;
+  width: auto;
+  max-width: 100%;
+  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
+  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
+}
+
+/* Life Cycles — slide 2 (The White Book edit, 3204×2412). */
+main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
+  aspect-ratio: 3204 / 2412;
+  width: auto;
+  max-width: 100%;
+  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+}
+
+main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-spin {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-spin__link {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 769px) {
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-arrows .gallery-detail__carousel-media {
+    height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
+    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
+    height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-spin__img {
+    max-width: min(91%, 24rem);
+  }
 }
 
 /* T-shirt detail: 3:2 carousel (larger frame + first slide on desktop vs default facetrack caps) */
@@ -924,6 +999,24 @@ main.gallery-detail--tshirt {
   main.gallery-detail--tshirt .gallery-detail__carousel-slide--tshirt-first .gallery-detail__carousel-media {
     width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.18));
     max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.18);
+  }
+}
+
+/*
+ * Nonsense — Glyphs specimen (slide 2, 2260×1550): native aspect + slightly taller cap than default 3:2 letterboxing (phone + desktop).
+ */
+main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .gallery-detail__carousel-media {
+  aspect-ratio: 2260 / 1550;
+  width: auto;
+  max-width: 100%;
+  height: min(66vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  max-height: min(66vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+}
+
+@media (min-width: 769px) {
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .gallery-detail__carousel-media {
+    height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
   }
 }
 
@@ -982,6 +1075,7 @@ main.gallery-detail--taco .gallery-detail__stage,
 main.gallery-detail--ilove-daddy .gallery-detail__stage,
 main.gallery-detail--head .gallery-detail__stage,
 main.gallery-detail--daddys-girl .gallery-detail__stage,
+main.gallery-detail--life-cycles .gallery-detail__stage,
 main.gallery-detail--dollhouse .gallery-detail__stage {
   display: flex;
   flex-direction: column;
@@ -1000,6 +1094,7 @@ main.gallery-detail--taco .gallery-detail__carousel,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel,
 main.gallery-detail--head .gallery-detail__carousel,
 main.gallery-detail--daddys-girl .gallery-detail__carousel,
+main.gallery-detail--life-cycles .gallery-detail__carousel,
 main.gallery-detail--dollhouse .gallery-detail__carousel {
   display: flex;
   flex-direction: row;
@@ -1024,6 +1119,7 @@ main.gallery-detail--taco .gallery-detail__carousel-viewport,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-viewport,
 main.gallery-detail--head .gallery-detail__carousel-viewport,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
+main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
 main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   flex: 1;
   min-width: 0;
@@ -1046,6 +1142,7 @@ main.gallery-detail--taco .gallery-detail__carousel-track,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
 main.gallery-detail--head .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
+main.gallery-detail--life-cycles .gallery-detail__carousel-track,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track {
   display: flex;
   align-items: flex-start;
@@ -1064,6 +1161,7 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-track,
 main.gallery-detail--taco .gallery-detail__carousel-track,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
+main.gallery-detail--life-cycles .gallery-detail__carousel-track,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track {
   align-items: center;
 }
@@ -1080,6 +1178,7 @@ main.gallery-detail--taco .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--head .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--life-cycles .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track--no-transition {
   transition: none;
 }
@@ -1096,6 +1195,7 @@ main.gallery-detail--taco .gallery-detail__carousel-slide,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide,
 main.gallery-detail--head .gallery-detail__carousel-slide,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-slide,
+main.gallery-detail--life-cycles .gallery-detail__carousel-slide,
 main.gallery-detail--dollhouse .gallery-detail__carousel-slide {
   flex: 0 0 100%;
   width: 100%;
@@ -1124,6 +1224,7 @@ main.gallery-detail--taco .gallery-detail__carousel-media,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media,
 main.gallery-detail--head .gallery-detail__carousel-media,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media,
+main.gallery-detail--life-cycles .gallery-detail__carousel-media,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   box-sizing: border-box;
   position: relative;
@@ -1219,8 +1320,9 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-sp
 }
 
 @media (max-width: 768px) {
+  /* Spring slide: scaled iframe — a tad smaller than 1.24 so slide 1 (sign) dominates a bit more */
   main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-spring .gallery-detail__iframe-spring {
-    transform: translate(-50%, -50%) scale(1.35);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
@@ -1297,6 +1399,15 @@ main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-
 @media (min-width: 769px) {
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
     --tis-portrait-max-h: min(68vh, calc(var(--gallery-detail-media-max-h) * 1.22));
+  }
+
+  /* Slide 1 (SLOW sign, 491×577): larger on desktop than default 3:2 letterboxing (same idea as mobile). */
+  main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-first .gallery-detail__carousel-media {
+    aspect-ratio: 491 / 577;
+    width: auto;
+    max-width: 100%;
+    height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
+    max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
   }
 
   main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-print .gallery-detail__carousel-media {
@@ -1524,6 +1635,7 @@ main.gallery-detail--taco .gallery-detail__carousel-media > img,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media > img,
 main.gallery-detail--head .gallery-detail__carousel-media > img,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media > img,
+main.gallery-detail--life-cycles .gallery-detail__carousel-media > img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media > img {
   display: block;
   width: 100%;
@@ -1563,6 +1675,7 @@ main.gallery-detail--taco .gallery-detail__carousel-media picture,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media picture,
 main.gallery-detail--head .gallery-detail__carousel-media picture,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media picture,
+main.gallery-detail--life-cycles .gallery-detail__carousel-media picture,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture {
   display: flex;
   align-items: center;
@@ -1584,6 +1697,7 @@ main.gallery-detail--taco .gallery-detail__carousel-media picture img,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media picture img,
 main.gallery-detail--head .gallery-detail__carousel-media picture img,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media picture img,
+main.gallery-detail--life-cycles .gallery-detail__carousel-media picture img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture img {
   max-width: 100%;
   max-height: 100%;
@@ -1641,6 +1755,7 @@ main.gallery-detail--taco .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
+main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
   background: none;
   border: none;
@@ -1665,6 +1780,7 @@ main.gallery-detail--taco .gallery-detail__carousel .mobile-scroll-hint__btn:act
 main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn:active,
+main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn:active {
   opacity: 0.65;
 }
@@ -1681,6 +1797,7 @@ main.gallery-detail--taco .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
+main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
   display: block;
   width: 3rem;
@@ -1700,6 +1817,7 @@ main.gallery-detail--taco .gallery-detail__carousel-chevron--left,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-chevron--left,
 main.gallery-detail--head .gallery-detail__carousel-chevron--left,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-chevron--left,
+main.gallery-detail--life-cycles .gallery-detail__carousel-chevron--left,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--left {
   transform: rotate(90deg);
 }
@@ -1716,6 +1834,7 @@ main.gallery-detail--taco .gallery-detail__carousel-chevron--right,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-chevron--right,
 main.gallery-detail--head .gallery-detail__carousel-chevron--right,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-chevron--right,
+main.gallery-detail--life-cycles .gallery-detail__carousel-chevron--right,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   transform: rotate(-90deg);
 }
@@ -1733,6 +1852,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     animation: none;
     opacity: 0.52;
@@ -1862,7 +1982,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--taco,
   main.gallery-detail--ilove-daddy,
   main.gallery-detail--head,
-  main.gallery-detail--daddys-girl {
+  main.gallery-detail--daddys-girl,
+  main.gallery-detail--life-cycles {
     --gallery-detail-media-max-w: var(--gallery-detail-carousel-mobile-media-max-w);
     --gallery-detail-media-max-h: var(--gallery-detail-carousel-mobile-media-max-h);
     --gallery-detail-carousel-cap-h: var(--gallery-detail-carousel-mobile-cap-h);
@@ -1872,10 +1993,58 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     );
   }
 
-  /* Take it slow — slide 1 (SLOW sign): slightly larger 3:2 frame on phone only */
+  /*
+   * Take it slow — slide 1 (SLOW sign, 491×577): same issue as Daddy’s Girl Hello Kitty — 3:2 +
+   * min(100%, cap_w) hits full slide width so extra cap_w doesn’t grow the art; use native AR + height.
+   */
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-first .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.12));
-    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.1);
+    aspect-ratio: 491 / 577;
+    width: auto;
+    max-width: 100%;
+    height: min(70svh, calc(var(--gallery-detail-carousel-cap-h) * 1.4));
+    max-height: min(70svh, calc(var(--gallery-detail-carousel-cap-h) * 1.4));
+  }
+
+  /*
+   * Hump bridge — slide 1 (triangular sign SVG, 139×122): cap_w multipliers often hit 100% slide width;
+   * native AR + height reads larger on phone (same pattern as Take it slow slide 1).
+   */
+  main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-first .gallery-detail__carousel-media {
+    aspect-ratio: 139 / 122;
+    width: auto;
+    max-width: 100%;
+    height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.42));
+    max-height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.42));
+  }
+
+  /* Hump bridge — photograph (4588×3600): slightly larger than default 3:2 letterboxing on phone */
+  main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-photo .gallery-detail__carousel-media {
+    aspect-ratio: 4588 / 3600;
+    width: auto;
+    max-width: 100%;
+    height: min(46svh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
+    max-height: min(46svh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
+  }
+
+  /* Daddy's Girl — Hello Kitty: slightly smaller on phone (width still auto from 500/530 AR) */
+  main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second .gallery-detail__carousel-media {
+    height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
+    max-height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-arrows .gallery-detail__carousel-media {
+    height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+    max-height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
+    height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
+    max-height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
+  }
+
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .gallery-detail__carousel-media {
+    height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.36));
+    max-height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.36));
   }
 
   /*
@@ -2067,6 +2236,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--ilove-daddy .gallery-detail__carousel,
   main.gallery-detail--head .gallery-detail__carousel,
   main.gallery-detail--daddys-girl .gallery-detail__carousel,
+  main.gallery-detail--life-cycles .gallery-detail__carousel,
   main.gallery-detail--dollhouse .gallery-detail__carousel {
     width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
     max-width: 100vw;
@@ -2090,6 +2260,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--ilove-daddy .gallery-detail__carousel-viewport,
   main.gallery-detail--head .gallery-detail__carousel-viewport,
   main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
+  main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
   main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
     max-width: none;
   }
@@ -2106,6 +2277,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
     box-sizing: border-box;
     padding: 0.125rem 0;
@@ -2130,6 +2302,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     width: 2.5rem;
     height: 2.5rem;
@@ -3052,10 +3225,18 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     padding: 1.4375rem 1.125rem;
   }
 
-  /* Footer ticker: same type size + line rhythm as bio (body already 1.3em / Diatype — inherit explicitly). */
+  /* Footer: same type size as body / detail descriptions (100% = parent body computed size). */
   .footer {
-    font: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: 100%;
     line-height: 1.38;
+  }
+
+  .footer .footer-marquee__segment,
+  .footer .hyperlink {
+    font-size: inherit;
+    line-height: inherit;
   }
 
 }

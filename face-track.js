@@ -31,6 +31,13 @@
    */
   const CENTER_PULL_DESKTOP = 0.5;
 
+  /**
+   * Index gallery tile only: keep the green square nearer the middle of the cell (all widths).
+   * Lower = subtler tracking / more centred.
+   */
+  const CENTER_PULL_GALLERY_WIDE = 0.48;
+  const CENTER_PULL_GALLERY_PHONE = 0.11;
+
   /** Detector low-pass before centre pull — phone-only. */
   const DETECTOR_PRE_SMOOTH_PHONE = 0.22;
 
@@ -58,9 +65,10 @@
 
   /** How much of the face offset from tile centre to apply (always ≤ 1). */
   function centerPullFactor() {
+    if (!onGalleryDetail()) {
+      return isSubtleTrackingViewport() ? CENTER_PULL_GALLERY_PHONE : CENTER_PULL_GALLERY_WIDE;
+    }
     if (isSubtleTrackingViewport()) return CENTER_PULL_PHONE;
-    /* Index gallery tile: full follow so the green square tracks the webcam face. Detail pages keep a calmer partial follow on large screens. */
-    if (!onGalleryDetail()) return 1;
     return CENTER_PULL_DESKTOP;
   }
 
@@ -100,6 +108,11 @@
   /** #Surveillancecore detail: native camera slide (first carousel item) — class is detail-only. */
   function isSurveillancecoreDetailNativeSlide() {
     return Boolean(slot.closest('.gallery-detail__carousel-slide--facetrack'));
+  }
+
+  /** Index grid tile + Surveillancecore camera slide: follow face on X only; Y stays cell-centred. */
+  function isHorizontalOnlyFaceTrack() {
+    return !onGalleryDetail() || isSurveillancecoreDetailNativeSlide();
   }
 
   function faceBoxFraction() {
@@ -190,13 +203,18 @@
     const cy = (H - size) / 2;
     const pull = centerPullFactor();
     const tx = cx + (t.x - cx) * pull;
-    const ty = cy + (t.y - cy) * pull;
+    const horizontalOnly = isHorizontalOnlyFaceTrack();
+    const ty = horizontalOnly ? cy : cy + (t.y - cy) * pull;
     const smooth = displaySmoothFactor();
     if (!displayBox) {
       displayBox = { x: tx, y: ty, w: size, h: size };
     } else {
       displayBox.x += (tx - displayBox.x) * smooth;
-      displayBox.y += (ty - displayBox.y) * smooth;
+      if (horizontalOnly) {
+        displayBox.y = cy;
+      } else {
+        displayBox.y += (ty - displayBox.y) * smooth;
+      }
       displayBox.w = size;
       displayBox.h = size;
     }
