@@ -230,17 +230,24 @@ function registerGalleryScrollRestoreOnPageshow() {
   });
 }
 
-/** Mobile gallery detail: “Back” to index, same slot as footer (above footer links). */
-function setupGalleryDetailBackButton() {
-  const main = document.querySelector('main.gallery-detail');
-  if (!main || document.querySelector('.gallery-detail__back-wrap')) return;
+/** Gallery detail + bio: “Back” to gallery index, above footer (all breakpoints). */
+function setupPageBackButton() {
+  if (document.querySelector('.page-back-wrap')) return;
   const footer = document.querySelector('footer.footer');
   if (!footer || !footer.parentNode) return;
 
+  const isGalleryDetail = !!document.querySelector('main.gallery-detail');
+  const isBio = document.body.classList.contains('page-bio');
+  if (!isGalleryDetail && !isBio) return;
+
+  const href = isGalleryDetail
+    ? new URL('../index.html', window.location.href).href
+    : new URL('index.html', window.location.href).href;
+
   const wrap = document.createElement('div');
-  wrap.className = 'gallery-detail__back-wrap';
+  wrap.className = 'page-back-wrap';
   const a = document.createElement('a');
-  a.href = new URL('../index.html', window.location.href).href;
+  a.href = href;
   a.className = 'nav-button';
   a.textContent = 'Back';
   a.setAttribute('aria-label', 'Back to gallery');
@@ -582,7 +589,7 @@ if (document.readyState === 'loading') {
     setupClockDesktopExpand();
     setupHyperlinks();
     setupGalleryMidnightStamp();
-    setupGalleryDetailBackButton();
+    setupPageBackButton();
     setupGalleryScrollRestore();
     tryRestoreGalleryScrollOnIndex();
     setupMobileGalleryScrollHint();
@@ -595,7 +602,7 @@ if (document.readyState === 'loading') {
   setupClockDesktopExpand();
   setupHyperlinks();
   setupGalleryMidnightStamp();
-  setupGalleryDetailBackButton();
+  setupPageBackButton();
   setupGalleryScrollRestore();
   tryRestoreGalleryScrollOnIndex();
   setupMobileGalleryScrollHint();

@@ -633,9 +633,14 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
   }
 }
 
-/* Injected by script.js — mobile-only Back button (see @media below) */
-.gallery-detail__back-wrap {
-  display: none;
+/* Injected by script.js — Back to gallery above footer (gallery detail + bio; all breakpoints) */
+.page-back-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  /* Bottom padding matches mobile: clear white band above the pink footer (not flush / “on” it). */
+  padding: 1.25rem 1.875rem max(1.75rem, env(safe-area-inset-bottom, 0));
 }
 
 .gallery-detail__image {
@@ -3119,7 +3124,7 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
   }
 
   .top-actions .nav-button,
-  body:has(main.gallery-detail) .gallery-detail__back-wrap > .nav-button {
+  .page-back-wrap > .nav-button {
     font-size: 1.5em;
     padding: 0.55rem 1rem;
   }
@@ -3229,11 +3234,7 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     max-width: min(84%, 14.5rem);
   }
 
-  body:has(main.gallery-detail) .gallery-detail__back-wrap {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
+  .page-back-wrap {
     padding: 0 1rem max(1.75rem, env(safe-area-inset-bottom, 0));
   }
 
@@ -3249,6 +3250,9 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     line-height: inherit;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Thinner pink bar than tablet/desktop; safe-area still wins for home indicator. */
+    padding-top: 0.75rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
   }
 
   .footer .footer-marquee,
