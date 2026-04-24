@@ -126,14 +126,17 @@ function setupHyperlinks() {
 
 /** Gallery tile: clock stuck in 23:59:00–23:59:59, looping forever (never midnight). */
 function setupGalleryMidnightStamp() {
-  const timeEl = document.querySelector('.gallery-midnight-time');
-  if (!timeEl) return;
-
   let seconds = 0;
   function tick() {
+    const timeEls = document.querySelectorAll('.gallery-midnight-time');
+    if (!timeEls.length) return;
     const ss = String(seconds).padStart(2, '0');
-    timeEl.textContent = `23:59:${ss}`;
-    timeEl.setAttribute('datetime', `1970-01-01T23:59:${ss}`);
+    const text = `23:59:${ss}`;
+    const dt = `1970-01-01T23:59:${ss}`;
+    timeEls.forEach((timeEl) => {
+      timeEl.textContent = text;
+      timeEl.setAttribute('datetime', dt);
+    });
     seconds = (seconds + 1) % 60;
   }
   tick();
@@ -238,62 +241,49 @@ function setupGalleryDetailBackButton() {
   wrap.className = 'gallery-detail__back-wrap';
   const a = document.createElement('a');
   a.href = new URL('../index.html', window.location.href).href;
-  a.className = 'nav-button gallery-detail__back';
+  a.className = 'nav-button';
   a.textContent = 'Back';
   a.setAttribute('aria-label', 'Back to gallery');
   wrap.appendChild(a);
   footer.parentNode.insertBefore(wrap, footer);
 }
 
-/** Music tile: press the icon to play/pause (gallery detail page). */
-function setupGalleryAudioSlots() {
-  document.querySelectorAll('.gallery-audio-slot').forEach((slot) => {
-    const audio = slot.querySelector('audio');
-    const visual = slot.querySelector('.gallery-audio-visual');
-    if (!audio || !visual) return;
+registerGalleryScrollRestoreOnPageshow();
 
-    const playGlyph = slot.querySelector('.gallery-audio-overlay-play');
-    const pauseGlyph = slot.querySelector('.gallery-audio-overlay-pause');
-
-    function syncLabel() {
-      const playing = !audio.paused && !audio.ended;
-      slot.classList.toggle('is-playing', playing);
-      visual.setAttribute('aria-label', playing ? 'Pause audio' : 'Play audio');
-      visual.setAttribute('aria-pressed', playing ? 'true' : 'false');
-      if (playGlyph && pauseGlyph) {
-        if (playing) {
-          playGlyph.setAttribute('hidden', '');
-          pauseGlyph.removeAttribute('hidden');
-        } else {
-          pauseGlyph.setAttribute('hidden', '');
-          playGlyph.removeAttribute('hidden');
-        }
-      }
-    }
-    ['play', 'pause', 'ended', 'playing'].forEach((ev) => {
-      audio.addEventListener(ev, syncLabel);
-    });
-    syncLabel();
-
-    function toggle() {
-      if (audio.paused) audio.play().catch(() => {});
-      else audio.pause();
-    }
-
-    visual.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggle();
-    });
-
-    visual.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      e.preventDefault();
-      toggle();
-    });
-  });
+/** Same distance as the mobile “scroll down” chevron under the nav (index + bio). */
+function scrollMobileGalleryHintDistance() {
+  const delta = Math.min(220, Math.max(100, window.innerHeight * 0.25));
+  window.scrollBy({ top: delta, behavior: 'smooth' });
 }
 
-registerGalleryScrollRestoreOnPageshow();
+/**
+ * Mobile: on index or bio, tapping the active nav label (Gallery / Bio) scrolls like the chevron.
+ */
+function setupMobileSamePageNavScrollDown() {
+  const top = document.querySelector('.top-actions');
+  if (!top) return;
+  const galleryBtn = top.querySelector('a.nav-button[href*="index.html"]');
+  const bioBtn = top.querySelector('a.nav-button[href*="bio.html"]');
+  if (!galleryBtn && !bioBtn) return;
+
+  function isNarrow() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  galleryBtn?.addEventListener('click', (e) => {
+    if (!isNarrow()) return;
+    if (!document.querySelector('body > section.gallery')) return;
+    e.preventDefault();
+    scrollMobileGalleryHintDistance();
+  });
+
+  bioBtn?.addEventListener('click', (e) => {
+    if (!isNarrow()) return;
+    if (!document.querySelector('body > section.profile-content')) return;
+    e.preventDefault();
+    scrollMobileGalleryHintDistance();
+  });
+}
 
 /**
  * Mobile (index + bio): soft blinking arrow under the nav; tap scrolls a short way.
@@ -328,12 +318,7 @@ function setupMobileGalleryScrollHint() {
     wrap.classList.toggle(FADED, contentVisible);
   }
 
-  function onClick() {
-    const delta = Math.min(220, Math.max(100, window.innerHeight * 0.25));
-    window.scrollBy({ top: delta, behavior: 'smooth' });
-  }
-
-  btn.addEventListener('click', onClick);
+  btn.addEventListener('click', scrollMobileGalleryHintDistance);
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   mq.addEventListener('change', update);
@@ -361,7 +346,7 @@ function horseRateSmoothstep(u) {
  */
 function setupHorseVideoSeamlessLoop() {
   function initSlot(slot, activeClass) {
-    const videos = slot.querySelectorAll('video[src*="whitehorse"]');
+    const videos = slot.querySelectorAll('video');
     if (videos.length < 2) return;
 
     /** Outgoing opacity transition + setTimeout cleanup stay aligned (see CSS). */
@@ -597,11 +582,11 @@ if (document.readyState === 'loading') {
     setupClockDesktopExpand();
     setupHyperlinks();
     setupGalleryMidnightStamp();
-    setupGalleryAudioSlots();
     setupGalleryDetailBackButton();
     setupGalleryScrollRestore();
     tryRestoreGalleryScrollOnIndex();
     setupMobileGalleryScrollHint();
+    setupMobileSamePageNavScrollDown();
     setupHorseVideoSeamlessLoop();
     setupFooterMarquee();
   });
@@ -610,11 +595,11 @@ if (document.readyState === 'loading') {
   setupClockDesktopExpand();
   setupHyperlinks();
   setupGalleryMidnightStamp();
-  setupGalleryAudioSlots();
   setupGalleryDetailBackButton();
   setupGalleryScrollRestore();
   tryRestoreGalleryScrollOnIndex();
   setupMobileGalleryScrollHint();
+  setupMobileSamePageNavScrollDown();
   setupHorseVideoSeamlessLoop();
   setupFooterMarquee();
 }
