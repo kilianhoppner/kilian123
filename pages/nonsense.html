@@ -50,6 +50,13 @@
                 <img src="../files/nonsense-3.png" alt="Nonsense — black-and-white collage of hand-drawn letters, numbers, and symbols" class="typeface" width="2530" height="1680" decoding="async" loading="lazy">
               </div>
             </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--nonsense-r-skeleton" aria-label="Uppercase R outline from Nonsense typeface">
+              <div class="gallery-detail__carousel-media gallery-detail__carousel-media--vector-r">
+                <div id="nonsenseRSkeleton" class="nonsense-r-skeleton" role="img" aria-label="Uppercase R outline from Nonsense typeface">
+                  <p class="nonsense-r-skeleton__status" data-skeleton-status>Loading outline…</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--next mobile-scroll-hint__btn" aria-label="Next slide">
@@ -64,7 +71,7 @@
     </section>
   </div>
   <section class="profile-content gallery-detail__details">
-    <p>A typeface filled with juxtapositions and anomalies, highlighting that while people may not always share values, we must coexist peacefully to create a more sustainable future.</p>
+    <p>A typeface filled with juxtapositions and anomalies, highlighting that while people may not always share values, we must coexist peacefully to create a sustainable future.</p>
     <p class="section-heading">References</p>
     <div class="reference-list">
       <p>Nina Gibbes, <a href="https://ninamgibbes.com/" class="hyperlink" rel="noopener noreferrer">Community Typeface</a>, 2022</p>
@@ -73,8 +80,66 @@
   </section>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
 <script src="../script.js"></script>
 <script src="../carousel.js"></script>
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var FONT_URL = '../files/Nonsense.otf';
+
+  function buildSkeleton(container) {
+    var statusEl = container.querySelector('[data-skeleton-status]');
+    if (typeof opentype === 'undefined') {
+      if (statusEl) statusEl.textContent = 'Could not load font parser.';
+      return;
+    }
+    opentype.load(FONT_URL, function (err, font) {
+      if (err || !font) {
+        if (statusEl) statusEl.textContent = 'Could not load Nonsense.otf.';
+        return;
+      }
+      var fontSize = 420;
+      var path = font.getPath('R', 0, fontSize, fontSize);
+      var bb = path.getBoundingBox();
+      var pad = 56;
+      var d = path.toPathData(2);
+
+      var svg = document.createElementNS(NS, 'svg');
+      var vbW = bb.x2 - bb.x1 + pad * 2;
+      var vbH = bb.y2 - bb.y1 + pad * 2;
+      svg.setAttribute('viewBox', '0 0 ' + vbW + ' ' + vbH);
+      svg.setAttribute('width', '100%');
+      svg.setAttribute('height', '100%');
+      svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      svg.setAttribute('class', 'nonsense-r-skeleton__svg');
+
+      var g = document.createElementNS(NS, 'g');
+      /* opentype.js paths use y+ down (same as SVG); only translate into the viewBox. */
+      g.setAttribute(
+        'transform',
+        'translate(' + (pad - bb.x1) + ' ' + (pad - bb.y1) + ')'
+      );
+
+      var outline = document.createElementNS(NS, 'path');
+      outline.setAttribute('d', d);
+      outline.setAttribute('fill', 'none');
+      outline.setAttribute('stroke', 'currentColor');
+      outline.setAttribute('stroke-width', '3');
+      outline.setAttribute('stroke-linejoin', 'round');
+      outline.setAttribute('stroke-linecap', 'round');
+      g.appendChild(outline);
+
+      svg.appendChild(g);
+      container.innerHTML = '';
+      container.appendChild(svg);
+    });
+  }
+
+  var el = document.getElementById('nonsenseRSkeleton');
+  if (el) buildSkeleton(el);
+})();
+</script>
 <footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
 </body>
 </html>
