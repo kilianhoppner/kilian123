@@ -1035,6 +1035,48 @@ main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .
   }
 }
 
+/*
+ * Nonsense — inline SVG: uppercase R outline (baked path from Nonsense.otf, stroke only).
+ */
+main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-r-skeleton .gallery-detail__carousel-media--vector-r {
+  aspect-ratio: 4 / 5;
+  width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.04));
+  max-width: 100%;
+  max-height: min(76vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gallery-detail-bg, #fff);
+  color: var(--gallery-detail-fg, #111);
+}
+
+main.gallery-detail--typeface .nonsense-r-skeleton {
+  width: 100%;
+  height: 100%;
+  min-height: 15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main.gallery-detail--typeface .nonsense-r-skeleton__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: min(72vh, calc(var(--gallery-detail-carousel-cap-h) * 1.1));
+}
+
+@media (min-width: 769px) {
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-r-skeleton .gallery-detail__carousel-media--vector-r {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.12));
+    max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.26));
+  }
+
+  main.gallery-detail--typeface .nonsense-r-skeleton__svg {
+    max-height: min(78vh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+  }
+}
+
 /* Weather Room detail: modestly larger media + frame than default detail caps so every slide scales up a touch. */
 main.gallery-detail--weatherroom {
   --gallery-detail-media-max-w: min(91vw, calc(var(--gallery-detail-art-max-w) * 1.05));
