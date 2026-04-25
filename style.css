@@ -18,6 +18,14 @@
   font-weight: 400;
 }
 
+@font-face {
+  font-family: "Dotline";
+  src: url("typefaces/Dotline-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Body */
 html {
   height: 100%;
@@ -594,6 +602,13 @@ main.gallery-detail--menarefrommars {
   --gallery-detail-media-min-h: min(12.5rem, 34vh);
 }
 
+@media (min-width: 769px) {
+  main.gallery-detail--dotline {
+    --gallery-detail-media-max-w: min(88vw, calc(var(--gallery-detail-art-max-w) * 0.96));
+    --gallery-detail-media-max-h: min(68vh, calc(var(--gallery-detail-art-max-h) * 0.96));
+  }
+}
+
 @media (max-width: 768px) {
   main.gallery-detail--menarefrommars {
     --gallery-detail-media-max-w: min(62vw, calc(var(--gallery-detail-art-max-w) * 0.73));
@@ -700,6 +715,151 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
   object-fit: contain;
   object-position: center;
   flex-shrink: 0;
+}
+
+/* Dotline detail: two SVGs in the same footprint, alternating in sequence. */
+.dotline-sequence-detail {
+  position: relative;
+  display: block;
+  max-width: var(--gallery-detail-media-max-w);
+  max-height: var(--gallery-detail-media-max-h);
+  min-width: var(--gallery-detail-media-min-w);
+  min-height: var(--gallery-detail-media-min-h);
+  width: auto;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+.dotline-sequence-detail > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.dotline-sequence-detail__a {
+  animation: dotline-sequence-a 12.4s linear infinite;
+}
+
+.dotline-sequence-detail__b {
+  animation: dotline-sequence-b 12.4s linear infinite;
+}
+
+/* Dotline page — carousel slide 2 specimen in Dotline Regular. */
+main.gallery-detail--dotline .dotline-specimen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.75rem, 2.2vw, 1.35rem);
+  padding: clamp(0.9rem, 3vw, 2rem);
+  box-sizing: border-box;
+  font-family: "Dotline", "Diatype", sans-serif !important;
+  color: #000;
+  background: #fff;
+}
+
+main.gallery-detail--dotline .dotline-specimen__line {
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  font-size: clamp(1.05rem, 3.2vw, 2.1rem);
+  font-family: "Dotline", "Diatype", sans-serif !important;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+main.gallery-detail--dotline .dotline-specimen__line--caps-all {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  text-align: left;
+  gap: 0;
+  letter-spacing: 0;
+  word-spacing: 0;
+  line-height: 1.02;
+}
+
+main.gallery-detail--dotline .dotline-specimen__line--symbols {
+  letter-spacing: 0.02em;
+}
+
+main.gallery-detail--dotline .dotline-specimen__group {
+  display: inline-flex;
+  gap: 0;
+  margin-right: 0;
+  white-space: nowrap;
+}
+
+main.gallery-detail--dotline .dotline-specimen__group:last-child {
+  margin-right: 0;
+}
+
+main.gallery-detail--dotline .dotline-specimen__alt--ss01 {
+  font-feature-settings: "ss01" 1;
+}
+
+main.gallery-detail--dotline .dotline-specimen__alt--ss02 {
+  font-feature-settings: "ss02" 1;
+}
+
+main.gallery-detail--dotline .dotline-specimen__alt--ss03 {
+  font-feature-settings: "ss03" 1;
+}
+
+main.gallery-detail--dotline .dotline-specimen__alt--ss04 {
+  font-feature-settings: "ss04" 1;
+}
+
+main.gallery-detail--dotline .dotline-specimen__alt--ss05 {
+  font-feature-settings: "ss05" 1;
+}
+
+main.gallery-detail--dotline .dotline-grid-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+main.gallery-detail--dotline .dotline-grid-overlay > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+main.gallery-detail--dotline .dotline-grid-overlay__grid {
+  transform: scale(1.2957);
+  transform-origin: center;
+}
+
+/* Keep animation identical to slide 1 scale/position; align grid underneath it. */
+main.gallery-detail--dotline .dotline-grid-overlay__animation {
+  transform-origin: center;
+  transform: none;
+  opacity: 0.75;
+}
+
+@media (min-width: 900px) {
+  main.gallery-detail--dotline .dotline-specimen {
+    padding-inline: clamp(0.1rem, 0.45vw, 0.35rem);
+  }
+
+  main.gallery-detail--dotline .dotline-specimen__line {
+    font-size: clamp(1.7rem, 2.45vw, 3rem);
+  }
 }
 
 /* Same footprint as other detail media — matches index grid video tile */
@@ -1540,6 +1700,20 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-sp
 }
 
 @media (min-width: 769px) {
+  /* Hump bridge desktop: make slide 1 noticeably larger. */
+  main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-first .gallery-detail__carousel-media {
+    aspect-ratio: 139 / 122;
+    width: auto;
+    max-width: 100%;
+    height: min(64vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+    max-height: min(64vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  }
+
+  /* Hump bridge desktop: make slide 2 only slightly larger. */
+  main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-photo .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 0.96));
+  }
+
   main.gallery-detail--hump-bridge .gallery-detail__carousel-slide--hump-bridge-spinebeam .gallery-detail__carousel-media {
     width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 0.92));
   }
@@ -2267,6 +2441,21 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     max-height: min(46svh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
   }
 
+  /* Dotline (mobile): make slides 1, 2, 3 render larger. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-photo .gallery-detail__carousel-media {
+    width: auto;
+    max-width: 100%;
+    height: min(56svh, calc(var(--gallery-detail-carousel-cap-h) * 1.34));
+    max-height: min(56svh, calc(var(--gallery-detail-carousel-cap-h) * 1.34));
+  }
+
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media {
+    aspect-ratio: 1 / 1;
+  }
+
   /* Daddy's Girl — Hello Kitty: slightly smaller on phone (width still auto from 500/530 AR) */
   main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second .gallery-detail__carousel-media {
     height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
@@ -2623,6 +2812,27 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
 .gallery img.daddysgirl {
   --img-max-height: 88%;
   --img-max-width: 88%;
+}
+
+.gallery img.a-symbol {
+  --img-max-height: 80%;
+  --img-max-width: 80%;
+}
+
+@media (min-width: 1025px) {
+  .gallery img.a-symbol {
+    --img-max-height: 50%;
+    --img-max-width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery img.a-symbol {
+    --img-max-height: 74%;
+    --img-max-width: 74%;
+    margin-top: 8.0rem;
+    margin-bottom: 7.0rem;
+  }
 }
 
 @media (max-width: 768px) {

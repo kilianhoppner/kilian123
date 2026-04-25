@@ -266,19 +266,32 @@ function setupPageBackButton() {
 
   const isGalleryDetail = !!document.querySelector('main.gallery-detail');
   const isBio = document.body.classList.contains('page-bio');
-  if (!isGalleryDetail && !isBio) return;
+  const isGalleryIndex = !!document.querySelector('section.gallery') && !isGalleryDetail;
+  if (!isGalleryDetail && !isBio && !isGalleryIndex) return;
 
-  const href = isGalleryDetail
-    ? new URL('../index.html', window.location.href).href
-    : new URL('index.html', window.location.href).href;
+  const isTopButton = isBio || isGalleryIndex;
+  const href = isTopButton
+    ? '#top'
+    : isGalleryDetail
+      ? new URL('../index.html', window.location.href).href
+      : new URL('index.html', window.location.href).href;
 
   const wrap = document.createElement('div');
   wrap.className = 'page-back-wrap';
   const a = document.createElement('a');
   a.href = href;
   a.className = 'nav-button';
-  a.textContent = 'Back';
-  a.setAttribute('aria-label', 'Back to gallery');
+  if (isTopButton) {
+    a.textContent = 'Top';
+    a.setAttribute('aria-label', 'Scroll to top');
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  } else {
+    a.textContent = 'Back';
+    a.setAttribute('aria-label', 'Back to gallery');
+  }
   wrap.appendChild(a);
   footer.parentNode.insertBefore(wrap, footer);
 }
