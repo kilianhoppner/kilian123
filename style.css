@@ -853,6 +853,13 @@ main.gallery-detail--dotline .dotline-grid-overlay__animation {
 }
 
 @media (min-width: 900px) {
+  /* Dotline desktop: slightly larger slide 1+2 without clipping (grow frame, not inner media). */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.04));
+    max-height: min(76vh, calc(var(--gallery-detail-carousel-cap-h) * 1.04));
+  }
+
   main.gallery-detail--dotline .dotline-specimen {
     padding-inline: clamp(0.1rem, 0.45vw, 0.35rem);
   }
