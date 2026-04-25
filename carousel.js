@@ -30,6 +30,69 @@
     }
   }
 
+  /** Nonsense + The Big Issue: one live magazine/3D; strip hook + cancel WAAPI on wrap clones. */
+  function stripTbiMagazineCarouselClone(cloneRoot) {
+    var root = cloneRoot.querySelector('[data-tbi-magazine]');
+    if (!root) return;
+    root.removeAttribute('data-tbi-magazine');
+    var book = root.querySelector('.gallery-magazine-3d__book');
+    if (book && book.getAnimations) {
+      book.getAnimations().forEach(function (a) {
+        a.cancel();
+      });
+    }
+  }
+
+  /**
+   * TBI carousel wrap clone should visually match the live slide before transition.
+   * WAAPI transforms aren't cloned as inline styles, so copy computed transform + face textures.
+   */
+  function syncTbiMagazineCloneVisual(sourceSlide, cloneSlide) {
+    if (!sourceSlide || !cloneSlide) return;
+    var srcBook = sourceSlide.querySelector('.gallery-magazine-3d__book');
+    var cloneBook = cloneSlide.querySelector('.gallery-magazine-3d__book');
+    if (srcBook && cloneBook) {
+      var t = window.getComputedStyle(srcBook).transform;
+      cloneBook.style.transform = t && t !== 'none' ? t : '';
+    }
+
+    var srcFront = sourceSlide.querySelector('.gallery-magazine-3d__face--front');
+    var srcBack = sourceSlide.querySelector('.gallery-magazine-3d__face--back');
+    var cloneFront = cloneSlide.querySelector('.gallery-magazine-3d__face--front');
+    var cloneBack = cloneSlide.querySelector('.gallery-magazine-3d__face--back');
+    if (srcFront && cloneFront) {
+      var frontBg = srcFront.style.backgroundImage || window.getComputedStyle(srcFront).backgroundImage;
+      cloneFront.style.backgroundImage = frontBg;
+    }
+    if (srcBack && cloneBack) {
+      var backBg = srcBack.style.backgroundImage || window.getComputedStyle(srcBack).backgroundImage;
+      cloneBack.style.backgroundImage = backBg;
+    }
+  }
+
+  /**
+   * During wrap animation, keep clone in lockstep with the live TBI slide so it doesn't appear static.
+   * Returns a stop function.
+   */
+  function followTbiMagazineCloneVisual(sourceSlide, cloneSlide) {
+    var rafId = 0;
+    var stopped = false;
+
+    function tick() {
+      if (stopped) return;
+      syncTbiMagazineCloneVisual(sourceSlide, cloneSlide);
+      rafId = window.requestAnimationFrame(tick);
+    }
+
+    tick();
+    return function stop() {
+      stopped = true;
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }
+
   /** Infinite-loop clones must not re-run Three.js on [data-globe-sphere-three]. */
   function stripGlobeSphereCarouselClone(cloneRoot) {
     cloneRoot.querySelectorAll('[data-globe-sphere-three]').forEach(function (mount) {
@@ -96,11 +159,16 @@
     stripGlobeSphereCarouselClone(firstClone);
     stripModelViewerCarouselClone(lastClone);
     stripModelViewerCarouselClone(firstClone);
+    stripTbiMagazineCarouselClone(firstClone);
+    stripTbiMagazineCarouselClone(lastClone);
+    syncTbiMagazineCloneVisual(originals[0], firstClone);
+    syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
 
     track.insertBefore(lastClone, originals[0]);
     track.appendChild(firstClone);
 
     var trackIndex = 1;
+    var stopTbiCloneFollow = null;
     var isDollhouse = root.closest && root.closest('main.gallery-detail--dollhouse');
     var hash = typeof location !== 'undefined' ? location.hash || '' : '';
     if (isDollhouse && /^#sketch$/i.test(hash)) {
@@ -171,6 +239,10 @@
 
     function go(delta) {
       if (locked) return;
+      if (stopTbiCloneFollow) {
+        stopTbiCloneFollow();
+        stopTbiCloneFollow = null;
+      }
       pauseCarouselVideos(track);
       var prevTi = trackIndex;
       trackIndex += delta;
@@ -199,6 +271,14 @@
         return;
       }
 
+      if (trackIndex === realN + 1) {
+        syncTbiMagazineCloneVisual(originals[0], firstClone);
+        stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[0], firstClone);
+      } else if (trackIndex === 0) {
+        syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
+        stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[realN - 1], lastClone);
+      }
+
       locked = true;
       triggerViewportSlideFade();
       applyTransform(true);
@@ -206,6 +286,10 @@
 
     track.addEventListener('transitionend', function (e) {
       if (e.target !== track || e.propertyName !== 'transform') return;
+      if (stopTbiCloneFollow) {
+        stopTbiCloneFollow();
+        stopTbiCloneFollow = null;
+      }
       if (trackIndex === 0) {
         trackIndex = realN;
         applyTransform(false);

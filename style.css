@@ -948,8 +948,9 @@ main.gallery-detail--facetrack {
   }
 }
 
-/* Nonsense typeface + Take it slow + globe detail: same 3:2 carousel caps as #Surveillancecore */
+/* Nonsense typeface + The Big Issue + Take it slow + globe detail: same 3:2 carousel caps as #Surveillancecore */
 main.gallery-detail--typeface,
+main.gallery-detail--thebigissue,
 main.gallery-detail--take-it-slow,
 main.gallery-detail--hammersmith-flyover-uv,
 main.gallery-detail--globe-sphere,
@@ -1076,8 +1077,16 @@ main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .
 
 @media (min-width: 1025px) {
   main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-spread .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.26));
-    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.2);
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.34));
+    max-height: calc(var(--gallery-detail-carousel-cap-h) * 1.28);
+  }
+}
+
+/* Nonsense — cover slide (1st): slightly smaller 3:2 frame on desktop; class also on end clone (same art). */
+@media (min-width: 1025px) {
+  main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-cover .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 0.9));
+    max-height: calc(var(--gallery-detail-carousel-cap-h) * 0.9);
   }
 }
 
@@ -1149,6 +1158,7 @@ main.gallery-detail--dollhouse {
 }
 
 main.gallery-detail--facetrack .gallery-detail__stage,
+main.gallery-detail--thebigissue .gallery-detail__stage,
 main.gallery-detail--weatherroom .gallery-detail__stage,
 main.gallery-detail--tshirt .gallery-detail__stage,
 main.gallery-detail--typeface .gallery-detail__stage,
@@ -1180,6 +1190,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel,
 main.gallery-detail--head .gallery-detail__carousel,
 main.gallery-detail--daddys-girl .gallery-detail__carousel,
 main.gallery-detail--life-cycles .gallery-detail__carousel,
+main.gallery-detail--thebigissue .gallery-detail__carousel,
 main.gallery-detail--dollhouse .gallery-detail__carousel {
   display: flex;
   flex-direction: row;
@@ -1205,6 +1216,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-viewport,
 main.gallery-detail--head .gallery-detail__carousel-viewport,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
 main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
+main.gallery-detail--thebigissue .gallery-detail__carousel-viewport,
 main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   flex: 1;
   min-width: 0;
@@ -1213,6 +1225,11 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   max-width: var(--gallery-detail-media-max-w);
   overflow: hidden;
   opacity: 1;
+}
+
+/* TBI: flex min-height:0 + overflow:hidden on viewport need a tall enough min-height (see --tbi-magazine-clip-min-h) */
+main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
+  min-height: var(--tbi-magazine-clip-min-h);
 }
 
 main.gallery-detail--facetrack .gallery-detail__carousel-track,
@@ -1228,6 +1245,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
 main.gallery-detail--head .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track,
+main.gallery-detail--thebigissue .gallery-detail__carousel-track,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track {
   display: flex;
   align-items: flex-start;
@@ -1248,6 +1266,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
 main.gallery-detail--head .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track,
+main.gallery-detail--thebigissue .gallery-detail__carousel-track,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track {
   align-items: center;
 }
@@ -1265,6 +1284,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--head .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--thebigissue .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--dollhouse .gallery-detail__carousel-track--no-transition {
   transition: none;
 }
@@ -1282,6 +1302,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide,
 main.gallery-detail--head .gallery-detail__carousel-slide,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-slide,
 main.gallery-detail--life-cycles .gallery-detail__carousel-slide,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide,
 main.gallery-detail--dollhouse .gallery-detail__carousel-slide {
   flex: 0 0 100%;
   width: 100%;
@@ -1311,6 +1332,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-media,
 main.gallery-detail--head .gallery-detail__carousel-media,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media,
+main.gallery-detail--thebigissue .gallery-detail__carousel-media,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   box-sizing: border-box;
   position: relative;
@@ -1326,6 +1348,111 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media {
 
 main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   aspect-ratio: 3 / 4;
+}
+
+/* The Big Issue — first slide: 3D magazine (portrait); not the default 3:2 frame */
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine {
+  min-height: var(--tbi-magazine-clip-min-h);
+}
+
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .gallery-detail__carousel-media {
+  aspect-ratio: auto;
+  height: auto;
+  max-height: none;
+  min-height: var(--tbi-magazine-clip-min-h);
+  overflow: visible;
+  width: 100%;
+  max-width: var(--gallery-detail-media-max-w);
+}
+
+/* Spreads (slides 2–3): keep shadow fully inside each slide so it never bleeds onto slide 1. */
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy {
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Symmetric room so shadow spread is even and not clipped at top/bottom. */
+  padding-block: clamp(1rem, 2vh, 1.4rem);
+  padding-inline: clamp(0.6rem, 1.8vw, 1rem);
+}
+
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media {
+  overflow: visible;
+}
+
+/* Magazine slide: ensure no stray box-shadow on the 3D stack (spreads use shadow on img only) */
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .thebigissue-magazine,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .thebigissue-magazine * {
+  box-shadow: none;
+}
+
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media > img,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media > img {
+  filter: var(--tbi-creative-grade);
+  border-radius: 0;
+  /* Even shadow around the image (no bottom-heavy bias). */
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.14),
+    0 0 22px rgba(0, 0, 0, 0.12);
+}
+
+/* Keep spread image element sized to rendered art bounds, so shadow starts exactly at top/bottom edges. */
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media > img,
+main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media > img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Mobile + iPad: slightly tighter horizontal diffusion than desktop. */
+@media (max-width: 1180px) {
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media > img,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media > img {
+    box-shadow:
+      0 1px 8px rgba(0, 0, 0, 0.14),
+      0 3px 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@media (min-width: 1181px) {
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.1));
+    max-height: min(84vh, calc(var(--gallery-detail-carousel-cap-h) * 1.1));
+  }
+}
+
+/* Keep desktop hero/title alignment consistent with other pages; no extra viewport height from TBI carousel. */
+main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
+  padding-block: 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy {
+    padding-inline: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile only: a bit of room for spread shadows without shifting desktop headline position. */
+  main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
+    padding-block: 0.9rem;
+  }
+
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy {
+    padding-inline: 0.9rem;
+  }
 }
 
 /*
@@ -1745,6 +1872,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-media > img,
 main.gallery-detail--head .gallery-detail__carousel-media > img,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media > img,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media > img,
+main.gallery-detail--thebigissue .gallery-detail__carousel-media > img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media > img {
   display: block;
   width: 100%;
@@ -1781,6 +1909,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-media picture,
 main.gallery-detail--head .gallery-detail__carousel-media picture,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media picture,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media picture,
+main.gallery-detail--thebigissue .gallery-detail__carousel-media picture,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture {
   display: flex;
   align-items: center;
@@ -1803,6 +1932,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-media picture img,
 main.gallery-detail--head .gallery-detail__carousel-media picture img,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media picture img,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media picture img,
+main.gallery-detail--thebigissue .gallery-detail__carousel-media picture img,
 main.gallery-detail--dollhouse .gallery-detail__carousel-media picture img {
   max-width: 100%;
   max-height: 100%;
@@ -1861,6 +1991,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
+main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__btn,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
   background: none;
   border: none;
@@ -1886,6 +2017,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn:active,
+main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__btn:active,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn:active {
   opacity: 0.65;
 }
@@ -1903,6 +2035,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__
 main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
+main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__icon,
 main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
   display: block;
   width: 3rem;
@@ -1923,6 +2056,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-chevron--left,
 main.gallery-detail--head .gallery-detail__carousel-chevron--left,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-chevron--left,
 main.gallery-detail--life-cycles .gallery-detail__carousel-chevron--left,
+main.gallery-detail--thebigissue .gallery-detail__carousel-chevron--left,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--left {
   transform: rotate(90deg);
 }
@@ -1940,6 +2074,7 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-chevron--right,
 main.gallery-detail--head .gallery-detail__carousel-chevron--right,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-chevron--right,
 main.gallery-detail--life-cycles .gallery-detail__carousel-chevron--right,
+main.gallery-detail--thebigissue .gallery-detail__carousel-chevron--right,
 main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   transform: rotate(-90deg);
 }
@@ -1958,6 +2093,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-chevron--right {
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     animation: none;
     opacity: 0.52;
@@ -2255,7 +2391,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
    * Dollhouse phone: track defaults to align-items:flex-start so shorter slides (sketch) hug the
    * top while chevrons are align-items:center — vertically center slides in the track.
    */
-  main.gallery-detail--dollhouse .gallery-detail__carousel-track {
+  main.gallery-detail--dollhouse .gallery-detail__carousel-track,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-track {
     align-items: center;
   }
 
@@ -2354,6 +2491,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--head .gallery-detail__carousel,
   main.gallery-detail--daddys-girl .gallery-detail__carousel,
   main.gallery-detail--life-cycles .gallery-detail__carousel,
+  main.gallery-detail--thebigissue .gallery-detail__carousel,
   main.gallery-detail--dollhouse .gallery-detail__carousel {
     width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
     max-width: 100vw;
@@ -2378,6 +2516,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--head .gallery-detail__carousel-viewport,
   main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
   main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-viewport,
   main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
     max-width: none;
   }
@@ -2395,6 +2534,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
     box-sizing: border-box;
     padding: 0.125rem 0;
@@ -2420,6 +2560,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
     width: 2.5rem;
     height: 2.5rem;
@@ -2501,7 +2642,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
 .gallery .face-track-slot,
 .gallery .gallery-iframe-slot,
 .gallery .gallery-video-slot,
-.gallery .gallery-globe-wireframe {
+.gallery .gallery-globe-wireframe,
+.gallery .gallery-magazine-slot {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -2516,7 +2658,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
 
 .gallery .gallery-iframe-slot,
 .gallery .gallery-video-slot,
-.gallery .gallery-globe-wireframe {
+.gallery .gallery-globe-wireframe,
+.gallery .gallery-magazine-slot {
   max-height: var(--img-max-height, 100%);
   max-width: var(--img-max-width, 100%);
 }
@@ -2566,6 +2709,158 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   width: 100%;
   height: 100%;
   background: transparent;
+}
+
+/* The Big Issue — very slight colour grade (faces; on __face not __book so 3D isn’t flattened) */
+.gallery .gallery-magazine-slot .gallery-magazine-3d__face {
+  filter: brightness(1.025) contrast(1.02) saturate(1.04);
+}
+
+/* Index: closed magazine, two faces, Y rotation — 4 cover PNGs, swap every 180° (tbi-magazine.js) */
+.gallery .gallery-magazine-slot {
+  --img-max-height: 78%;
+  --img-max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: visible;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gallery .gallery-magazine-slot:hover {
+  transform: scale(1.26);
+}
+
+.gallery .gallery-magazine-slot--with-overlay {
+  cursor: pointer;
+}
+
+.gallery .gallery-magazine-slot--with-overlay .gallery-magazine-3d,
+.gallery .gallery-magazine-slot--with-overlay .gallery-magazine-3d * {
+  pointer-events: none;
+}
+
+.gallery .gallery-magazine-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.gallery .gallery-magazine-3d__book {
+  position: relative;
+  width: min(50%, 9.5rem);
+  max-width: 100%;
+  aspect-ratio: 1240 / 1594;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Gallery: 2-column layout (≤1024px) — cell is narrow; 50% book width + low rem cap read tiny on phones. */
+@media (max-width: 1024px) {
+  .gallery .gallery-magazine-3d__book {
+    width: min(72%, 12.5rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery .gallery-magazine-3d__book {
+    width: min(92%, 17rem);
+  }
+}
+
+/* Detail page: .gallery-detail__stage is flex + align-items:center; without a real width here,
+   % widths on the book chain collapse to 0 and the animation is invisible. */
+main.gallery-detail--thebigissue {
+  --gallery-detail-media-max-w: min(90vw, var(--gallery-detail-art-max-w));
+  --gallery-detail-media-max-h: min(70vh, var(--gallery-detail-art-max-h));
+  --gallery-detail-media-min-w: min(14rem, 88vw);
+  --gallery-detail-media-min-h: min(12.5rem, 36vh);
+  /* Midpoint between flat assets and the stronger grade — gallery tile + detail carousel (covers + spreads) */
+  --tbi-creative-grade: brightness(1.025) contrast(1.02) saturate(1.04);
+  /*
+   * Clip region for carousel + 3D stage: must be ≥ book at max width (22rem × 1594/1240) + perspective/filter bleed.
+   * Previous min(64vh, 28rem) was shorter than the book (~28.28rem), so the top/bottom were cut off — book size unchanged.
+   */
+  --tbi-magazine-clip-min-h: max(
+    min(72vh, 36rem),
+    calc(22rem * 1594 / 1240 + 1.25rem)
+  );
+}
+
+main.gallery-detail--thebigissue .thebigissue-magazine {
+  align-self: stretch;
+  width: 100%;
+  max-width: var(--gallery-detail-media-max-w);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.thebigissue-magazine .gallery-magazine-3d {
+  position: relative;
+  width: 100%;
+  min-height: var(--tbi-magazine-clip-min-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+.thebigissue-magazine .gallery-magazine-3d__book {
+  position: relative;
+  width: min(78%, 22rem);
+  max-width: 100%;
+  aspect-ratio: 1240 / 1594;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.thebigissue-magazine .gallery-magazine-3d__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter: var(--tbi-creative-grade);
+}
+
+.thebigissue-magazine .gallery-magazine-3d__face--front {
+  transform: translateZ(1px);
+}
+
+.thebigissue-magazine .gallery-magazine-3d__face--back {
+  transform: rotateY(180deg) translateZ(1px);
+}
+
+.gallery .gallery-magazine-3d__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.gallery .gallery-magazine-3d__face--front {
+  transform: translateZ(1px);
+}
+
+.gallery .gallery-magazine-3d__face--back {
+  transform: rotateY(180deg) translateZ(1px);
 }
 
 .gallery .gallery-iframe-slot:hover,
