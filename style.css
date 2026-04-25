@@ -426,6 +426,32 @@ body {
   margin-bottom: 0;
 }
 
+/* Bio (mobile only): biography truncates after “web development”; “Read more” reveals the rest. Desktop shows full paragraph. */
+body.page-bio .bio-biography__readmore {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body.page-bio .bio-biography:not(.bio-biography--expanded) .bio-biography__rest {
+    display: none;
+  }
+
+  body.page-bio .bio-biography__readmore {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+}
+
 /* Detail pages: center in the visible viewport. min-height is required or main collapses to image height
    and justify-content:center has no effect (looks “stuck to the top”). Does not rely on :has(). */
 :root {
