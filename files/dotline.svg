@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="626.5333333333333" height="626.5333333333334" viewBox="0 0 626.5333333333333 626.5333333333334">
+<defs>
+  <style>
+    .draw-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-line-a 6.2s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes draw-line-a {
+      0% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+      }
+      16.12% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+      }
+      16.13% {
+        stroke-dashoffset: 1000;
+        opacity: 1;
+      }
+      82% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      95.5% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      99.2% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+      100% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+      }
+    }
+  </style>
+  <mask id="unified-shape-inverted">
+    <rect x="0" y="0" width="626.5333333333333" height="626.5333333333334" fill="black" />
+    <path class="draw-line" pathLength="1000" d="M 42.60000000000002 583.9333333333334 L 42.60000000000002 448.5999999999999 L 42.60000000000002 313.26666666666665 L 177.93333333333334 177.9333333333333 L 313.2666666666667 42.599999999999994 L 448.59999999999997 42.599999999999994 L 583.9333333333334 42.599999999999994 L 583.9333333333334 177.9333333333333 L 583.9333333333334 313.26666666666665 L 583.9333333333334 448.5999999999999 L 583.9333333333334 583.9333333333334" stroke="white" stroke-width="81.2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+<circle cx="42.60000000000002" cy="583.9333333333334" r="18.94666666666667" fill="black" />
+<circle cx="42.60000000000002" cy="313.26666666666665" r="18.94666666666667" fill="black" />
+<circle cx="313.2666666666667" cy="42.599999999999994" r="18.94666666666667" fill="black" />
+<circle cx="583.9333333333334" cy="42.599999999999994" r="18.94666666666667" fill="black" />
+<circle cx="583.9333333333334" cy="583.9333333333334" r="18.94666666666667" fill="black" />
+
+  </mask>
+</defs>
+<rect x="0" y="0" width="626.5333333333333" height="626.5333333333334" fill="black" mask="url(#unified-shape-inverted)" />
+</svg>

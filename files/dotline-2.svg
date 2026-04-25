@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="white" />
+
+  <!-- Grid guide lines (center + edge offsets) -->
+  <g stroke="rgb(220,220,220)" stroke-width="2" fill="none">
+    <!-- Horizontal rows -->
+    <line x1="200" y1="200" x2="1000" y2="200" />
+    <line x1="200" y1="140" x2="1000" y2="140" />
+    <line x1="200" y1="260" x2="1000" y2="260" />
+
+    <line x1="200" y1="400" x2="1000" y2="400" />
+    <line x1="200" y1="340" x2="1000" y2="340" />
+    <line x1="200" y1="460" x2="1000" y2="460" />
+
+    <line x1="200" y1="600" x2="1000" y2="600" />
+    <line x1="200" y1="540" x2="1000" y2="540" />
+    <line x1="200" y1="660" x2="1000" y2="660" />
+
+    <line x1="200" y1="800" x2="1000" y2="800" />
+    <line x1="200" y1="740" x2="1000" y2="740" />
+    <line x1="200" y1="860" x2="1000" y2="860" />
+
+    <line x1="200" y1="1000" x2="1000" y2="1000" />
+    <line x1="200" y1="940" x2="1000" y2="940" />
+    <line x1="200" y1="1060" x2="1000" y2="1060" />
+
+    <!-- Vertical columns -->
+    <line x1="200" y1="200" x2="200" y2="1000" />
+    <line x1="140" y1="200" x2="140" y2="1000" />
+    <line x1="260" y1="200" x2="260" y2="1000" />
+
+    <line x1="400" y1="200" x2="400" y2="1000" />
+    <line x1="340" y1="200" x2="340" y2="1000" />
+    <line x1="460" y1="200" x2="460" y2="1000" />
+
+    <line x1="600" y1="200" x2="600" y2="1000" />
+    <line x1="540" y1="200" x2="540" y2="1000" />
+    <line x1="660" y1="200" x2="660" y2="1000" />
+
+    <line x1="800" y1="200" x2="800" y2="1000" />
+    <line x1="740" y1="200" x2="740" y2="1000" />
+    <line x1="860" y1="200" x2="860" y2="1000" />
+
+    <line x1="1000" y1="200" x2="1000" y2="1000" />
+    <line x1="940" y1="200" x2="940" y2="1000" />
+    <line x1="1060" y1="200" x2="1060" y2="1000" />
+  </g>
+
+  <!-- Filled grid circles -->
+  <g fill="rgb(200,200,200)" stroke="none">
+    <circle cx="200" cy="200" r="28" />
+    <circle cx="400" cy="200" r="28" />
+    <circle cx="600" cy="200" r="28" />
+    <circle cx="800" cy="200" r="28" />
+    <circle cx="1000" cy="200" r="28" />
+
+    <circle cx="200" cy="400" r="28" />
+    <circle cx="400" cy="400" r="28" />
+    <circle cx="600" cy="400" r="28" />
+    <circle cx="800" cy="400" r="28" />
+    <circle cx="1000" cy="400" r="28" />
+
+    <circle cx="200" cy="600" r="28" />
+    <circle cx="400" cy="600" r="28" />
+    <circle cx="600" cy="600" r="28" />
+    <circle cx="800" cy="600" r="28" />
+    <circle cx="1000" cy="600" r="28" />
+
+    <circle cx="200" cy="800" r="28" />
+    <circle cx="400" cy="800" r="28" />
+    <circle cx="600" cy="800" r="28" />
+    <circle cx="800" cy="800" r="28" />
+    <circle cx="1000" cy="800" r="28" />
+
+    <circle cx="200" cy="1000" r="28" />
+    <circle cx="400" cy="1000" r="28" />
+    <circle cx="600" cy="1000" r="28" />
+    <circle cx="800" cy="1000" r="28" />
+    <circle cx="1000" cy="1000" r="28" />
+  </g>
+
+  <!-- Circle outlines matching module diameter -->
+  <g fill="none" stroke="rgb(220,220,220)" stroke-width="2">
+    <circle cx="200" cy="200" r="60" />
+    <circle cx="400" cy="200" r="60" />
+    <circle cx="600" cy="200" r="60" />
+    <circle cx="800" cy="200" r="60" />
+    <circle cx="1000" cy="200" r="60" />
+
+    <circle cx="200" cy="400" r="60" />
+    <circle cx="400" cy="400" r="60" />
+    <circle cx="600" cy="400" r="60" />
+    <circle cx="800" cy="400" r="60" />
+    <circle cx="1000" cy="400" r="60" />
+
+    <circle cx="200" cy="600" r="60" />
+    <circle cx="400" cy="600" r="60" />
+    <circle cx="600" cy="600" r="60" />
+    <circle cx="800" cy="600" r="60" />
+    <circle cx="1000" cy="600" r="60" />
+
+    <circle cx="200" cy="800" r="60" />
+    <circle cx="400" cy="800" r="60" />
+    <circle cx="600" cy="800" r="60" />
+    <circle cx="800" cy="800" r="60" />
+    <circle cx="1000" cy="800" r="60" />
+
+    <circle cx="200" cy="1000" r="60" />
+    <circle cx="400" cy="1000" r="60" />
+    <circle cx="600" cy="1000" r="60" />
+    <circle cx="800" cy="1000" r="60" />
+    <circle cx="1000" cy="1000" r="60" />
+  </g>
+</svg>
