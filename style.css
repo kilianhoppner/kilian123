@@ -1569,6 +1569,13 @@ main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-
   }
 }
 
+/* Home is where the … is (dollhouse): slides 2 (UV print), 4 (WIP), last (mens rights) — slight lift; all viewports. */
+main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-print .gallery-detail__carousel-media > img,
+main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-wip .gallery-detail__carousel-media > img,
+main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-mensrights .gallery-detail__carousel-media > img {
+  filter: brightness(1.04) contrast(1.05) saturate(1.06);
+}
+
 @media (min-width: 1025px) {
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
     --tis-portrait-max-h: min(70vh, calc(var(--gallery-detail-media-max-h) * 1.24));

@@ -231,11 +231,11 @@ function registerGalleryScrollRestoreOnPageshow() {
 }
 
 /** Gallery detail + bio: “Back” to gallery index, above footer (all breakpoints). */
-/** Bio: mobile only — expand/collapse biography after “web development.” */
+/** Bio: mobile only — one-way expand after “re-constructing” + “... more” (no Read less). */
 function setupBioBiographyReadMore() {
   if (!document.body.classList.contains('page-bio')) return;
   const block = document.querySelector('[data-bio-biography]');
-  const btn = block?.querySelector('.bio-biography__readmore');
+  const btn = block?.querySelector('.bio-biography__more-btn');
   if (!block || !btn) return;
 
   const mq = window.matchMedia('(max-width: 768px)');
@@ -244,15 +244,16 @@ function setupBioBiographyReadMore() {
     if (!mq.matches) {
       block.classList.remove('bio-biography--expanded');
       btn.setAttribute('aria-expanded', 'false');
-      btn.textContent = 'Read more';
+      btn.hidden = false;
     }
   }
 
   btn.addEventListener('click', () => {
     if (!mq.matches) return;
-    const open = block.classList.toggle('bio-biography--expanded');
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    btn.textContent = open ? 'Read less' : 'Read more';
+    if (block.classList.contains('bio-biography--expanded')) return;
+    block.classList.add('bio-biography--expanded');
+    btn.setAttribute('aria-expanded', 'true');
+    btn.hidden = true;
   });
 
   mq.addEventListener('change', setStateFromWidth);
