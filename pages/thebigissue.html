@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Big Issue</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="top-bar">
+  <div class="top-actions">
+    <a href="../index.html" class="nav-button">Gallery</a>
+    <a href="../bio.html" class="nav-button">Bio</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button">Email</a>
+  </div>
+  <div class="time">
+    <div id="londonClock" class="clock" aria-label="London UTC analog clock">
+      <span class="clock-hand hour-hand"></span>
+      <span class="clock-hand minute-hand"></span>
+      <span class="clock-hand second-hand"></span>
+      <span class="clock-center"></span>
+    </div>
+  </div>
+</div>
+
+<main class="gallery-detail gallery-detail--thebigissue">
+  <div class="gallery-detail__hero">
+    <div class="gallery-detail__stage">
+      <div class="gallery-detail__carousel" data-infinite-carousel aria-roledescription="carousel">
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--prev mobile-scroll-hint__btn" aria-label="Previous slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--left" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="gallery-detail__carousel-viewport">
+          <div class="gallery-detail__carousel-track">
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--tbi-magazine">
+              <div class="gallery-detail__carousel-media">
+                <div class="thebigissue-magazine" data-tbi-magazine data-asset-base="../files">
+                  <div class="gallery-magazine-3d" aria-hidden="true">
+                    <div class="gallery-magazine-3d__book">
+                      <div class="gallery-magazine-3d__face gallery-magazine-3d__face--front"></div>
+                      <div class="gallery-magazine-3d__face gallery-magazine-3d__face--back"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--tbi-spread-climate">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/ClimateChangeSpread.png" alt="The Big Issue — magazine spread on climate" width="2400" height="1600" decoding="async" loading="eager">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--tbi-spread-amy">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/AmySpread.png" alt="The Big Issue — magazine spread" width="2400" height="1600" decoding="async" loading="eager">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="gallery-detail__carousel-nav gallery-detail__carousel-nav--next mobile-scroll-hint__btn" aria-label="Next slide">
+          <svg class="mobile-scroll-hint__icon gallery-detail__carousel-chevron gallery-detail__carousel-chevron--right" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <section class="profile-content gallery-detail__headline">
+      <p><em>The Big Issue</em>, 2024, brand refresh</p>
+    </section>
+  </div>
+  <section class="profile-content gallery-detail__details">
+    <p>The objective for the speculative design refresh of <a href="https://www.bigissue.com/" class="hyperlink" rel="noopener noreferrer">The Big Issue</a> is to create a brand that embodies inclusivity and celebrates the inherent self-worth of its vendors. By infusing the brand with a new, modern design aesthetic, the goal is to not only enhance its visual appeal but also make it more accessible and engaging to a broader audience.</p>
+    <p class="section-heading">References</p>
+    <div class="reference-list">
+      <p>Matt Willey, <a href="https://mattwilley.co.uk/American-A-B-C-D" class="hyperlink" rel="noopener noreferrer">American A, B, C, D</a>, 2017</p>
+      <p>Wim Crouwel, <a href="https://www.designculture.it/interview/wim-crouwel.html" class="hyperlink" rel="noopener noreferrer">Frieda Hunziker</a>, 1962</p>
+    </div>
+  </section>
+</main>
+
+<script src="../script.js"></script>
+<script src="../tbi-magazine.js"></script>
+<script src="../carousel.js"></script>
+<footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
+</body>
+</html>
