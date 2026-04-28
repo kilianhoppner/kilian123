@@ -37,15 +37,27 @@
           <div class="gallery-detail__carousel-track">
             <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-animation">
               <div class="gallery-detail__carousel-media">
-                <img src="../files/dotline.svg" alt="Animated abstract geometric line artwork" class="a-symbol" decoding="async" loading="eager" data-dotline-sync>
+                <span
+                  class="a-symbol dotline-az"
+                  role="img"
+                  aria-label="Dotline typeface animation cycling through A to Z"
+                  data-dotline-az
+                  data-dotline-font="../typefaces/Dotline-Regular.otf"
+                  data-dotline-fallback="../files/dotline.svg"
+                ></span>
               </div>
             </div>
-            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-grid">
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-animation">
               <div class="gallery-detail__carousel-media">
-                <div class="dotline-grid-overlay">
-                  <img src="../files/dotline-2.svg" alt="Dotline glyph grid specimen" class="dotline-grid-overlay__grid" decoding="async" loading="lazy">
-                  <img src="../files/dotline.svg" alt="Animated abstract geometric line artwork over grid" class="dotline-grid-overlay__animation" decoding="async" loading="eager" data-dotline-sync>
-                </div>
+                <span
+                  class="a-symbol dotline-az dotline-az--opacity-65"
+                  role="img"
+                  aria-label="Dotline typeface animation cycling through A to Z"
+                  data-dotline-az
+                  data-dotline-font="../typefaces/Dotline-Regular.otf"
+                  data-dotline-grid="../files/grid-5x5.svg"
+                  data-dotline-fallback="../files/dotline.svg"
+                ></span>
               </div>
             </div>
             <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-photo">
@@ -63,18 +75,23 @@
       </div>
     </div>
     <section class="profile-content gallery-detail__headline">
-      <p><em>Dotline</em>, 2026, geometric line study</p>
+      <p><em>Dotline</em>, 2026, type design</p>
     </section>
   </div>
   <section class="profile-content gallery-detail__details">
+    <p>A geometric line study exploring how minimal routes, nodes, and directional shifts can generate a coherent system.</p>
     <p class="section-heading">References</p>
     <div class="reference-list">
+      <p>Bureau 205, <a href="https://www.editions205.fr/products/le-petit-didier" class="hyperlink" rel="noopener noreferrer">Le Petit Didier</a>, 2021</p>
       <p>SPIN studio, <a href="https://spin.co.uk/projects/proa" class="hyperlink" rel="noopener noreferrer">Fundación Proa</a></p>
-      <p>London's Screen Archives, <a href="https://www.londonsscreenarchives.org.uk/title/19773/" class="hyperlink" rel="noopener noreferrer">The Hammersmith Flyover, Hammersmith</a>, 1961</p>
+      <p>Josef Müller-Brockmann, <a href="https://monoskop.org/images/a/a4/Mueller-Brockmann_Josef_Grid_Systems_in_Graphic_Design_Raster_Systeme_fuer_die_Visuele_Gestaltung_English_German_no_OCR.pdf" class="hyperlink" rel="noopener noreferrer">Grid systems in graphic design</a>, 1981</p>
+      <p>London Screen Archive, <a href="https://www.londonsscreenarchives.org.uk/title/19773/" class="hyperlink" rel="noopener noreferrer">The Hammersmith Flyover, Hammersmith</a>, 1961</p>
+      <p>Marcel Duchamp, <a href="https://www.centrepompidou.fr/fr/ressources/oeuvre/cMdzAer" class="hyperlink" rel="noopener noreferrer">Fontaine</a>, 1917</p>
     </div>
   </section>
 </main>
 
+<script src="https://unpkg.com/opentype.js@1.3.4/dist/opentype.min.js"></script>
 <script src="../script.js"></script>
 <script src="../carousel.js"></script>
 <footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
