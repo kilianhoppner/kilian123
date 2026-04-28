@@ -611,10 +611,10 @@ main.gallery-detail--menarefrommars {
 
 @media (max-width: 768px) {
   main.gallery-detail--menarefrommars {
-    --gallery-detail-media-max-w: min(62vw, calc(var(--gallery-detail-art-max-w) * 0.73));
-    --gallery-detail-media-max-h: min(46vh, calc(var(--gallery-detail-art-max-h) * 0.73));
-    --gallery-detail-media-min-w: min(12.5rem, 82vw);
-    --gallery-detail-media-min-h: min(11rem, 30vh);
+    --gallery-detail-media-max-w: min(82vw, calc(var(--gallery-detail-art-max-w) * 1.02));
+    --gallery-detail-media-max-h: min(62vh, calc(var(--gallery-detail-art-max-h) * 1.02));
+    --gallery-detail-media-min-w: min(15.5rem, 92vw);
+    --gallery-detail-media-min-h: min(14rem, 38vh);
   }
 }
 
