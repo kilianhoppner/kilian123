@@ -853,6 +853,11 @@ main.gallery-detail--dotline .dotline-az--opacity-65 .dotline-az__circle:not(.do
   stroke: currentColor;
 }
 
+main.gallery-detail--dotline .dotline-az--opacity-65 .dotline-az__circle--fill {
+  fill: rgb(200, 200, 200);
+  stroke: currentColor;
+}
+
 /* Dotline page — carousel slide 2 specimen in Dotline Regular. */
 main.gallery-detail--dotline .dotline-specimen {
   width: 100%;
