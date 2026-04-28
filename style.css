@@ -2730,6 +2730,16 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     padding-bottom: clamp(1.375rem, 3.5vw, 2.75rem);
   }
 
+  /* Mobile detail pages: moderate first-screen art height so text sits slightly higher, not too tight. */
+  main.gallery-detail .gallery-detail__hero {
+    min-height: 97svh;
+  }
+
+  main.gallery-detail .gallery-detail__hero .gallery-detail__stage,
+  main.gallery-detail .gallery-detail__stage {
+    min-height: min(69svh, calc(97svh - var(--gallery-detail-chrome) - 3.7rem));
+  }
+
   /*
    * 3:2 carousels — #Surveillancecore, Weather Room, t-shirt, Nonsense, Take it slow, globe, hump bridge, TACO, I love daddy, Daddy's Girl: same mobile bounds
    * via :root --gallery-detail-carousel-mobile-* (viewport + art caps + 3:2 frame height).
@@ -4145,6 +4155,15 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     margin-left: 0;
     margin-right: 0;
     max-width: none;
+  }
+
+  /* Mobile gallery detail pages: pull all text blocks slightly closer to the media. */
+  main.gallery-detail .gallery-detail__headline.profile-content {
+    padding-top: clamp(0.8rem, 2.8vw, 1.35rem);
+  }
+
+  main.gallery-detail .gallery-detail__details.profile-content {
+    padding-top: clamp(0.45rem, 1.8vw, 0.85rem);
   }
 
   .gallery {
