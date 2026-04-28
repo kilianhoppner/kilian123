@@ -922,6 +922,196 @@ function setupDotlineAZAnimation() {
   });
 }
 
+function setupDotlineCharacterOverview() {
+  const grids = document.querySelectorAll('[data-dotline-overview-grid]');
+  if (!grids.length) return;
+
+  const glyphOrder = [
+    'A', 'A.ss01', 'A.ss02', 'A.ss03',
+    'B', 'B.ss01', 'B.ss02', 'B.ss03', 'B.ss04',
+    'C',
+    'D', 'D.ss01', 'D.ss02',
+    'E', 'E.ss01', 'E.ss02', 'E.ss03', 'E.ss04',
+    'F', 'F.ss01', 'F.ss02', 'F.ss03',
+    'G', 'G.ss01', 'G.ss02',
+    'H', 'H.ss01', 'H.ss02',
+    'I', 'I.ss01',
+    'J', 'J.ss01',
+    'K', 'K.ss01',
+    'L',
+    'M', 'M.ss01', 'M.ss02', 'M.ss03', 'M.ss04', 'M.ss05',
+    'N', 'N.ss01', 'N.ss02',
+    'O',
+    'P', 'P.ss01',
+    'Q', 'Q.ss01', 'Q.ss02',
+    'R', 'R.ss01',
+    'S', 'S.ss01',
+    'T', 'T.ss01', 'T.ss02',
+    'U', 'U.ss01',
+    'V', 'V.ss01',
+    'W', 'W.ss01', 'W.ss02', 'W.ss03', 'W.ss04', 'W.ss05',
+    'X', 'X.ss01',
+    'Y', 'Y.ss01',
+    'Z', 'Z.ss01', 'Z.ss02',
+    'zero',
+    'one', 'one.ss01', 'one.ss02',
+    'two', 'two.ss01', 'two.ss02', 'two.ss03',
+    'three', 'three.ss01', 'three.ss02', 'three.ss03',
+    'four', 'four.ss01', 'four.ss02',
+    'five',
+    'six', 'six.ss01',
+    'seven', 'seven.ss01',
+    'eight', 'eight.ss01',
+    'nine', 'nine.ss01',
+    'period', 'comma', 'exclam', 'question', 'question.ss01',
+    'plus', 'minus', 'multiply', 'divide',
+    'rightArrow', 'downArrow', 'leftArrow', 'upArrow'
+  ];
+
+  const glyphToChar = {
+    zero: '0',
+    one: '1',
+    two: '2',
+    three: '3',
+    four: '4',
+    five: '5',
+    six: '6',
+    seven: '7',
+    eight: '8',
+    nine: '9',
+    period: '.',
+    comma: ',',
+    exclam: '!',
+    question: '?',
+    plus: '+',
+    minus: '−',
+    multiply: '×',
+    divide: '÷',
+    rightArrow: '→',
+    downArrow: '↓',
+    leftArrow: '←',
+    upArrow: '↑',
+    space: ' '
+  };
+
+  function parseAltFeature(glyphName) {
+    const match = /\.ss(\d\d)$/.exec(glyphName);
+    return match ? `ss${match[1]}` : null;
+  }
+
+  function baseGlyph(glyphName) {
+    return glyphName.split('.')[0];
+  }
+
+  grids.forEach((grid) => {
+    grid.textContent = '';
+
+    glyphOrder.forEach((name) => {
+      const cell = document.createElement('div');
+      cell.className = 'dotline-specimen__glyph-cell';
+
+      const char = document.createElement('p');
+      char.className = 'dotline-specimen__glyph-char';
+      const base = baseGlyph(name);
+      const mapped = glyphToChar[base];
+      const displayChar = mapped != null ? mapped : base;
+      const isSpace = base === 'space';
+      if (isSpace) {
+        char.textContent = 'space';
+        char.classList.add('dotline-specimen__glyph-char--space');
+      } else {
+        char.textContent = displayChar;
+      }
+
+      const feature = parseAltFeature(name);
+      if (feature) {
+        char.style.fontFeatureSettings = `"${feature}" 1`;
+      }
+
+      const label = document.createElement('p');
+      label.className = 'dotline-specimen__glyph-label';
+      label.textContent = name;
+
+      cell.appendChild(char);
+      cell.appendChild(label);
+      grid.appendChild(cell);
+    });
+
+    const specimen = grid.closest('[data-dotline-overview]');
+    if (!specimen) return;
+
+    const items = glyphOrder.length;
+    function applyDynamicOverviewLayout() {
+      const rect = grid.getBoundingClientRect();
+      const W = rect.width;
+      const H = rect.height;
+      if (!W || !H) return;
+
+      // Keep proportions stable while ensuring all rows fit in available height.
+      const gap = Math.max(3, Math.min(8, W * 0.006));
+      let best = null;
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const minCols = isMobile ? 5 : 11;
+      const maxCols = isMobile ? 8 : 21;
+
+      for (let cols = minCols; cols <= maxCols; cols += 1) {
+        const rows = Math.ceil(items / cols);
+        const cellW = (W - (cols - 1) * gap) / cols;
+        const cellH = (H - (rows - 1) * gap) / rows;
+        if (cellW <= 0 || cellH <= 0) continue;
+
+        // Score prefers larger readable cells that still fit.
+        const score = Math.min(cellW, cellH * 1.25);
+        if (!best || score > best.score) {
+          best = { cols, rows, cellW, cellH, score };
+        }
+      }
+
+      if (!best) return;
+
+      const glyphSize = Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
+      const labelSize = Math.max(7, Math.min(best.cellH * 0.17, 11.5));
+      const padY = Math.max(2, best.cellH * 0.1);
+      const padX = Math.max(2, best.cellW * 0.1);
+      const innerGap = Math.max(1, best.cellH * 0.05);
+
+      grid.style.setProperty('--dot-ov-cols', String(best.cols));
+      grid.style.setProperty('--dot-ov-gap', `${gap.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-cell-h', `${best.cellH.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-glyph-size', `${glyphSize.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-label-size', `${labelSize.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-pad-y', `${padY.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-pad-x', `${padX.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-inner-gap', `${innerGap.toFixed(2)}px`);
+
+      // Keep hover behavior identical for all cells (no edge-specific nudging).
+    }
+
+    const ro = new ResizeObserver(() => applyDynamicOverviewLayout());
+    ro.observe(specimen);
+    ro.observe(grid);
+    applyDynamicOverviewLayout();
+  });
+}
+
+function setupDotlineWrenchViewer() {
+  const viewer = document.querySelector('.dotline-wrench-viewer');
+  if (!viewer) return;
+  const mq = window.matchMedia('(max-width: 768px)');
+  const desktopOrientation = '90deg 180.1deg 159deg';
+  const mobileOrientation = '180deg 155deg 180deg';
+
+  const apply = () => {
+    viewer.setAttribute('field-of-view', mq.matches ? '10deg' : '40deg');
+    viewer.setAttribute('orientation', mq.matches ? mobileOrientation : desktopOrientation);
+    viewer.setAttribute('camera-orbit', mq.matches ? '0deg 100deg 110%' : '0deg 90deg 120%');
+  };
+
+  apply();
+  mq.addEventListener('change', apply);
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     setupLondonClock();
@@ -937,6 +1127,8 @@ if (document.readyState === 'loading') {
     setupHorseVideoSeamlessLoop();
     setupFooterMarquee();
     setupDotlineAZAnimation();
+    setupDotlineCharacterOverview();
+    setupDotlineWrenchViewer();
   });
 } else {
   setupLondonClock();
@@ -952,4 +1144,6 @@ if (document.readyState === 'loading') {
   setupHorseVideoSeamlessLoop();
   setupFooterMarquee();
   setupDotlineAZAnimation();
+  setupDotlineCharacterOverview();
+  setupDotlineWrenchViewer();
 }

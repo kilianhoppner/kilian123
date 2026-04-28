@@ -872,6 +872,7 @@ main.gallery-detail--dotline .dotline-specimen {
   font-family: "Dotline", "Diatype", sans-serif !important;
   color: #000;
   background: #fff;
+  transform: translateY(-1.0rem);
 }
 
 main.gallery-detail--dotline .dotline-specimen__line {
@@ -933,6 +934,154 @@ main.gallery-detail--dotline .dotline-specimen__alt--ss05 {
   font-feature-settings: "ss05" 1;
 }
 
+main.gallery-detail--dotline .dotline-specimen--interactive {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: clamp(0.65rem, 1.8vw, 1rem);
+}
+
+main.gallery-detail--dotline .dotline-specimen__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+main.gallery-detail--dotline .dotline-specimen__control {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  letter-spacing: 0.02em;
+}
+
+main.gallery-detail--dotline .dotline-specimen__control input[type="range"] {
+  width: clamp(8rem, 26vw, 16rem);
+}
+
+main.gallery-detail--dotline .dotline-specimen__line--editable {
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  padding: 0.4rem 0.6rem;
+  min-height: 2.2em;
+  cursor: text;
+}
+
+main.gallery-detail--dotline .dotline-specimen__line--editable:focus {
+  outline: 1px solid rgba(0, 0, 0, 0.55);
+}
+
+main.gallery-detail--dotline .dotline-specimen--overview {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: clamp(0.3rem, 0.8vw, 0.55rem);
+  overflow: visible;
+  min-height: 0;
+}
+
+main.gallery-detail--dotline .dotline-specimen__overview-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--dot-ov-cols, 12), minmax(0, 1fr));
+  grid-auto-rows: var(--dot-ov-cell-h, auto);
+  gap: var(--dot-ov-gap, 0.32rem);
+  align-content: stretch;
+  height: 100%;
+  min-height: 0;
+  /* Extra safe inset so hover scale/shadows on edge cells remain fully visible. */
+  padding: clamp(0.7rem, 1.4vw, 1.2rem);
+  box-sizing: border-box;
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-cell {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 0.28rem;
+  padding: var(--dot-ov-pad-y, 0.18rem) var(--dot-ov-pad-x, 0.18rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dot-ov-inner-gap, 0.08rem);
+  min-height: 0;
+  overflow: visible;
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  will-change: transform;
+  position: relative;
+  z-index: 0;
+  cursor: default;
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-cell:hover {
+  transform: scale(1.6);
+  z-index: 8;
+  border-color: #000;
+  box-shadow: none;
+  background: #000;
+  color: #fff;
+}
+
+
+@media (min-width: 1025px) {
+  main.gallery-detail--dotline .dotline-specimen--overview {
+    gap: clamp(0.35rem, 0.9vw, 0.65rem);
+  }
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-char {
+  margin: 0;
+  line-height: 1.2;
+  font-size: var(--dot-ov-glyph-size, 0.98rem);
+  letter-spacing: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  text-align: center;
+  overflow: visible;
+  cursor: default;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-char--space {
+  font-family: "Diatype", sans-serif !important;
+  font-size: calc(var(--dot-ov-glyph-size, 0.98rem) * 0.6);
+  letter-spacing: 0.02em;
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-label {
+  margin: 0;
+  font-family: "Diatype", sans-serif !important;
+  font-size: calc(var(--dot-ov-label-size, 0.46rem) * 0.88);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  opacity: 0.8;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+  position: absolute;
+  left: 50%;
+  bottom: 0.18rem;
+  transform: translate(-50%, 0.18rem);
+  opacity: 0;
+  max-width: calc(100% - 0.35rem);
+  transition: opacity 140ms ease, transform 140ms ease;
+  z-index: 2;
+}
+
+main.gallery-detail--dotline .dotline-specimen__glyph-cell:hover .dotline-specimen__glyph-label {
+  color: #fff;
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 main.gallery-detail--dotline .dotline-grid-overlay {
   position: relative;
   width: 100%;
@@ -969,12 +1118,26 @@ main.gallery-detail--dotline .dotline-grid-overlay__animation {
   opacity: 0.75;
 }
 
+
+/* Allow hover shadows to render past viewport edges without resizing layout. */
+main.gallery-detail--dotline .gallery-detail__carousel-viewport {
+  overflow: clip;
+  overflow-clip-margin: clamp(1rem, 2.2vw, 1.8rem);
+}
+
 @media (min-width: 900px) {
   /* Dotline desktop: slightly larger slide 1+2 without clipping (grow frame, not inner media). */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
-  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media {
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__carousel-media {
     width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.16));
     max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  }
+
+  /* Dotline desktop: make slide 4 photo slightly smaller. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-photo .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.06));
+    max-height: min(78vh, calc(var(--gallery-detail-carousel-cap-h) * 1.06));
   }
 
   main.gallery-detail--dotline .dotline-specimen {
@@ -983,6 +1146,36 @@ main.gallery-detail--dotline .dotline-grid-overlay__animation {
 
   main.gallery-detail--dotline .dotline-specimen__line {
     font-size: clamp(1.7rem, 2.45vw, 3rem);
+  }
+
+  /* Specimen slide: enlarge the full frame so boxes + glyphs + labels scale together. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.568));
+    max-height: min(91vh, calc(var(--gallery-detail-carousel-cap-h) * 1.568));
+    margin-left: auto;
+    margin-right: auto;
+    align-self: center;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile: let the specimen grow vertically (more rows), not overly compressed. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
+    aspect-ratio: auto;
+    width: 100%;
+    max-width: 100%;
+    height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.45));
+    max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.45));
+  }
+
+  main.gallery-detail--dotline .dotline-specimen--overview {
+    overflow: auto;
+  }
+
+  main.gallery-detail--dotline .dotline-specimen__overview-grid {
+    height: auto;
+    min-height: 100%;
   }
 }
 
@@ -1052,6 +1245,20 @@ main.gallery-detail--head .gallery-detail__carousel-slide--head-3d .gallery-deta
   aspect-ratio: unset;
   /* No extra scale — parent .gallery-detail__carousel-media is overflow:hidden; scale(1.16) clipped the GLB */
   transform: none;
+  transform-origin: center center;
+}
+
+main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__model-viewer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: unset;
+  transform: translateX(0.8%);
   transform-origin: center center;
 }
 
@@ -2001,12 +2208,12 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-mensri
   filter: brightness(1.04) contrast(1.05) saturate(1.06);
 }
 
-/* Home is where the... is — slide 1 sketch: nudge reds toward pink. */
+/* Home is where the... is — slide 1 sketch: orange-red shift. */
 main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-sketch .gallery-detail__carousel-media > img {
   filter: hue-rotate(20deg) saturate(1.32) brightness(1.03);
 }
 
-/* Same pink shift on gallery tile image. */
+/* Same orange-red shift on gallery tile image. */
 .gallery a[href*="home-is-where-the-is"] img.sketchhouse {
   filter: hue-rotate(20deg) saturate(1.32) brightness(1.03);
 }
@@ -2592,8 +2799,17 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     max-height: min(56svh, calc(var(--gallery-detail-carousel-cap-h) * 1.34));
   }
 
+  /* Dotline mobile: wrench slide gets a taller frame to avoid top/bottom clipping. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__carousel-media {
+    width: auto;
+    max-width: 100%;
+    height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    max-height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+  }
+
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
-  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media {
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media,
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__carousel-media {
     aspect-ratio: 1 / 1;
   }
 
@@ -2991,8 +3207,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
 
   /* Dotline tile: very slightly larger than other a-symbol tiles on desktop. */
   .gallery a[href*="pages/dotline.html"] .a-symbol {
-    --img-max-height: 66%;
-    --img-max-width: 66%;
+    --img-max-height: 65%;
+    --img-max-width: 65%;
   }
 }
 
@@ -4063,4 +4279,17 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
     white-space: normal;
     text-align: center;
   }
+}
+
+/* Dotline specimen hover: allow overshoot to paint beyond viewport clipping edge.
+ * Keep late in file to override shared typeface viewport overflow:hidden rule. */
+main.gallery-detail--dotline .gallery-detail__carousel-viewport {
+  overflow: clip !important;
+  overflow-clip-margin: clamp(2.4rem, 6vw, 4.2rem) !important;
+}
+
+/* Ensure specimen hover overshoot is never clipped by shared typeface media/frame rules. */
+main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen,
+main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
+  overflow: visible !important;
 }

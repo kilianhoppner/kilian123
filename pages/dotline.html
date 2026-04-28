@@ -60,9 +60,32 @@
                 ></span>
               </div>
             </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-specimen">
+              <div class="gallery-detail__carousel-media">
+                <section class="dotline-specimen dotline-specimen--overview" data-dotline-overview>
+                  <div class="dotline-specimen__overview-grid" data-dotline-overview-grid></div>
+                </section>
+              </div>
+            </div>
             <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-photo">
               <div class="gallery-detail__carousel-media">
                 <img src="../files/dotline.png" alt="Dotline reference photograph of structural cables and concrete" decoding="async" loading="lazy">
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--dotline-wrench" aria-label="3D open-end wrench model">
+              <div class="gallery-detail__carousel-media">
+                <model-viewer
+                  class="gallery-detail__model-viewer dotline-wrench-viewer"
+                  src="../files/dotline-wrench.glb"
+                  alt="3D model of an open-end wrench"
+                  camera-target="0m 0m 0m"
+                  touch-action="none"
+                  interaction-prompt="none"
+                  shadow-intensity="0"
+                  environment-image="neutral"
+                  exposure="1.0"
+                  ar-modes="webxr scene-viewer quick-look"
+                ></model-viewer>
               </div>
             </div>
           </div>
@@ -79,7 +102,7 @@
     </section>
   </div>
   <section class="profile-content gallery-detail__details">
-    <p>A geometric line study exploring how minimal routes, nodes, and directional shifts can generate a coherent system.</p>
+    <p>A geometric line study exploring how minimal routes, nodes, and directional shifts can generate a coherent type system. I built a custom shape generator for this project so I could draw each line on a grid and output mathematically precise SVGs. These were then imported into Glyphs to create a functional typeface. Try the shape generator tool <a class="hyperlink" href="https://kilianhoppner.github.io/dotline-typeface/">here</a>.</p>
     <p class="section-heading">References</p>
     <div class="reference-list">
       <p>Bureau 205, <a href="https://www.editions205.fr/products/le-petit-didier" class="hyperlink" rel="noopener noreferrer">Le Petit Didier</a>, 2021</p>
@@ -92,6 +115,7 @@
 </main>
 
 <script src="https://unpkg.com/opentype.js@1.3.4/dist/opentype.min.js"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <script src="../script.js"></script>
 <script src="../carousel.js"></script>
 <footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>

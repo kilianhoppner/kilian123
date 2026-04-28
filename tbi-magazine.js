@@ -35,7 +35,7 @@
     return;
   }
 
-  const DURATION_MS = 8000;
+  const DURATION_MS = 9200;
   /** 0,1,2,3: which cover (0..3) on front / back for that 4s segment */
   const FRONT = [0, 2, 2, 0];
   const BACK = [1, 1, 3, 3];
