@@ -134,6 +134,7 @@
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
+
   function pauseCarouselVideos(track) {
     if (!track) return;
     track.querySelectorAll('video').forEach(function (v) {

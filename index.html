@@ -75,7 +75,16 @@
     />
     </a>
   </div>
-  <a href="pages/home-is-where-the-is.html#sketch" class="gallery-item-link"><img src="files/home-is-where-the-is-1.png" alt="sketchhouse" class="sketchhouse"></a>
+  <a href="pages/dotline.html" class="gallery-item-link" aria-label="Open Dotline">
+    <span
+      class="a-symbol dotline-az"
+      role="img"
+      aria-label="Dotline typeface animation cycling through A to Z"
+      data-dotline-az
+      data-dotline-font="typefaces/Dotline-Regular.otf"
+      data-dotline-fallback="files/dotline.svg"
+    ></span>
+  </a>
   <div class="gallery-iframe-slot gallery-toiletroll-3d gallery-iframe-slot--with-overlay" aria-label="Up your ass">
     <a href="pages/up-your-ass.html" class="gallery-tile-overlay-link" aria-label="Open Up your ass"></a>
     <div class="gallery-toiletroll-3d__viewer" data-toiletroll-init></div>
@@ -135,7 +144,7 @@
       </div>
     </div>
   </div>
-  <a href="pages/dotline.html" class="gallery-item-link"><img src="files/dotline.svg" alt="Abstract geometric black line artwork" class="a-symbol"></a>
+  <a href="pages/home-is-where-the-is.html#sketch" class="gallery-item-link"><img src="files/home-is-where-the-is-1.png" alt="sketchhouse" class="sketchhouse"></a>
 </section>
 
 <!-- Preload p5 sketch in background. No allow=camera so Permissions Policy blocks webcam here (no prompt on Gallery); surveillancecore.html iframe enables camera. -->
@@ -146,6 +155,7 @@
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <script type="module" src="toiletroll.js"></script>
 <script type="module" src="globe-sphere-three.js?v=44"></script>
+<script src="https://unpkg.com/opentype.js@1.3.4/dist/opentype.min.js"></script>
 <script src="script.js"></script>
 <script src="tbi-magazine.js"></script>
 <script src="face-track.js"></script>

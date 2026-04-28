@@ -624,6 +624,304 @@ function setupFooterMarquee() {
   });
 }
 
+// ==========================
+//  Dotline A–Z stroke animation
+// ==========================
+function setupDotlineAZAnimation() {
+  const hosts = Array.from(document.querySelectorAll('[data-dotline-az]'));
+  if (!hosts.length) return;
+  if (!('opentype' in window)) return;
+
+  const VIEW = 626.5333333333334;
+  const NS = 'http://www.w3.org/2000/svg';
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const LETTER_MS = 11000;
+
+  const fontCache = new Map();
+  function loadFont(url) {
+    if (fontCache.has(url)) return fontCache.get(url);
+    const p = new Promise((resolve, reject) => {
+      window.opentype.load(url, (err, font) => {
+        if (err) reject(err);
+        else resolve(font);
+      });
+    });
+    fontCache.set(url, p);
+    return p;
+  }
+
+  function buildSvgHost(host) {
+    host.textContent = '';
+
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${VIEW} ${VIEW}`);
+    svg.setAttribute('width', String(VIEW));
+    svg.setAttribute('height', String(VIEW));
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    svg.setAttribute('aria-hidden', 'true');
+
+    host.appendChild(svg);
+    return svg;
+  }
+
+  function buildLetterPath(font, letter, gridSrc) {
+    // Start with a generous font size; we’ll scale into the square viewBox.
+    const baseSize = 520;
+    const p = font.getPath(letter, 0, 0, baseSize);
+    const bb = p.getBoundingBox();
+    const w = Math.max(1, bb.x2 - bb.x1);
+    const h = Math.max(1, bb.y2 - bb.y1);
+
+    const target = VIEW * 0.82;
+    const s = target / Math.max(w, h);
+    const tx = (VIEW - w * s) / 2 - bb.x1 * s;
+    const ty = (VIEW - h * s) / 2 - bb.y1 * s;
+
+    const wrap = document.createElementNS(NS, 'g');
+
+    const img = gridSrc ? document.createElementNS(NS, 'image') : null;
+    if (img) {
+      // Use both href and xlink:href for maximum compatibility.
+      img.setAttribute('href', gridSrc);
+      img.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', gridSrc);
+      img.setAttribute('preserveAspectRatio', 'none');
+      img.style.pointerEvents = 'none';
+      wrap.appendChild(img);
+    }
+
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('transform', `translate(${tx.toFixed(3)} ${ty.toFixed(3)}) scale(${s.toFixed(6)})`);
+
+    const fill = document.createElementNS(NS, 'path');
+    fill.setAttribute('d', p.toPathData(2));
+    fill.setAttribute('class', 'dotline-az__fill');
+    g.appendChild(fill);
+
+    // Split glyph outlines into contours so each contour can be stroked.
+    const commands = Array.isArray(p.commands) ? p.commands : [];
+    const contours = [];
+    let cur = [];
+    commands.forEach((cmd) => {
+      if (cmd.type === 'M' && cur.length) {
+        contours.push(cur);
+        cur = [];
+      }
+      cur.push(cmd);
+      if (cmd.type === 'Z') {
+        contours.push(cur);
+        cur = [];
+      }
+    });
+    if (cur.length) contours.push(cur);
+
+    const stroke = Math.max(1.5, Math.min(18, 12 / s));
+    const circleMax = baseSize * 0.42;
+    const contourMeta = contours.map((c) => {
+      const cp = new window.opentype.Path();
+      cp.commands = c;
+      const cbb = cp.getBoundingBox();
+      const w = Math.max(0, cbb.x2 - cbb.x1);
+      const h = Math.max(0, cbb.y2 - cbb.y1);
+      const ratio = w && h ? w / h : 0;
+      const squareish = ratio > 0.82 && ratio < 1.22;
+      const smallish = w < circleMax && h < circleMax;
+      const isCircle = squareish && smallish;
+      const size = Math.max(w, h);
+      return { cp, cbb, w, h, isCircle, size };
+    });
+
+    const circleSizes = contourMeta.filter((m) => m.isCircle).map((m) => m.size);
+    const minCircleSize = circleSizes.length ? Math.min(...circleSizes) : null;
+    const minTolerance = 0.75;
+
+    // Fit the grid (and the circle radius) based on the node circle centers.
+    // grid-5x5.svg uses viewBox 0..800 with node centers spanning [GRID_MIN..GRID_MAX]
+    // and node radius GRID_R.
+    const GRID_VIEW = 800;
+    const GRID_R = 76.31357123;
+    const GRID_MIN = GRID_R;
+    const GRID_MAX = 723.68642877;
+    const GRID_SPAN = GRID_MAX - GRID_MIN;
+    let gridScale = null;
+    let gridX = null;
+    let gridY = null;
+    let gridSize = null;
+
+    if (minCircleSize != null) {
+      const pts = contourMeta
+        .filter((m) => m.isCircle && m.size <= minCircleSize + minTolerance)
+        .map((m) => {
+          const cx = (m.cbb.x1 + m.cbb.x2) / 2;
+          const cy = (m.cbb.y1 + m.cbb.y2) / 2;
+          return { x: tx + cx * s, y: ty + cy * s };
+        });
+
+      if (pts.length >= 2) {
+        let minX = pts[0].x;
+        let maxX = pts[0].x;
+        let minY = pts[0].y;
+        let maxY = pts[0].y;
+        for (let i = 1; i < pts.length; i += 1) {
+          const p = pts[i];
+          if (p.x < minX) minX = p.x;
+          if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y;
+          if (p.y > maxY) maxY = p.y;
+        }
+
+        const sx = (maxX - minX) / GRID_SPAN;
+        const sy = (maxY - minY) / GRID_SPAN;
+        gridScale = (sx + sy) / 2;
+        gridX = minX - gridScale * GRID_MIN;
+        gridY = minY - gridScale * GRID_MIN;
+        gridSize = gridScale * GRID_VIEW;
+      }
+    }
+
+    if (img && gridScale != null && gridX != null && gridY != null && gridSize != null) {
+      img.setAttribute('x', gridX.toFixed(3));
+      img.setAttribute('y', gridY.toFixed(3));
+      img.setAttribute('width', gridSize.toFixed(3));
+      img.setAttribute('height', gridSize.toFixed(3));
+    } else if (img) {
+      // Fallback: map to glyph bounding box if we can't fit from circles.
+      const x0 = (VIEW - w * s) / 2;
+      const y0 = (VIEW - h * s) / 2;
+      img.setAttribute('x', x0.toFixed(3));
+      img.setAttribute('y', y0.toFixed(3));
+      img.setAttribute('width', (w * s).toFixed(3));
+      img.setAttribute('height', (h * s).toFixed(3));
+    }
+
+    contourMeta.forEach((m) => {
+      const { cp, cbb, w, h, isCircle, size } = m;
+      const isSmallestCircle =
+        isCircle && minCircleSize != null && size <= minCircleSize + minTolerance;
+
+      if (isSmallestCircle) {
+        // Normalize smallest circle contours to real <circle> primitives.
+        const circle = document.createElementNS(NS, 'circle');
+        const cx = (cbb.x1 + cbb.x2) / 2;
+        const cy = (cbb.y1 + cbb.y2) / 2;
+        const r = Math.max(0.1, (w + h) / 4);
+
+        circle.setAttribute('cx', cx.toFixed(3));
+        circle.setAttribute('cy', cy.toFixed(3));
+        circle.setAttribute('r', r.toFixed(3));
+        circle.setAttribute('fill', '#fff');
+        circle.setAttribute('stroke', 'currentColor');
+        circle.setAttribute('stroke-linecap', 'round');
+        circle.setAttribute('stroke-linejoin', 'round');
+        circle.setAttribute('stroke-width', stroke.toFixed(2));
+        circle.setAttribute('class', 'dotline-az__circle');
+        g.appendChild(circle);
+
+        // Fill-state hole circle (only visible during filled end-state).
+        // If a grid is fitted, match its circle radius, with a tiny compensation so the
+        // visible hole (fill + outline) matches the grid circle more closely.
+        const rFill =
+          gridScale != null
+            ? Math.max(0.1, (gridScale * GRID_R) / s + stroke / 2)
+            : r;
+        const circleFill = document.createElementNS(NS, 'circle');
+        circleFill.setAttribute('cx', cx.toFixed(3));
+        circleFill.setAttribute('cy', cy.toFixed(3));
+        circleFill.setAttribute('r', rFill.toFixed(3));
+        circleFill.setAttribute('fill', '#fff');
+        circleFill.setAttribute('stroke', 'currentColor');
+        circleFill.setAttribute('stroke-linecap', 'round');
+        circleFill.setAttribute('stroke-linejoin', 'round');
+        circleFill.setAttribute('stroke-width', stroke.toFixed(2));
+        circleFill.setAttribute('class', 'dotline-az__circle dotline-az__circle--fill');
+        g.appendChild(circleFill);
+      } else {
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', cp.toPathData(2));
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', 'currentColor');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        path.setAttribute('pathLength', '1000');
+        path.setAttribute('stroke-width', stroke.toFixed(2));
+        path.setAttribute('class', 'dotline-az__path');
+        g.appendChild(path);
+      }
+    });
+
+    wrap.appendChild(g);
+    return wrap;
+  }
+
+  // Group all animations by font URL so every instance stays perfectly in sync.
+  const groups = new Map();
+  hosts.forEach((host) => {
+    const fontUrl = host.getAttribute('data-dotline-font') || '';
+    if (!fontUrl) return;
+    if (!groups.has(fontUrl)) groups.set(fontUrl, []);
+    groups.get(fontUrl).push(host);
+  });
+
+  groups.forEach((groupHosts, fontUrl) => {
+    const svgs = groupHosts.map((host) => {
+      const svg = buildSvgHost(host);
+      host.style.color = '#000';
+      return { host, svg };
+    });
+
+    loadFont(fontUrl)
+      .then((font) => {
+        let idx = 0;
+        let timer = null;
+        let active = true;
+
+        const renderAll = () => {
+          const letter = LETTERS[idx % LETTERS.length];
+          // Keep all instances in sync by letter index, but allow per-host grid underlays.
+          svgs.forEach(({ host, svg }) => {
+            const gridSrc = host.getAttribute('data-dotline-grid') || '';
+            svg.replaceChildren(buildLetterPath(font, letter, gridSrc));
+          });
+          idx += 1;
+        };
+
+        const tick = () => {
+          if (!active) return;
+          renderAll();
+          timer = window.setTimeout(tick, LETTER_MS);
+        };
+
+        renderAll();
+        timer = window.setTimeout(tick, LETTER_MS);
+
+        // If the page unloads, stop timers (avoid orphan timeouts).
+        window.addEventListener(
+          'pagehide',
+          () => {
+            active = false;
+            if (timer != null) window.clearTimeout(timer);
+          },
+          { once: true }
+        );
+      })
+      .catch(() => {
+        svgs.forEach(({ host }) => {
+          const fallback = host.getAttribute('data-dotline-fallback');
+          if (!fallback) return;
+          host.textContent = '';
+          const img = document.createElement('img');
+          img.src = fallback;
+          img.alt = 'Animated line symbol';
+          img.decoding = 'async';
+          img.loading = 'eager';
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'contain';
+          host.appendChild(img);
+        });
+      });
+  });
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     setupLondonClock();
@@ -638,6 +936,7 @@ if (document.readyState === 'loading') {
     setupMobileSamePageNavScrollDown();
     setupHorseVideoSeamlessLoop();
     setupFooterMarquee();
+    setupDotlineAZAnimation();
   });
 } else {
   setupLondonClock();
@@ -652,4 +951,5 @@ if (document.readyState === 'loading') {
   setupMobileSamePageNavScrollDown();
   setupHorseVideoSeamlessLoop();
   setupFooterMarquee();
+  setupDotlineAZAnimation();
 }

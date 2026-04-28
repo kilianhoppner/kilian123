@@ -749,6 +749,110 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
   animation: dotline-sequence-b 12.4s linear infinite;
 }
 
+/* Dotline A–Z animation (replaces dotline.svg in gallery + dotline page) */
+.dotline-az {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.dotline-az > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dotline-az--faded {
+  opacity: 0.6;
+}
+
+.dotline-az--opacity-65 {
+  opacity: 0.65;
+}
+
+/* Dotline slide 2: grid underlay behind animation (no sizing changes). */
+/* Grid is now injected per-frame inside the animation SVG (script.js). */
+
+.dotline-az__path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  /* Slight delay before stroke appears; smooth slow→fast→slow overall. */
+  animation: dotline-az-stroke 11s cubic-bezier(0.52, 0, 0.48, 1) infinite;
+  opacity: 1;
+}
+
+@keyframes dotline-az-stroke {
+  /* Hold (no stroke visible) at the very beginning. */
+  0% { stroke-dashoffset: 1000; opacity: 0; }
+  6% { stroke-dashoffset: 1000; opacity: 0; }
+  6.01% { stroke-dashoffset: 1000; opacity: 1; }
+  /* Draw phase (slow→fast→slow from timing function). */
+  66% { stroke-dashoffset: 0; opacity: 1; }
+  /* Short hold on completed outline. */
+  74% { stroke-dashoffset: 0; opacity: 1; }
+  /* Switch to filled state (no fade). */
+  74.01% { stroke-dashoffset: 0; opacity: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* End-state fill: snaps to black near the end (no fade). */
+.dotline-az__fill {
+  fill: currentColor;
+  opacity: 0;
+  animation: dotline-az-fill 11s linear infinite;
+}
+
+@keyframes dotline-az-fill {
+  0% { opacity: 0; }
+  74% { opacity: 0; }
+  74.01% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Smallest circles: static outline + white interior “hole”. */
+.dotline-az__circle {
+  fill: #fff;
+  stroke: currentColor;
+  opacity: 1;
+  animation: none;
+}
+
+/* (No circle masking / stroke hacks — matches pre-hole-adjustment behavior.) */
+
+/* During filled end-state, swap to the fill-state circle radius (matches grid diameter on slide 2). */
+.dotline-az__circle--fill {
+  opacity: 0;
+  animation: dotline-az-circle-fill-only 11s steps(1, end) infinite;
+}
+
+@keyframes dotline-az-circle-fill-only {
+  0% { opacity: 0; }
+  74% { opacity: 0; }
+  74.01% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.dotline-az__circle:not(.dotline-az__circle--fill) {
+  animation: dotline-az-circle-stroke-only 11s steps(1, end) infinite;
+}
+
+@keyframes dotline-az-circle-stroke-only {
+  0% { opacity: 1; }
+  74% { opacity: 1; }
+  74.01% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Slide 2 variant:
+ * - During stroke phase, only the non-fill circles are visible → set them to grid gray.
+ * - During filled phase, only the fill circles are visible → they remain white (default).
+ * Importantly: do NOT override the opacity swap animations above.
+ */
+main.gallery-detail--dotline .dotline-az--opacity-65 .dotline-az__circle:not(.dotline-az__circle--fill) {
+  fill: rgb(200, 200, 200);
+  stroke: currentColor;
+}
+
 /* Dotline page — carousel slide 2 specimen in Dotline Regular. */
 main.gallery-detail--dotline .dotline-specimen {
   width: 100%;
@@ -840,6 +944,14 @@ main.gallery-detail--dotline .dotline-grid-overlay > img {
   display: block;
 }
 
+main.gallery-detail--dotline .dotline-grid-overlay > .dotline-az {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 main.gallery-detail--dotline .dotline-grid-overlay__grid {
   transform: scale(1.2957);
   transform-origin: center;
@@ -856,8 +968,8 @@ main.gallery-detail--dotline .dotline-grid-overlay__animation {
   /* Dotline desktop: slightly larger slide 1+2 without clipping (grow frame, not inner media). */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.04));
-    max-height: min(76vh, calc(var(--gallery-detail-carousel-cap-h) * 1.04));
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.16));
+    max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
   }
 
   main.gallery-detail--dotline .dotline-specimen {
@@ -1884,6 +1996,16 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-mensri
   filter: brightness(1.04) contrast(1.05) saturate(1.06);
 }
 
+/* Home is where the... is — slide 1 sketch: nudge reds toward pink. */
+main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-sketch .gallery-detail__carousel-media > img {
+  filter: hue-rotate(20deg) saturate(1.32) brightness(1.03);
+}
+
+/* Same pink shift on gallery tile image. */
+.gallery a[href*="home-is-where-the-is"] img.sketchhouse {
+  filter: hue-rotate(20deg) saturate(1.32) brightness(1.03);
+}
+
 @media (min-width: 1025px) {
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
     --tis-portrait-max-h: min(70vh, calc(var(--gallery-detail-media-max-h) * 1.24));
@@ -2061,6 +2183,13 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media > img {
   object-fit: contain;
   object-position: center;
   vertical-align: middle;
+}
+
+/* Dotline A–Z uses a span container instead of an <img>. */
+main.gallery-detail--typeface .gallery-detail__carousel-media > .dotline-az {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* I love daddy — carousel first slide: no tilt (index grid .gallery img.ilovedaddy keeps subtle rotate). */
@@ -2804,6 +2933,27 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   transform: scale(1.26);
 }
 
+/* Dotline A–Z animation tile (span + inline SVG) should behave like gallery images. */
+.gallery .dotline-az {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  transition: transform 180ms ease;
+}
+.gallery a.gallery-item-link:hover .dotline-az {
+  transform: scale(1.26);
+}
+.gallery .dotline-az[class] {
+  max-height: var(--img-max-height, 100%);
+  max-width: var(--img-max-width, 100%);
+  width: auto;
+  height: auto;
+  justify-self: center;
+  align-self: center;
+  rotate: var(--img-rotate, 0deg);
+}
+
 
 /* Per-image gallery overrides */
 .gallery img[class] {
@@ -2821,20 +2971,29 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   --img-max-width: 88%;
 }
 
-.gallery img.a-symbol {
+.gallery img.a-symbol,
+.gallery .a-symbol {
   --img-max-height: 80%;
   --img-max-width: 80%;
 }
 
 @media (min-width: 1025px) {
-  .gallery img.a-symbol {
-    --img-max-height: 50%;
-    --img-max-width: 50%;
+  .gallery img.a-symbol,
+  .gallery .a-symbol {
+    --img-max-height: 63%;
+    --img-max-width: 63%;
+  }
+
+  /* Dotline tile: very slightly larger than other a-symbol tiles on desktop. */
+  .gallery a[href*="pages/dotline.html"] .a-symbol {
+    --img-max-height: 66%;
+    --img-max-width: 66%;
   }
 }
 
 @media (max-width: 768px) {
-  .gallery img.a-symbol {
+  .gallery img.a-symbol,
+  .gallery .a-symbol {
     --img-max-height: 74%;
     --img-max-width: 74%;
     margin-top: 8.0rem;
@@ -3373,6 +3532,9 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
 }
 .gallery img.tshirt { --img-max-height: 100%; }
 .gallery img.sketchhouse { --img-max-height: 95%; }
+@media (min-width: 1025px) {
+  .gallery img.sketchhouse { --img-max-height: 88%; }
+}
 /* Weather room: orange ↔ blue crossfade (horizontal Letter-style rectangle). */
 .gallery .gallery-weatherroom {
   --img-max-width: 90%;
