@@ -777,7 +777,7 @@ body:has(main.gallery-detail--globe-sphere) .nav-button:hover {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
   /* Slight delay before stroke appears; smooth slow→fast→slow overall. */
-  animation: dotline-az-stroke 11s cubic-bezier(0.52, 0, 0.48, 1) infinite;
+  animation: dotline-az-stroke 11s cubic-bezier(0.46, 0, 0.54, 1) infinite;
   opacity: 1;
 }
 
