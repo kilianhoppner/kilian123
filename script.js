@@ -1052,8 +1052,8 @@ function setupDotlineCharacterOverview() {
       let best = null;
 
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      const minCols = isMobile ? 5 : 11;
-      const maxCols = isMobile ? 8 : 21;
+      const minCols = isMobile ? 7 : 11;
+      const maxCols = isMobile ? 10 : 21;
 
       for (let cols = minCols; cols <= maxCols; cols += 1) {
         const rows = Math.ceil(items / cols);
@@ -1070,8 +1070,12 @@ function setupDotlineCharacterOverview() {
 
       if (!best) return;
 
-      const glyphSize = Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
-      const labelSize = Math.max(7, Math.min(best.cellH * 0.17, 11.5));
+      const glyphSize = isMobile
+        ? Math.max(9, Math.min(best.cellH * 0.48, best.cellW * 0.54))
+        : Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
+      const labelSize = isMobile
+        ? Math.max(6.5, Math.min(best.cellH * 0.15, 10.5))
+        : Math.max(7, Math.min(best.cellH * 0.17, 11.5));
       const padY = Math.max(2, best.cellH * 0.1);
       const padX = Math.max(2, best.cellW * 0.1);
       const innerGap = Math.max(1, best.cellH * 0.05);
@@ -1101,15 +1105,60 @@ function setupDotlineWrenchViewer() {
   const mq = window.matchMedia('(max-width: 768px)');
   const desktopOrientation = '90deg 180.1deg 159deg';
   const mobileOrientation = '180deg 155deg 180deg';
+  let resizeRaf = 0;
+  const media = viewer.closest('.gallery-detail__carousel-media');
 
   const apply = () => {
     viewer.setAttribute('field-of-view', mq.matches ? '10deg' : '40deg');
     viewer.setAttribute('orientation', mq.matches ? mobileOrientation : desktopOrientation);
     viewer.setAttribute('camera-orbit', mq.matches ? '0deg 100deg 110%' : '0deg 90deg 120%');
+    if (typeof viewer.jumpCameraToGoal === 'function') {
+      viewer.jumpCameraToGoal();
+    }
+  };
+
+  const forceViewerLayout = () => {
+    if (!media) return;
+    const rect = media.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    // Force a concrete pixel box during resize so model-viewer redraws immediately.
+    viewer.style.width = `${rect.width}px`;
+    viewer.style.height = `${rect.height}px`;
+    viewer.style.maxWidth = 'none';
+    viewer.style.maxHeight = 'none';
+    viewer.style.minWidth = '0';
+    viewer.style.minHeight = '0';
+    if (typeof viewer.jumpCameraToGoal === 'function') {
+      viewer.jumpCameraToGoal();
+    }
+  };
+
+  const scheduleApply = () => {
+    if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
+    resizeRaf = window.requestAnimationFrame(() => {
+      resizeRaf = 0;
+      apply();
+      forceViewerLayout();
+    });
   };
 
   apply();
-  mq.addEventListener('change', apply);
+  forceViewerLayout();
+  viewer.addEventListener('load', scheduleApply, { once: true });
+  mq.addEventListener('change', scheduleApply);
+  window.addEventListener('resize', scheduleApply, { passive: true });
+
+  if (typeof ResizeObserver !== 'undefined') {
+    if (media) {
+      const ro = new ResizeObserver(scheduleApply);
+      ro.observe(media);
+    }
+  }
+
+  const track = viewer.closest('.gallery-detail__carousel')?.querySelector('.gallery-detail__carousel-track');
+  if (track) {
+    track.addEventListener('transitionend', scheduleApply);
+  }
 }
 
 if (document.readyState === 'loading') {

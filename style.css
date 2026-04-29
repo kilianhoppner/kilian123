@@ -2813,8 +2813,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__carousel-media {
     width: auto;
     max-width: 100%;
-    height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
-    max-height: min(64svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    height: min(67svh, calc(var(--gallery-detail-carousel-cap-h) * 1.62));
+    max-height: min(67svh, calc(var(--gallery-detail-carousel-cap-h) * 1.62));
   }
 
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
