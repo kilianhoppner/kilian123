@@ -1192,12 +1192,16 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
   main.gallery-detail--dotline .dotline-specimen--overview {
     overflow: auto;
     justify-content: center;
+    width: 100%;
+    padding-inline: 0;
   }
 
   main.gallery-detail--dotline .dotline-specimen__overview-grid {
+    width: 100%;
     height: auto;
     min-height: 100%;
     align-content: center;
+    padding: clamp(0.35rem, 0.9vw, 0.7rem);
   }
 
   /* Dotline specimen on mobile: disable glyph hover interaction, keep static cells. */
