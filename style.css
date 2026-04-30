@@ -1159,23 +1159,60 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
   }
 }
 
+@media (min-width: 769px) and (max-width: 899px) {
+  /* iPad / in-between breakpoint: keep Dotline specimen scale consistent with desktop feel. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.5));
+    max-height: min(89vh, calc(var(--gallery-detail-carousel-cap-h) * 1.5));
+    margin-left: auto;
+    margin-right: auto;
+    align-self: center;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 768px) {
   /* Mobile: let the specimen grow vertically (more rows), not overly compressed. */
+  main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen {
+    justify-content: center;
+    align-items: center;
+  }
+
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
     aspect-ratio: auto;
     width: 100%;
     max-width: 100%;
-    height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.45));
-    max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.45));
+    height: min(86vh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    max-height: min(86vh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    margin-top: auto;
+    margin-bottom: auto;
+    align-self: center;
   }
 
   main.gallery-detail--dotline .dotline-specimen--overview {
     overflow: auto;
+    justify-content: center;
   }
 
   main.gallery-detail--dotline .dotline-specimen__overview-grid {
     height: auto;
     min-height: 100%;
+    align-content: center;
+  }
+
+  /* Dotline specimen on mobile: disable glyph hover interaction, keep static cells. */
+  main.gallery-detail--dotline .dotline-specimen__glyph-cell:hover {
+    transform: scale(1);
+    z-index: 0;
+    border-color: rgba(0, 0, 0, 0.16);
+    background: transparent;
+    color: inherit;
+  }
+
+  main.gallery-detail--dotline .dotline-specimen__glyph-cell:hover .dotline-specimen__glyph-label {
+    color: inherit;
+    opacity: 0;
+    transform: translate(-50%, 0.18rem);
   }
 }
 
@@ -2739,6 +2776,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail .gallery-detail__stage {
     min-height: min(69svh, calc(97svh - var(--gallery-detail-chrome) - 3.7rem));
   }
+
 
   /*
    * 3:2 carousels — #Surveillancecore, Weather Room, t-shirt, Nonsense, Take it slow, globe, hump bridge, TACO, I love daddy, Daddy's Girl: same mobile bounds

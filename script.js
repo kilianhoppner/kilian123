@@ -1072,19 +1072,20 @@ function setupDotlineCharacterOverview() {
 
       if (!best) return;
 
+      const layoutCellH = isMobile ? Math.min(best.cellH, best.cellW) : best.cellH;
       const glyphSize = isMobile
-        ? Math.max(8.25, Math.min(best.cellH * 0.44, best.cellW * 0.5))
+        ? Math.max(8.25, Math.min(layoutCellH * 0.44, best.cellW * 0.5))
         : Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
       const labelSize = isMobile
-        ? Math.max(6, Math.min(best.cellH * 0.135, 10))
+        ? Math.max(6, Math.min(layoutCellH * 0.135, 10))
         : Math.max(7, Math.min(best.cellH * 0.17, 11.5));
-      const padY = Math.max(2, best.cellH * 0.1);
+      const padY = Math.max(2, layoutCellH * 0.1);
       const padX = Math.max(2, best.cellW * 0.1);
-      const innerGap = Math.max(1, best.cellH * 0.05);
+      const innerGap = Math.max(1, layoutCellH * 0.05);
 
       grid.style.setProperty('--dot-ov-cols', String(best.cols));
       grid.style.setProperty('--dot-ov-gap', `${gap.toFixed(2)}px`);
-      grid.style.setProperty('--dot-ov-cell-h', `${best.cellH.toFixed(2)}px`);
+      grid.style.setProperty('--dot-ov-cell-h', `${layoutCellH.toFixed(2)}px`);
       grid.style.setProperty('--dot-ov-glyph-size', `${glyphSize.toFixed(2)}px`);
       grid.style.setProperty('--dot-ov-label-size', `${labelSize.toFixed(2)}px`);
       grid.style.setProperty('--dot-ov-pad-y', `${padY.toFixed(2)}px`);
