@@ -1048,12 +1048,14 @@ function setupDotlineCharacterOverview() {
       if (!W || !H) return;
 
       // Keep proportions stable while ensuring all rows fit in available height.
-      const gap = Math.max(3, Math.min(8, W * 0.006));
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const gap = isMobile
+        ? Math.max(2, Math.min(6, W * 0.0048))
+        : Math.max(3, Math.min(8, W * 0.006));
       let best = null;
 
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      const minCols = isMobile ? 7 : 11;
-      const maxCols = isMobile ? 10 : 21;
+      const minCols = isMobile ? 9 : 11;
+      const maxCols = isMobile ? 12 : 21;
 
       for (let cols = minCols; cols <= maxCols; cols += 1) {
         const rows = Math.ceil(items / cols);
@@ -1071,10 +1073,10 @@ function setupDotlineCharacterOverview() {
       if (!best) return;
 
       const glyphSize = isMobile
-        ? Math.max(9, Math.min(best.cellH * 0.48, best.cellW * 0.54))
+        ? Math.max(8.25, Math.min(best.cellH * 0.44, best.cellW * 0.5))
         : Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
       const labelSize = isMobile
-        ? Math.max(6.5, Math.min(best.cellH * 0.15, 10.5))
+        ? Math.max(6, Math.min(best.cellH * 0.135, 10))
         : Math.max(7, Math.min(best.cellH * 0.17, 11.5));
       const padY = Math.max(2, best.cellH * 0.1);
       const padX = Math.max(2, best.cellW * 0.1);
