@@ -1182,8 +1182,8 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
     aspect-ratio: auto;
     width: 100%;
     max-width: 100%;
-    height: min(86vh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
-    max-height: min(86vh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    height: min(86svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
+    max-height: min(86svh, calc(var(--gallery-detail-carousel-cap-h) * 1.52));
     margin-top: auto;
     margin-bottom: auto;
     align-self: center;
