@@ -439,6 +439,11 @@ body.page-bio .bio-biography__more-btn {
   display: none;
 }
 
+.bio-dotline-check {
+  font-family: "Diatype", sans-serif;
+  font-weight: 400;
+}
+
 @media (max-width: 768px) {
   body.page-bio .bio-biography:not(.bio-biography--expanded) .bio-biography__rest {
     display: none;
