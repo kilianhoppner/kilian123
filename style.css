@@ -1260,6 +1260,35 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
   transition: none;
 }
 
+/* White horse detail carousel: keep image slide at the exact video-slot footprint. */
+main.gallery-detail--whitehorse .gallery-detail__carousel-slide--whitehorse-image .gallery-detail__carousel-media {
+  width: min(100%, var(--gallery-detail-media-max-w));
+  max-width: var(--gallery-detail-media-max-w);
+  max-height: var(--gallery-detail-media-max-h);
+  min-width: var(--gallery-detail-media-min-w);
+  min-height: var(--gallery-detail-media-min-h);
+  aspect-ratio: 1 / 1;
+}
+
+main.gallery-detail--whitehorse .gallery-detail__carousel-slide--whitehorse-image .gallery-detail__carousel-media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 380px) {
+  /* Very small phones: allow White Horse slides to shrink instead of overflowing into neighbors. */
+  main.gallery-detail--whitehorse .gallery-detail__carousel-slide--whitehorse-video .gallery-detail__video-slot,
+  main.gallery-detail--whitehorse .gallery-detail__carousel-slide--whitehorse-image .gallery-detail__carousel-media {
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: min(62svh, var(--gallery-detail-media-max-h));
+  }
+}
+
 .gallery-detail__model-viewer {
   display: block;
   box-sizing: border-box;
@@ -1705,6 +1734,7 @@ main.gallery-detail--globe-sphere .gallery-detail__stage,
 main.gallery-detail--hump-bridge .gallery-detail__stage,
 main.gallery-detail--taco .gallery-detail__stage,
 main.gallery-detail--ilove-daddy .gallery-detail__stage,
+main.gallery-detail--whitehorse .gallery-detail__stage,
 main.gallery-detail--head .gallery-detail__stage,
 main.gallery-detail--daddys-girl .gallery-detail__stage,
 main.gallery-detail--life-cycles .gallery-detail__stage,
@@ -1724,6 +1754,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel,
 main.gallery-detail--hump-bridge .gallery-detail__carousel,
 main.gallery-detail--taco .gallery-detail__carousel,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel,
+main.gallery-detail--whitehorse .gallery-detail__carousel,
 main.gallery-detail--head .gallery-detail__carousel,
 main.gallery-detail--daddys-girl .gallery-detail__carousel,
 main.gallery-detail--life-cycles .gallery-detail__carousel,
@@ -1750,6 +1781,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-viewport,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-viewport,
 main.gallery-detail--taco .gallery-detail__carousel-viewport,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-viewport,
+main.gallery-detail--whitehorse .gallery-detail__carousel-viewport,
 main.gallery-detail--head .gallery-detail__carousel-viewport,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
 main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
@@ -1779,6 +1811,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-track,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-track,
 main.gallery-detail--taco .gallery-detail__carousel-track,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
+main.gallery-detail--whitehorse .gallery-detail__carousel-track,
 main.gallery-detail--head .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track,
@@ -1800,6 +1833,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-track,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-track,
 main.gallery-detail--taco .gallery-detail__carousel-track,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track,
+main.gallery-detail--whitehorse .gallery-detail__carousel-track,
 main.gallery-detail--head .gallery-detail__carousel-track,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track,
@@ -1818,6 +1852,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-track--no-transition
 main.gallery-detail--hump-bridge .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--taco .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-track--no-transition,
+main.gallery-detail--whitehorse .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--head .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-track--no-transition,
 main.gallery-detail--life-cycles .gallery-detail__carousel-track--no-transition,
@@ -1836,6 +1871,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-slide,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-slide,
 main.gallery-detail--taco .gallery-detail__carousel-slide,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide,
+main.gallery-detail--whitehorse .gallery-detail__carousel-slide,
 main.gallery-detail--head .gallery-detail__carousel-slide,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-slide,
 main.gallery-detail--life-cycles .gallery-detail__carousel-slide,
@@ -1866,6 +1902,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-media,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-media,
 main.gallery-detail--taco .gallery-detail__carousel-media,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media,
+main.gallery-detail--whitehorse .gallery-detail__carousel-media,
 main.gallery-detail--head .gallery-detail__carousel-media,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media,
@@ -2430,6 +2467,7 @@ main.gallery-detail--globe-sphere .gallery-detail__carousel-media > img,
 main.gallery-detail--hump-bridge .gallery-detail__carousel-media > img,
 main.gallery-detail--taco .gallery-detail__carousel-media > img,
 main.gallery-detail--ilove-daddy .gallery-detail__carousel-media > img,
+main.gallery-detail--whitehorse .gallery-detail__carousel-media > img,
 main.gallery-detail--head .gallery-detail__carousel-media > img,
 main.gallery-detail--daddys-girl .gallery-detail__carousel-media > img,
 main.gallery-detail--life-cycles .gallery-detail__carousel-media > img,
@@ -3091,6 +3129,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--hump-bridge .gallery-detail__carousel,
   main.gallery-detail--taco .gallery-detail__carousel,
   main.gallery-detail--ilove-daddy .gallery-detail__carousel,
+  main.gallery-detail--whitehorse .gallery-detail__carousel,
   main.gallery-detail--head .gallery-detail__carousel,
   main.gallery-detail--daddys-girl .gallery-detail__carousel,
   main.gallery-detail--life-cycles .gallery-detail__carousel,
@@ -3116,6 +3155,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--hump-bridge .gallery-detail__carousel-viewport,
   main.gallery-detail--taco .gallery-detail__carousel-viewport,
   main.gallery-detail--ilove-daddy .gallery-detail__carousel-viewport,
+  main.gallery-detail--whitehorse .gallery-detail__carousel-viewport,
   main.gallery-detail--head .gallery-detail__carousel-viewport,
   main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
   main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
@@ -3134,6 +3174,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--hump-bridge .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--taco .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--whitehorse .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
@@ -3160,6 +3201,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--hump-bridge .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--taco .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--ilove-daddy .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--whitehorse .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--head .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
