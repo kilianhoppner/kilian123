@@ -93,6 +93,59 @@
     };
   }
 
+  /**
+   * White Horse carousel: keep wrap clone video in sync so infinite wrap doesn't look like a refresh.
+   */
+  function syncWhitehorseVideoClone(sourceSlide, cloneSlide) {
+    if (!sourceSlide || !cloneSlide) return;
+    var srcVideos = sourceSlide.querySelectorAll('.gallery-detail__video-slot video');
+    var cloneVideos = cloneSlide.querySelectorAll('.gallery-detail__video-slot video');
+    if (!srcVideos.length || !cloneVideos.length) return;
+
+    var activeIdx = 0;
+    for (var i = 0; i < srcVideos.length; i++) {
+      if (srcVideos[i].classList.contains('gallery-detail__video--active')) {
+        activeIdx = i;
+        break;
+      }
+    }
+    var srcActive = srcVideos[activeIdx] || srcVideos[0];
+    var t = srcActive.currentTime || 0;
+    var rate = srcActive.playbackRate || 1;
+    var paused = !!srcActive.paused;
+
+    cloneVideos.forEach(function (v, idx) {
+      try {
+        v.currentTime = t;
+      } catch (e) {}
+      v.defaultPlaybackRate = rate;
+      v.playbackRate = rate;
+      if (idx === activeIdx) v.classList.add('gallery-detail__video--active');
+      else v.classList.remove('gallery-detail__video--active');
+      if (paused) {
+        v.pause();
+      } else {
+        var p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+      }
+    });
+  }
+
+  function followWhitehorseVideoClone(sourceSlide, cloneSlide) {
+    var rafId = 0;
+    var stopped = false;
+    function tick() {
+      if (stopped) return;
+      syncWhitehorseVideoClone(sourceSlide, cloneSlide);
+      rafId = window.requestAnimationFrame(tick);
+    }
+    tick();
+    return function stop() {
+      stopped = true;
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }
+
   /** Infinite-loop clones must not re-run Three.js on [data-globe-sphere-three]. */
   function stripGlobeSphereCarouselClone(cloneRoot) {
     cloneRoot.querySelectorAll('[data-globe-sphere-three]').forEach(function (mount) {
@@ -170,7 +223,9 @@
 
     var trackIndex = 1;
     var stopTbiCloneFollow = null;
+    var stopWhitehorseCloneFollow = null;
     var isDollhouse = root.closest && root.closest('main.gallery-detail--dollhouse');
+    var isWhitehorse = root.closest && root.closest('main.gallery-detail--whitehorse');
     var hash = typeof location !== 'undefined' ? location.hash || '' : '';
     if (isDollhouse && /^#sketch$/i.test(hash)) {
       var sketchSlideIdx = -1;
@@ -244,7 +299,13 @@
         stopTbiCloneFollow();
         stopTbiCloneFollow = null;
       }
-      pauseCarouselVideos(track);
+      if (stopWhitehorseCloneFollow) {
+        stopWhitehorseCloneFollow();
+        stopWhitehorseCloneFollow = null;
+      }
+      if (!isWhitehorse) {
+        pauseCarouselVideos(track);
+      }
       var prevTi = trackIndex;
       trackIndex += delta;
       if (trackIndex < 0) trackIndex = 0;
@@ -275,9 +336,17 @@
       if (trackIndex === realN + 1) {
         syncTbiMagazineCloneVisual(originals[0], firstClone);
         stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[0], firstClone);
+        if (isWhitehorse) {
+          syncWhitehorseVideoClone(originals[0], firstClone);
+          stopWhitehorseCloneFollow = followWhitehorseVideoClone(originals[0], firstClone);
+        }
       } else if (trackIndex === 0) {
         syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
         stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[realN - 1], lastClone);
+        if (isWhitehorse) {
+          syncWhitehorseVideoClone(originals[realN - 1], lastClone);
+          stopWhitehorseCloneFollow = followWhitehorseVideoClone(originals[realN - 1], lastClone);
+        }
       }
 
       locked = true;
@@ -290,6 +359,10 @@
       if (stopTbiCloneFollow) {
         stopTbiCloneFollow();
         stopTbiCloneFollow = null;
+      }
+      if (stopWhitehorseCloneFollow) {
+        stopWhitehorseCloneFollow();
+        stopWhitehorseCloneFollow = null;
       }
       if (trackIndex === 0) {
         trackIndex = realN;
