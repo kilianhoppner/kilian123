@@ -501,6 +501,11 @@ body.page-bio .bio-biography__more-btn {
   --gallery-detail-media-min-h: min(17.5rem, 42vh);
   --gallery-detail-media-max-w: min(88vw, var(--gallery-detail-art-max-w));
   --gallery-detail-media-max-h: min(68vh, var(--gallery-detail-art-max-h));
+  /*
+   * Carousel track + pink chevrons: fixed “wide” rail so arrow spacing matches across pages.
+   * Per-project --gallery-detail-media-max-w can stay smaller for artwork only (see .gallery-detail__carousel-media).
+   */
+  --gallery-detail-carousel-rail-max-w: min(88vw, var(--gallery-detail-art-max-w));
 }
 
 main.gallery-detail {
@@ -996,6 +1001,13 @@ main.gallery-detail--dotline .dotline-specimen__overview-grid {
   box-sizing: border-box;
 }
 
+/* Desktop: JS caps row height to ~cell width (~square glyphs); centre the grid block in leftover height. */
+@media (min-width: 769px) {
+  main.gallery-detail--dotline .dotline-specimen__overview-grid {
+    align-content: center;
+  }
+}
+
 main.gallery-detail--dotline .dotline-specimen__glyph-cell {
   border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 0.28rem;
@@ -1131,18 +1143,22 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
 }
 
 @media (min-width: 900px) {
-  /* Dotline desktop: slightly larger slide 1+2 without clipping (grow frame, not inner media). */
+  /*
+   * Dotline desktop: cap slide frames with the same vh/multiplier envelope as Life Cycles carousel
+   * (White Book slide: min(70vh, cap_h * 1.16)), so track height matches peer detail pages and the
+   * hero stage doesn’t center an oversized viewport (reads as “too low”).
+   */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-animation .gallery-detail__carousel-media,
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-grid .gallery-detail__carousel-media,
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .gallery-detail__carousel-media {
     width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.16));
-    max-height: min(82vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
   }
 
-  /* Dotline desktop: make slide 4 photo slightly smaller. */
+  /* Photo slide: narrower frame than slides 1–3; still the same vertical cap as LC white book. */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-photo .gallery-detail__carousel-media {
     width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.06));
-    max-height: min(78vh, calc(var(--gallery-detail-carousel-cap-h) * 1.06));
+    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
   }
 
   main.gallery-detail--dotline .dotline-specimen {
@@ -1153,10 +1169,13 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
     font-size: clamp(1.7rem, 2.45vw, 3rem);
   }
 
-  /* Specimen slide: enlarge the full frame so boxes + glyphs + labels scale together. */
+  /*
+   * Specimen: tallest Life Cycles–style slide bound as baseline; slightly larger media frame only on ≥900px
+   * so glyph overview/type reads a touch bigger without reshaping carousel rules elsewhere.
+   */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.568));
-    max-height: min(91vh, calc(var(--gallery-detail-carousel-cap-h) * 1.568));
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.36));
+    max-height: min(76vh, calc(var(--gallery-detail-carousel-cap-h) * 1.27));
     margin-left: auto;
     margin-right: auto;
     align-self: center;
@@ -1165,10 +1184,10 @@ main.gallery-detail--dotline .gallery-detail__carousel-viewport {
 }
 
 @media (min-width: 769px) and (max-width: 899px) {
-  /* iPad / in-between breakpoint: keep Dotline specimen scale consistent with desktop feel. */
+  /* iPad / in-between breakpoint: specimen uses the same cap envelope as wider desktop */
   main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.5));
-    max-height: min(89vh, calc(var(--gallery-detail-carousel-cap-h) * 1.5));
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.32));
+    max-height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
     margin-left: auto;
     margin-right: auto;
     align-self: center;
@@ -1581,9 +1600,10 @@ main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-
 }
 
 @media (min-width: 769px) {
+  /* Slide 1 only: slightly larger square frame vs. rotation diagonal (slides share viewport width; carousel rail unchanged). */
   main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-arrows .gallery-detail__carousel-media {
-    height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
-    max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
+    height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
+    max-height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
   }
 
   main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
@@ -1766,7 +1786,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel {
   justify-content: center;
   gap: clamp(0.375rem, 1.5vw, 0.875rem);
   width: 100%;
-  max-width: calc(var(--gallery-detail-media-max-w) + 7rem);
+  max-width: calc(var(--gallery-detail-carousel-rail-max-w) + 7rem);
   margin-top: 0;
   box-sizing: border-box;
 }
@@ -1791,7 +1811,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   min-width: 0;
   min-height: 0;
   width: 100%;
-  max-width: var(--gallery-detail-media-max-w);
+  max-width: var(--gallery-detail-carousel-rail-max-w);
   overflow: hidden;
   opacity: 1;
 }
@@ -1939,6 +1959,34 @@ main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .
   max-width: var(--gallery-detail-media-max-w);
 }
 
+/*
+ * Desktop: same bound as Life Cycles slide 1 arrows — max( clip, min(74vh, cap_h * 1.24) ) — gives the
+ * 3D magazine a taller media/viewport envelope so perspective / bleed doesn’t clip off the animation top.
+ */
+@media (min-width: 769px) {
+  main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
+    min-height: max(
+      var(--tbi-magazine-clip-min-h),
+      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
+    );
+  }
+
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine,
+  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .gallery-detail__carousel-media {
+    min-height: max(
+      var(--tbi-magazine-clip-min-h),
+      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
+    );
+  }
+
+  main.gallery-detail--thebigissue .thebigissue-magazine .gallery-magazine-3d {
+    min-height: max(
+      var(--tbi-magazine-clip-min-h),
+      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
+    );
+  }
+}
+
 /* Spreads (slides 2–3): keep shadow fully inside each slide so it never bleeds onto slide 1. */
 main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate,
 main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy {
@@ -1997,10 +2045,15 @@ main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy
 }
 
 @media (min-width: 1181px) {
+  /*
+   * Wide desktop: same peer envelope as Dotline photo — min(68vh, cap_h * 1.06). Older cap*1.1 + 84vh
+   * ceiling still resolved to ~56vh, but aligning the formula keeps the carousel track from drifting
+   * taller than sibling detail pages when combined with the magazine clip strip.
+   */
   main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate .gallery-detail__carousel-media,
   main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy .gallery-detail__carousel-media {
-    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.1));
-    max-height: min(84vh, calc(var(--gallery-detail-carousel-cap-h) * 1.1));
+    width: min(100%, calc(var(--gallery-detail-carousel-cap-w) * 1.06));
+    max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.06));
   }
 }
 
@@ -2199,11 +2252,16 @@ main.gallery-detail--ilove-daddy .gallery-detail__carousel-slide--ilove-daddy-da
 }
 
 /*
- * Take it slow — manual + Kilian: 2:3 frame vs default 3:2 so portraits aren’t tiny; caps tuned
- * below the previous “large” pass so slides 2–3 stay balanced vs 1 + 4 at every width.
+ * Take it slow — manual + Kilian: 2:3 frame vs default 3:2 so portraits aren’t tiny.
+ * Portrait + slide 1 heights use the same cap multipliers as Life Cycles carousel slides so the
+ * track/viewport doesn’t exceed peer detail pages — otherwise a taller track is centered in the
+ * hero stage and the whole carousel reads vertically offset vs other works.
  */
 main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
-  --tis-portrait-max-h: min(72svh, 66vh, calc(var(--gallery-detail-media-max-h) * 1.2));
+  /*
+   * Mirrors Life Cycles — white-book slide on phone: min(62svh, cap_h * 1.32).
+   */
+  --tis-portrait-max-h: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
   aspect-ratio: 2 / 3;
   max-height: var(--tis-portrait-max-h);
   width: min(
@@ -2214,17 +2272,20 @@ main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-
 }
 
 @media (min-width: 769px) {
+  /*
+   * Mirrors Life Cycles — white-book slide on desktop: min(70vh, cap_h * 1.16).
+   */
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
-    --tis-portrait-max-h: min(68vh, calc(var(--gallery-detail-media-max-h) * 1.22));
+    --tis-portrait-max-h: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
   }
 
-  /* Slide 1 (SLOW sign, 491×577): larger on desktop than default 3:2 letterboxing (same idea as mobile). */
+  /* Slide 1 (SLOW sign): same bounding formula as Life Cycles — arrows slide — min(74vh, cap * 1.24). */
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-first .gallery-detail__carousel-media {
     aspect-ratio: 491 / 577;
     width: auto;
     max-width: 100%;
-    height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
-    max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.28));
+    height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
+    max-height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
   }
 
   main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-print .gallery-detail__carousel-media {
@@ -2299,12 +2360,6 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-slide--dollhouse-sketch
 /* Same orange-red shift on gallery tile image. */
 .gallery a[href*="home-is-where-the-is"] img.sketchhouse {
   filter: hue-rotate(20deg) saturate(1.32) brightness(1.03);
-}
-
-@media (min-width: 1025px) {
-  main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-portrait .gallery-detail__carousel-media {
-    --tis-portrait-max-h: min(70vh, calc(var(--gallery-detail-media-max-h) * 1.24));
-  }
 }
 
 /*
@@ -2852,15 +2907,15 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   }
 
   /*
-   * Take it slow — slide 1 (SLOW sign, 491×577): same issue as Daddy’s Girl Hello Kitty — 3:2 +
-   * min(100%, cap_w) hits full slide width so extra cap_w doesn’t grow the art; use native AR + height.
+   * Take it slow — slide 1 (SLOW sign): native AR + height (cf. Daddy’s Girl Hello Kitty pattern).
+   * Same bounding formula as Life Cycles arrows slide — min(58svh, cap_h * 1.2).
    */
   main.gallery-detail--take-it-slow .gallery-detail__carousel-slide--take-it-slow-first .gallery-detail__carousel-media {
     aspect-ratio: 491 / 577;
     width: auto;
     max-width: 100%;
-    height: min(70svh, calc(var(--gallery-detail-carousel-cap-h) * 1.4));
-    max-height: min(70svh, calc(var(--gallery-detail-carousel-cap-h) * 1.4));
+    height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+    max-height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
   }
 
   /*
@@ -3489,6 +3544,19 @@ main.gallery-detail--thebigissue {
     min(72vh, 36rem),
     calc(22rem * 1594 / 1240 + 1.25rem)
   );
+}
+
+/*
+ * Desktop (≥769px): shorten the magazine clip strip versus min(72vh, 36rem) while keeping ≥ book + bleed.
+ * The viewport uses this as min-height; a shorter floor matches other detail carousels in the hero stage.
+ */
+@media (min-width: 769px) {
+  main.gallery-detail--thebigissue {
+    --tbi-magazine-clip-min-h: max(
+      min(62vh, 30rem),
+      calc(22rem * 1594 / 1240 + 1.25rem)
+    );
+  }
 }
 
 main.gallery-detail--thebigissue .thebigissue-magazine {

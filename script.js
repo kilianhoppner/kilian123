@@ -1063,8 +1063,8 @@ function setupDotlineCharacterOverview() {
         const cellH = (H - (rows - 1) * gap) / rows;
         if (cellW <= 0 || cellH <= 0) continue;
 
-        // Score prefers larger readable cells that still fit.
-        const score = Math.min(cellW, cellH * 1.25);
+        // Prefer larger cells that stay roughly square (bounding boxes ~ equal width × height).
+        const score = Math.min(cellW, cellH);
         if (!best || score > best.score) {
           best = { cols, rows, cellW, cellH, score };
         }
@@ -1072,13 +1072,14 @@ function setupDotlineCharacterOverview() {
 
       if (!best) return;
 
-      const layoutCellH = isMobile ? Math.min(best.cellH, best.cellW) : best.cellH;
+      // Square-ish glyph cells: cap row height by column width (desktop previously used full cellH → wide rectangles).
+      const layoutCellH = Math.min(best.cellH, best.cellW);
       const glyphSize = isMobile
         ? Math.max(8.25, Math.min(layoutCellH * 0.44, best.cellW * 0.5))
-        : Math.max(10, Math.min(best.cellH * 0.54, best.cellW * 0.6));
+        : Math.max(10, Math.min(layoutCellH * 0.54, best.cellW * 0.6));
       const labelSize = isMobile
         ? Math.max(6, Math.min(layoutCellH * 0.135, 10))
-        : Math.max(7, Math.min(best.cellH * 0.17, 11.5));
+        : Math.max(7, Math.min(layoutCellH * 0.17, 11.5));
       const padY = Math.max(2, layoutCellH * 0.1);
       const padX = Math.max(2, best.cellW * 0.1);
       const innerGap = Math.max(1, layoutCellH * 0.05);
