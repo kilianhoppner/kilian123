@@ -41,7 +41,6 @@
       }
     </style>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-troika-text/dist/aframe-troika-text.min.js"></script>
     <script>
       /*
        * Showcase tuning — edit these to adjust the object directory scene.
@@ -50,7 +49,6 @@
        * Grid placement: layoutGrid() sets each cell at
        *   x = (column - 3) * layout.xStep,  y = layout.topY - row * layout.rowStep.
        * Inside a cell, each model’s vertical offset uses objectY[key] (negative = lower in frame).
-       * Label copy: edit SHOWCASE_LABELS. Label size: labelFontSize / labelTextWidth / labelY.
        * Hover: objectHover[key] is cell scale on hover (1 = none, 1.4 = 40% larger).
        * Spin: showcaseSpinSpeed sets rotation rate for all objects.
        * Facing on load: objectRotation[key] — x/y/z degrees (y also used as spin start angle).
@@ -60,12 +58,6 @@
         hoverScaleDuration: 360,
         /* Fallback hover formula when objectHover[key] is omitted (see hoverAmountFor). */
         hoverReferenceScale: 1.25,
-        /* Grid label typeface (sign uses SunEden-Regular.otf — see TROIKA_SIGN). */
-        labelFontFile: "./ABCDiatypeRoundedEdu-Light.otf",
-        /* Name labels — labelFontSize is cap height in meters; labelTextWidth is wrap width. */
-        labelFontSize: 0.223,
-        labelTextWidth: 3.35,
-        labelY: -1.72,
         columns: 7,
         referenceViewportWidth: 1500,
         baseGridScale: 1.2,
@@ -176,32 +168,6 @@
         }
       };
 
-      /* Display names under each object — edit these to change label text. */
-      var SHOWCASE_LABELS = {
-        character: "Character",
-        balloon: "Hot Air Balloon",
-        giraffe: "Giraffe",
-        fish: "Fish",
-        house: "House",
-        chicken: "Chicken",
-        cow: "Cow",
-        butterfly: "Butterfly",
-        bird: "Bird",
-        helicopter: "Helicopter",
-        tree: "Tree",
-        flower: "Flower",
-        floatie: "Floatie",
-        sun: "Sun",
-        sign: "Sun Eden Sign",
-        flame: "Fire",
-        chair: "Plastic Chair",
-        umbrella: "Umbrella",
-        fishingRod: "Fishing Rod",
-        beachBall: "Beach Ball"
-      };
-
-      var TROIKA_SIGN =
-        "value: SUN EDEN; align: center; baseline: middle; color: #115CAC; font: ./SunEden-Regular.otf; fontSize: 0.53; maxWidth: 3.05; anchorX: center; anchorY: center; letterSpacing: 0.01; outlineWidth: 0; outlineColor: #5a3418";
       var SHOWCASE_POINTER_ACTIVE = false;
       window.addEventListener("mousemove", function () {
         SHOWCASE_POINTER_ACTIVE = true;
@@ -1113,20 +1079,6 @@
           return s;
         }
 
-        function showcaseLabelTroika(value) {
-          return (
-            "value: " +
-            value +
-            "; align: center; baseline: middle; color: #000000; font: " +
-            cfg.labelFontFile +
-            "; fontSize: " +
-            cfg.labelFontSize +
-            "; maxWidth: " +
-            cfg.labelTextWidth +
-            "; anchorX: center; anchorY: middle; sdfGlyphSize: 128; outlineWidth: 0; depthOffset: 0.001"
-          );
-        }
-
         function viewportFitScale() {
           return window.innerWidth / cfg.referenceViewportWidth;
         }
@@ -1148,7 +1100,7 @@
           return node;
         }
 
-        function cell(title, key, modelBase) {
+        function cell(key, modelBase) {
           var c = el("a-entity", grid, {
             position: "0 0 0"
           });
@@ -1673,15 +1625,6 @@
             color: "#F2F2F2",
             material: "shader: standard; roughness: 0.65; metalness: 0"
           });
-          el("a-entity", root, {
-            position: "0 1.43 0.06",
-            "troika-text": TROIKA_SIGN
-          });
-          el("a-entity", root, {
-            position: "0 1.43 -0.06",
-            rotation: "0 180 0",
-            "troika-text": TROIKA_SIGN
-          });
         }
 
         function makeFlame(parent) {
@@ -1838,8 +1781,7 @@
           cells.length = 0;
           makers.forEach(function (item) {
             var key = item[0];
-            var title = SHOWCASE_LABELS[key] || key;
-            var c = cell(title, key, item[2]);
+            var c = cell(key, item[2]);
             item[1](c);
           });
           playSubtreeAnimations(grid);
