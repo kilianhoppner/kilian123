@@ -2,6 +2,7 @@
   const slot = document.getElementById('faceTrackSlot');
   const video = slot && slot.querySelector('.face-track-video');
   const outline = slot && slot.querySelector('.face-track-outline');
+  const overlay = slot && slot.querySelector('.gallery-tile-overlay-link');
   if (!video || !outline) return;
 
   /** Camera stream is live (user granted access and video is playing). */
@@ -137,6 +138,15 @@
     outline.style.borderColor = '#00ff41';
   }
 
+  function syncOverlayToBox(x, y, size) {
+    if (!overlay) return;
+    overlay.style.inset = 'auto';
+    overlay.style.left = x + "px";
+    overlay.style.top = y + "px";
+    overlay.style.width = size + "px";
+    overlay.style.height = size + "px";
+  }
+
   function placeFallbackBox(W, H) {
     const size = Math.min(W, H) * faceBoxFraction();
     const x = (W - size) / 2;
@@ -147,6 +157,7 @@
     outline.style.width = `${size}px`;
     outline.style.height = `${size}px`;
     applyOutlineBorder(size);
+    syncOverlayToBox(x, y, size);
   }
 
   function clampBox(b, W, H) {
@@ -227,6 +238,7 @@
     outline.style.width = `${size}px`;
     outline.style.height = `${size}px`;
     applyOutlineBorder(size);
+    syncOverlayToBox(c.x, c.y, size);
   }
 
   function loadScript(src) {

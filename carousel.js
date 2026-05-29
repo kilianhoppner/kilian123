@@ -205,23 +205,28 @@
     var originals = slideEls(track);
     var realN = originals.length;
     if (realN < 2) return;
+    var finiteCarousel = root.hasAttribute('data-finite-carousel');
 
-    var lastClone = originals[realN - 1].cloneNode(true);
-    var firstClone = originals[0].cloneNode(true);
-    stripFaceTrackClone(firstClone);
-    stripGlobeSphereCarouselClone(lastClone);
-    stripGlobeSphereCarouselClone(firstClone);
-    stripModelViewerCarouselClone(lastClone);
-    stripModelViewerCarouselClone(firstClone);
-    stripTbiMagazineCarouselClone(firstClone);
-    stripTbiMagazineCarouselClone(lastClone);
-    syncTbiMagazineCloneVisual(originals[0], firstClone);
-    syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
+    var lastClone = null;
+    var firstClone = null;
+    if (!finiteCarousel) {
+      lastClone = originals[realN - 1].cloneNode(true);
+      firstClone = originals[0].cloneNode(true);
+      stripFaceTrackClone(firstClone);
+      stripGlobeSphereCarouselClone(lastClone);
+      stripGlobeSphereCarouselClone(firstClone);
+      stripModelViewerCarouselClone(lastClone);
+      stripModelViewerCarouselClone(firstClone);
+      stripTbiMagazineCarouselClone(firstClone);
+      stripTbiMagazineCarouselClone(lastClone);
+      syncTbiMagazineCloneVisual(originals[0], firstClone);
+      syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
 
-    track.insertBefore(lastClone, originals[0]);
-    track.appendChild(firstClone);
+      track.insertBefore(lastClone, originals[0]);
+      track.appendChild(firstClone);
+    }
 
-    var trackIndex = 1;
+    var trackIndex = finiteCarousel ? 0 : 1;
     var stopTbiCloneFollow = null;
     var stopWhitehorseCloneFollow = null;
     var isDollhouse = root.closest && root.closest('main.gallery-detail--dollhouse');
@@ -243,13 +248,14 @@
       if (slideHash) {
         var slideNum = parseInt(slideHash[1], 10);
         if (slideNum >= 1 && slideNum <= realN) {
-          trackIndex = slideNum;
+          trackIndex = finiteCarousel ? slideNum - 1 : slideNum;
         }
       }
     }
     var locked = false;
 
     function logicalFromTrackIndex(ti) {
+      if (finiteCarousel) return Math.max(0, Math.min(realN - 1, ti));
       if (ti === 0) return realN - 1;
       if (ti === realN + 1) return 0;
       return ti - 1;
@@ -308,8 +314,14 @@
       }
       var prevTi = trackIndex;
       trackIndex += delta;
-      if (trackIndex < 0) trackIndex = 0;
-      if (trackIndex > realN + 1) trackIndex = realN + 1;
+      if (finiteCarousel) {
+        if (trackIndex < 0) trackIndex = 0;
+        if (trackIndex > realN - 1) trackIndex = realN - 1;
+        if (trackIndex === prevTi) return;
+      } else {
+        if (trackIndex < 0) trackIndex = 0;
+        if (trackIndex > realN + 1) trackIndex = realN + 1;
+      }
 
       var prevLogical = logicalFromTrackIndex(prevTi);
       var prevSlide = originals[prevLogical];
@@ -326,21 +338,23 @@
       syncFromTrackIndex();
 
       if (prefersReducedMotion()) {
-        if (trackIndex === 0) trackIndex = realN;
-        else if (trackIndex === realN + 1) trackIndex = 1;
+        if (!finiteCarousel) {
+          if (trackIndex === 0) trackIndex = realN;
+          else if (trackIndex === realN + 1) trackIndex = 1;
+        }
         applyTransform(false);
         syncFromTrackIndex();
         return;
       }
 
-      if (trackIndex === realN + 1) {
+      if (!finiteCarousel && trackIndex === realN + 1) {
         syncTbiMagazineCloneVisual(originals[0], firstClone);
         stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[0], firstClone);
         if (isWhitehorse) {
           syncWhitehorseVideoClone(originals[0], firstClone);
           stopWhitehorseCloneFollow = followWhitehorseVideoClone(originals[0], firstClone);
         }
-      } else if (trackIndex === 0) {
+      } else if (!finiteCarousel && trackIndex === 0) {
         syncTbiMagazineCloneVisual(originals[realN - 1], lastClone);
         stopTbiCloneFollow = followTbiMagazineCloneVisual(originals[realN - 1], lastClone);
         if (isWhitehorse) {
@@ -364,11 +378,11 @@
         stopWhitehorseCloneFollow();
         stopWhitehorseCloneFollow = null;
       }
-      if (trackIndex === 0) {
+      if (!finiteCarousel && trackIndex === 0) {
         trackIndex = realN;
         applyTransform(false);
         syncFromTrackIndex();
-      } else if (trackIndex === realN + 1) {
+      } else if (!finiteCarousel && trackIndex === realN + 1) {
         trackIndex = 1;
         applyTransform(false);
         syncFromTrackIndex();
