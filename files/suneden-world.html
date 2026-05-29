@@ -59,115 +59,20 @@
         el.object3D.quaternion.copy(quaternion);
       }
 
-      AFRAME.registerComponent("globe-spin-controls", {
+      AFRAME.registerComponent("globe-auto-spin", {
         schema: {
-          baseSpeed: { type: "number", default: 1.38 },
-          yawSteer: { type: "number", default: 52 },
-          pitchSteer: { type: "number", default: 48 }
+          speed: { type: "number", default: 1.38 }
         },
         init: function () {
-          this.keys = {};
-          this.onKeyDown = this.onKeyDown.bind(this);
-          this.onKeyUp = this.onKeyUp.bind(this);
-          window.addEventListener("keydown", this.onKeyDown);
-          window.addEventListener("keyup", this.onKeyUp);
           this._qYaw = new THREE.Quaternion();
-          this._qPitch = new THREE.Quaternion();
           this._yawAxis = new THREE.Vector3(0, 1, 0);
-          this._pitchAxis = new THREE.Vector3(1, 0, 0);
-        },
-        remove: function () {
-          window.removeEventListener("keydown", this.onKeyDown);
-          window.removeEventListener("keyup", this.onKeyUp);
-        },
-        onKeyDown: function (event) {
-          this.keys[event.key.toLowerCase()] = true;
-        },
-        onKeyUp: function (event) {
-          this.keys[event.key.toLowerCase()] = false;
         },
         tick: function (_, deltaMs) {
           var dt = Math.min(deltaMs / 1000, 0.05);
-          var forwardAmount =
-            (this.keys.z || this.keys.w || this.keys.arrowup ? 1 : 0) -
-            (this.keys.s || this.keys.arrowdown ? 1 : 0);
-          var sideAmount =
-            (this.keys.d || this.keys.arrowright ? 1 : 0) -
-            (this.keys.q || this.keys.arrowleft ? 1 : 0);
-
-          var yawDegPerSec = this.data.baseSpeed - this.data.yawSteer * sideAmount;
-          var yawRad = THREE.MathUtils.degToRad(yawDegPerSec) * dt;
-          var pitchRad =
-            THREE.MathUtils.degToRad(this.data.pitchSteer) * forwardAmount * dt;
-
-          var q = this.el.object3D.quaternion;
+          var yawRad = THREE.MathUtils.degToRad(this.data.speed) * dt;
           this._qYaw.setFromAxisAngle(this._yawAxis, yawRad);
-          this._qPitch.setFromAxisAngle(this._pitchAxis, pitchRad);
-          q.premultiply(this._qYaw);
-          q.multiply(this._qPitch);
-          q.normalize();
-        }
-      });
-
-      AFRAME.registerComponent("wheel-dolly-zoom", {
-        schema: {
-          minDistance: { type: "number", default: 5 },
-          maxDistance: { type: "number", default: 46 },
-          sensitivity: { type: "number", default: 0.038 },
-          focusX: { type: "number", default: 0 },
-          focusY: { type: "number", default: 1 },
-          focusZ: { type: "number", default: -15 }
-        },
-        init: function () {
-          this.focus = new THREE.Vector3(
-            this.data.focusX,
-            this.data.focusY,
-            this.data.focusZ
-          );
-          this.onWheel = this.onWheel.bind(this);
-          this.onMessage = this.onMessage.bind(this);
-          window.addEventListener("message", this.onMessage);
-        },
-        play: function () {
-        },
-        pause: function () {
-          if (this._wheelCanvas) {
-            this._wheelCanvas.removeEventListener("wheel", this.onWheel);
-            this._wheelCanvas = null;
-          }
-        },
-        remove: function () {
-          window.removeEventListener("message", this.onMessage);
-          this.pause();
-        },
-        onMessage: function (event) {
-          if (!event.data || event.data.type !== "suneden-zoom") return;
-          this.dolly(Number(event.data.step) || 0);
-        },
-        dolly: function (step) {
-          if (Math.abs(step) < 1e-8) return;
-
-          var dir = new THREE.Vector3();
-          this.el.object3D.getWorldDirection(dir);
-
-          var pos = this.el.object3D.position;
-          var prev = pos.clone();
-          pos.addScaledVector(dir, step);
-
-          var dist = pos.distanceTo(this.focus);
-          if (dist < this.data.minDistance || dist > this.data.maxDistance) {
-            pos.copy(prev);
-          }
-        },
-        onWheel: function (event) {
-          var dy = event.deltaY;
-          if (event.deltaMode === 1) dy *= 16;
-          if (event.deltaMode === 2) dy *= 120;
-
-          var step = dy * this.data.sensitivity;
-          this.dolly(step);
-
-          event.preventDefault();
+          this.el.object3D.quaternion.premultiply(this._qYaw);
+          this.el.object3D.quaternion.normalize();
         }
       });
 
@@ -345,8 +250,8 @@
       <a-entity id="ambientLight" light="type: ambient; intensity: 0.78"></a-entity>
       <a-entity id="keyLight" light="type: directional; intensity: 0.95" position="5 8 4"></a-entity>
 
-      <!-- Globe: quaternion spin — steady yaw + Q/D; pitch inverted so Z/W/up = forward tilt, S/down = back -->
-      <a-entity id="worldRoot" position="0 1 -15" globe-spin-controls="baseSpeed: 1.38; yawSteer: 52; pitchSteer: 48">
+      <!-- Globe: passive auto-rotation. -->
+      <a-entity id="worldRoot" position="0 1 -15" globe-auto-spin="speed: 1.38">
         <!-- Mini planet -->
         <a-sphere
           id="planet"
@@ -362,13 +267,11 @@
         <a-entity id="trees"></a-entity>
       </a-entity>
 
-      <!-- Parent page +/− controls dolly the camera; wheel/pinch zoom is disabled for scrolling. -->
+      <!-- Static camera. -->
       <a-entity
         position="0 2.4 4"
         rotation="-8 0 0"
-        camera="active: true; fov: 95; near: 0.01; far: 1000"
-        look-controls="touchEnabled: false"
-        wheel-dolly-zoom="minDistance: 5; maxDistance: 46; sensitivity: 0.038; focusX: 0; focusY: 1; focusZ: -15">
+        camera="active: true; fov: 95; near: 0.01; far: 1000">
       </a-entity>
     </a-scene>
     <script>
