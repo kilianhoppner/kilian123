@@ -4827,3 +4827,34 @@ section.gallery .face-track-slot .gallery-tile-overlay-link {
     width: 44%;
   }
 }
+
+/* Sun Eden: prevent A-Frame iframe gestures from zooming the mobile page. */
+body:has(main.gallery-detail--suneden) {
+  overscroll-behavior-x: none;
+}
+
+main.gallery-detail--suneden,
+main.gallery-detail--suneden .gallery-detail__carousel,
+main.gallery-detail--suneden .gallery-detail__carousel-viewport,
+main.gallery-detail--suneden .gallery-detail__carousel-media,
+main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-character-embed {
+  touch-action: pan-y;
+}
+
+main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-character-embed {
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 768px) {
+  section.gallery > .gallery-suneden-world {
+    margin-top: clamp(-3.65rem, -12.5vw, -2.25rem);
+    margin-bottom: clamp(1.85rem, 6.8vw, 2.65rem);
+  }
+
+  .gallery img.menarefrommars {
+    --img-max-height: 88%;
+    --img-max-width: 88%;
+  }
+}
