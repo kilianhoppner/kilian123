@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <title>Character</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <style>
@@ -13,9 +13,12 @@
         width: 100%;
         overflow: hidden;
         background: transparent;
+        touch-action: pan-y;
+        overscroll-behavior: none;
       }
       a-scene {
         display: block;
+        touch-action: pan-y;
         position: fixed;
         top: 0;
         left: 0;
@@ -25,6 +28,7 @@
       }
       a-scene canvas {
         display: block;
+        touch-action: pan-y !important;
         height: 100% !important;
         width: 100% !important;
       }
@@ -1863,5 +1867,18 @@
       </a-camera>
     </a-scene>
     <div id="scrollSpacer" aria-hidden="true"></div>
+    <script>
+      (function () {
+        function blockGesture(event) {
+          if (event.cancelable) event.preventDefault();
+        }
+        document.addEventListener("gesturestart", blockGesture, { passive: false });
+        document.addEventListener("gesturechange", blockGesture, { passive: false });
+        document.addEventListener("gestureend", blockGesture, { passive: false });
+        document.addEventListener("touchmove", function (event) {
+          if (event.touches && event.touches.length > 1) blockGesture(event);
+        }, { passive: false });
+      })();
+    </script>
   </body>
 </html>

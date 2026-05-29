@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <title>World</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <style>
@@ -13,6 +13,9 @@
         width: 100%;
         overflow: hidden;
         background: transparent;
+      }
+      html, body, a-scene, canvas {
+        overscroll-behavior: none;
       }
       a-scene {
         display: block;
@@ -368,5 +371,18 @@
         wheel-dolly-zoom="minDistance: 5; maxDistance: 46; sensitivity: 0.038; focusX: 0; focusY: 1; focusZ: -15">
       </a-entity>
     </a-scene>
+    <script>
+      (function () {
+        function blockGesture(event) {
+          if (event.cancelable) event.preventDefault();
+        }
+        document.addEventListener("gesturestart", blockGesture, { passive: false });
+        document.addEventListener("gesturechange", blockGesture, { passive: false });
+        document.addEventListener("gestureend", blockGesture, { passive: false });
+        document.addEventListener("touchmove", function (event) {
+          if (event.touches && event.touches.length > 1) blockGesture(event);
+        }, { passive: false });
+      })();
+    </script>
   </body>
 </html>
