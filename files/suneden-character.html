@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Character</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+      a-scene {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh !important;
+        width: 100vw !important;
+        background: transparent;
+      }
+      a-scene canvas {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+      }
+      #scrollSpacer {
+        height: 100vh;
+        pointer-events: none;
+        visibility: hidden;
+        width: 1px;
+      }
+      .a-enter-vr,
+      .a-enter-ar,
+      .a-orientation-modal {
+        display: none !important;
+      }
+    </style>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-troika-text/dist/aframe-troika-text.min.js"></script>
+    <script>
+      /*
+       * Showcase tuning — edit these to adjust the object directory scene.
+       * 7 columns, proportionally scaled below referenceViewportWidth.
+       *
+       * Grid placement: layoutGrid() sets each cell at
+       *   x = (column - 3) * layout.xStep,  y = layout.topY - row * layout.rowStep.
+       * Inside a cell, each model’s vertical offset uses objectY[key] (negative = lower in frame).
+       * Label copy: edit SHOWCASE_LABELS. Label size: labelFontSize / labelTextWidth / labelY.
+       * Hover: objectHover[key] is cell scale on hover (1 = none, 1.4 = 40% larger).
+       * Spin: showcaseSpinSpeed sets rotation rate for all objects.
+       * Facing on load: objectRotation[key] — x/y/z degrees (y also used as spin start angle).
+       */
+      var SHOWCASE_CONFIG = {
+        hoverScaleAmount: 1.4,
+        hoverScaleDuration: 360,
+        /* Fallback hover formula when objectHover[key] is omitted (see hoverAmountFor). */
+        hoverReferenceScale: 1.25,
+        /* Grid label typeface (sign uses SunEden-Regular.otf — see TROIKA_SIGN). */
+        labelFontFile: "./ABCDiatypeRoundedEdu-Light.otf",
+        /* Name labels — labelFontSize is cap height in meters; labelTextWidth is wrap width. */
+        labelFontSize: 0.223,
+        labelTextWidth: 3.35,
+        labelY: -1.72,
+        columns: 7,
+        referenceViewportWidth: 1500,
+        baseGridScale: 1.2,
+        layout: {
+          xStep: 2.95,
+          rowStep: 3.14,
+          topY: 4.18,
+          pxPerRow: 360,
+          visibleRows: 2
+        },
+        cell: {
+          hitWidth: 2.65,
+          hitHeight: 3.28
+        },
+        camera: { position: "0 0.88 3.45" },
+        /* Degrees per second — same spin rate for every showcase object. */
+        showcaseSpinSpeed: 6.3,
+        objectSize: {
+          character: 3.35,
+          balloon: 1.04,
+          giraffe: 0.97,
+          fish: 1,
+          house: 1.2,
+          chicken: 1.8,
+          cow: 1.13,
+          butterfly: 0.78,
+          bird: 0.99,
+          helicopter: 1.5,
+          tree: 1.05,
+          flower: 1,
+          floatie: 1,
+          sun: 0.4,
+          sign: 0.77,
+          flame: 1,
+          chair: 1,
+          umbrella: 0.76,
+          fishingRod: 1.15,
+          beachBall: 0.97
+        },
+        /* Vertical offset per object within its grid cell (negative = lower). */
+        objectY: {
+          character: -1.02,
+          balloon: -1.08,
+          giraffe: -1.08,
+          fish: -0.45,
+          house: -0.94,
+          chicken: -0.9,
+          cow: -0.86,
+          butterfly: -0.46,
+          bird: -0.45,
+          helicopter: -0.43,
+          tree: -1.22,
+          flower: -0.78,
+          floatie: -0.5,
+          sun: -0.45,
+          sign: -0.8,
+          flame: -0.85,
+          chair: -0.9,
+          umbrella: -1.00,
+          fishingRod: -0.62,
+          beachBall: -0.35
+        },
+        /* Starting rotation per object (degrees). y = load facing + showcase-spin start. */
+        objectRotation: {
+          character: { x: 0, y: 180, z: 0 },
+          balloon: { x: 0, y: 0, z: 0 },
+          giraffe: { x: 0, y: 155, z: 0 },
+          fish: { x: 0, y: -45, z: 0 },
+          house: { x: 0, y: 176, z: 0 },
+          chicken: { x: 0, y: -35, z: 0 },
+          cow: { x: 0, y: -25, z: 0 },
+          butterfly: { x: 0, y: 0, z: 0 },
+          bird: { x: 0, y: 145, z: 0 },
+          helicopter: { x: -14, y: 150, z: 0 },
+          tree: { x: 0, y: 0, z: 0 },
+          flower: { x: 42, y: 24, z: 14 },
+          floatie: { x: 65, y: 0, z: 0 },
+          sun: { x: 0, y: 0, z: 0 },
+          sign: { x: 0, y: 32, z: 0 },
+          flame: { x: 0, y: 0, z: 0 },
+          chair: { x: 0, y: 180, z: 0 },
+          umbrella: { x: -3, y: 0, z: 0 },
+          fishingRod: { x: 0, y: -22, z: -8 },
+          beachBall: { x: 90, y: 0, z: 8 }
+        },
+        /* Per-object hover cell scale (1 = no growth; higher = bigger pop on hover). */
+        objectHover: {
+          character: 1.4,
+          balloon: 1.70,
+          giraffe: 1.35,
+          fish: 1.36,
+          house: 1.48,
+          chicken: 1.32,
+          cow: 1.45,
+          butterfly: 1.29,
+          bird: 1.43,
+          helicopter: 1.49,
+          tree: 1.52,
+          flower: 1.27,
+          floatie: 1.42,
+          sun: 1.95,
+          sign: 1.61,
+          flame: 1.37,
+          chair: 1.48,
+          umbrella: 1.52,
+          fishingRod: 1.7,
+          beachBall: 1.55
+        }
+      };
+
+      /* Display names under each object — edit these to change label text. */
+      var SHOWCASE_LABELS = {
+        character: "Character",
+        balloon: "Hot Air Balloon",
+        giraffe: "Giraffe",
+        fish: "Fish",
+        house: "House",
+        chicken: "Chicken",
+        cow: "Cow",
+        butterfly: "Butterfly",
+        bird: "Bird",
+        helicopter: "Helicopter",
+        tree: "Tree",
+        flower: "Flower",
+        floatie: "Floatie",
+        sun: "Sun",
+        sign: "Sun Eden Sign",
+        flame: "Fire",
+        chair: "Plastic Chair",
+        umbrella: "Umbrella",
+        fishingRod: "Fishing Rod",
+        beachBall: "Beach Ball"
+      };
+
+      var TROIKA_SIGN =
+        "value: SUN EDEN; align: center; baseline: middle; color: #115CAC; font: ./SunEden-Regular.otf; fontSize: 0.53; maxWidth: 3.05; anchorX: center; anchorY: center; letterSpacing: 0.01; outlineWidth: 0; outlineColor: #5a3418";
+      var SHOWCASE_POINTER_ACTIVE = false;
+      window.addEventListener("mousemove", function () {
+        SHOWCASE_POINTER_ACTIVE = true;
+      });
+
+      AFRAME.registerComponent("showcase-spin", {
+        schema: {
+          speed: { type: "number", default: 10 },
+          baseY: { type: "number", default: 0 }
+        },
+        init: function () {
+          this.t = 0;
+          this.baseRot = this.el.getAttribute("rotation") || { x: 0, y: 0, z: 0 };
+        },
+        tick: function (_, dt) {
+          this.t += (dt || 16) / 1000;
+          var y = this.data.baseY + this.t * this.data.speed;
+          this.el.setAttribute(
+            "rotation",
+            this.baseRot.x + " " + y + " " + this.baseRot.z
+          );
+        }
+      });
+
+      AFRAME.registerComponent("showcase-head-look", {
+        schema: {
+          phaseOffset: { type: "number", default: 0 }
+        },
+        init: function () {
+          this.angle = this.data.phaseOffset + Math.random() * 6.28;
+          this.holdRem = 0;
+          this.holdYaw = 0;
+          this.holdPitch = 0;
+          this.nextHoldCheck = 1.4 + Math.random() * 2.2;
+        },
+        tick: function (_, deltaMs) {
+          var dt = Math.min((deltaMs || 16) / 1000, 0.05);
+          var head = this.el.querySelector(".human-head");
+          if (!head) return;
+          if (this.holdRem > 0) {
+            this.holdRem -= dt;
+            head.setAttribute("rotation", this.holdPitch + " " + this.holdYaw + " 0");
+            return;
+          }
+          this.angle += dt * 0.48;
+          this.nextHoldCheck -= dt;
+          if (this.nextHoldCheck <= 0) {
+            this.nextHoldCheck = 2.8 + Math.random() * 4.6;
+            var yaw =
+              Math.sin(this.angle * 0.88) * 42 +
+              Math.sin(this.angle * 1.63 + this.data.phaseOffset) * 26 +
+              Math.sin(this.angle * 0.37) * 14;
+            var pitch =
+              Math.sin(this.angle * 0.55 + 0.6) * 10 +
+              Math.sin(this.angle * 1.12 + this.data.phaseOffset) * 6 +
+              Math.sin(this.angle * 0.24) * 4;
+            this.holdYaw = yaw;
+            this.holdPitch = pitch;
+            this.holdRem = 0.85 + Math.random() * 2.15;
+            head.setAttribute("rotation", this.holdPitch + " " + this.holdYaw + " 0");
+            return;
+          }
+          var headYaw =
+            Math.sin(this.angle * 0.88) * 42 +
+            Math.sin(this.angle * 1.63 + this.data.phaseOffset) * 26 +
+            Math.sin(this.angle * 0.37) * 14;
+          var headPitch =
+            Math.sin(this.angle * 0.55 + 0.6) * 10 +
+            Math.sin(this.angle * 1.12 + this.data.phaseOffset) * 6 +
+            Math.sin(this.angle * 0.24) * 4;
+          head.setAttribute("rotation", headPitch + " " + headYaw + " 0");
+        }
+      });
+
+      AFRAME.registerComponent("character-idle-gestures", {
+        init: function () {
+          this.t = 0;
+          this.head = this.el.querySelector(".human-head");
+          this.torso = this.el.querySelector(".human-torso");
+          this.leftArm = this.el.querySelector(".human-arm-left");
+          this.rightArm = this.el.querySelector(".human-arm-right");
+          this.leftLeg = this.el.querySelector(".human-leg-left");
+          this.rightLeg = this.el.querySelector(".human-leg-right");
+          var basePos = this.el.getAttribute("position") || { x: 0, y: 0, z: 0 };
+          this.baseX = Number(basePos.x) || 0;
+          this.baseY = Number(basePos.y) || 0;
+          this.baseZ = Number(basePos.z) || 0;
+          this.moveFromX = this.baseX;
+          this.moveToX = this.baseX;
+          this.moveElapsed = 0;
+          this.moveDuration = 1;
+          this.pauseRemaining = 3.2 + Math.random() * 3.6;
+          this.walking = false;
+          this.stepPhase = 0;
+          this.stepRate = 5.1;
+          this.walkStrength = 0;
+          this.bodyYaw = 0;
+          this.targetBodyYaw = 0;
+          this.headYaw = 0;
+          this.headPitch = -1;
+          this.targetYaw = 0;
+          this.targetPitch = -1;
+          this.nextLook = 1.8 + Math.random() * 2.8;
+        },
+        tick: function (_, deltaMs) {
+          var dt = Math.min((deltaMs || 16) / 1000, 0.05);
+          this.t += dt;
+          var t = this.t;
+          var breathe = Math.sin(t * 1.25);
+          this.walkStrength = 0;
+          if (this.walking) {
+            this.moveElapsed += dt;
+            var p = Math.min(1, this.moveElapsed / this.moveDuration);
+            var eased = p * p * (3 - 2 * p);
+            var walkX = this.moveFromX + (this.moveToX - this.moveFromX) * eased;
+            var direction = this.moveToX >= this.moveFromX ? 1 : -1;
+            this.walkStrength = Math.sin(p * Math.PI);
+            this.stepPhase += dt * this.stepRate;
+            if (p >= 1) {
+              walkX = this.moveToX;
+              this.moveFromX = walkX;
+              this.walking = false;
+              this.targetBodyYaw = 0;
+              this.pauseRemaining = 4.5 + Math.random() * 7.0;
+            }
+            var step = Math.sin(this.stepPhase);
+            var walkBob = this.walkStrength * (0.006 + Math.abs(step) * 0.008);
+            var lean = this.walkStrength * direction * 0.75;
+            this.bodyYaw += (this.targetBodyYaw - this.bodyYaw) * (1 - Math.exp(-2.45 * dt));
+            this.el.object3D.position.set(walkX, this.baseY + walkBob, this.baseZ);
+            this.el.object3D.rotation.set(
+              0,
+              Math.PI + THREE.MathUtils.degToRad(this.bodyYaw),
+              THREE.MathUtils.degToRad(-lean)
+            );
+          } else {
+            this.pauseRemaining -= dt;
+            if (this.pauseRemaining <= 0) {
+              if (Math.random() < 0.42) {
+                this.pauseRemaining = 2.2 + Math.random() * 5.6;
+                this.targetBodyYaw = 0;
+              } else {
+              this.moveFromX = this.el.object3D.position.x;
+              var nearCenter = Math.abs(this.moveFromX - this.baseX) < 0.035;
+              this.moveToX = nearCenter
+                ? this.baseX + (Math.random() < 0.5 ? -1 : 1) * (0.11 + Math.random() * 0.17)
+                : this.baseX + (-0.028 + Math.random() * 0.056);
+              var moveDir = this.moveToX >= this.moveFromX ? 1 : -1;
+              this.moveElapsed = 0;
+              this.moveDuration = 2.25 + Math.random() * 1.7;
+              this.stepRate = 3.15 + Math.random() * 1.0;
+              this.targetBodyYaw = moveDir * (10 + Math.random() * 4);
+              this.walking = true;
+              }
+            }
+            this.bodyYaw += (this.targetBodyYaw - this.bodyYaw) * (1 - Math.exp(-1.8 * dt));
+            this.el.object3D.position.set(this.moveFromX, this.baseY, this.baseZ);
+            this.el.object3D.rotation.set(0, Math.PI + THREE.MathUtils.degToRad(this.bodyYaw), 0);
+          }
+          if (this.torso) {
+            this.torso.object3D.position.set(0, 0.45 + breathe * 0.008, 0);
+          }
+          if (this.head) {
+            this.nextLook -= dt;
+            if (this.nextLook <= 0) {
+              this.nextLook = 2.4 + Math.random() * 5.0;
+              this.targetYaw = -14 + Math.random() * 28;
+              this.targetPitch = -6 + Math.random() * 11;
+            }
+            var settle = 1 - Math.exp(-0.82 * dt);
+            this.headYaw += (this.targetYaw - this.headYaw) * settle;
+            this.headPitch += (this.targetPitch - this.headPitch) * settle;
+            var microYaw = Math.sin(t * 0.38) * 0.7 + Math.sin(t * 0.19 + 1.8) * 0.45;
+            var microPitch = Math.sin(t * 0.31 + 0.4) * 0.42;
+            this.head.object3D.rotation.set(
+              THREE.MathUtils.degToRad(this.headPitch + microPitch),
+              THREE.MathUtils.degToRad(this.headYaw + microYaw),
+              0
+            );
+          }
+          if (this.leftArm) {
+            var armStep = this.walking ? Math.sin(this.stepPhase + Math.PI) * this.walkStrength * 2.8 : 0;
+            var leftSway = Math.sin(t * 0.82 + 0.7) * 1.25 + armStep;
+            this.leftArm.object3D.rotation.set(
+              THREE.MathUtils.degToRad(7),
+              0,
+              THREE.MathUtils.degToRad(10 + leftSway)
+            );
+          }
+          if (this.rightArm) {
+            var rightArmStep = this.walking ? Math.sin(this.stepPhase) * this.walkStrength * 2.8 : 0;
+            var rightSway = Math.sin(t * 0.78 + 2.4) * 1.2 + rightArmStep;
+            this.rightArm.object3D.rotation.set(
+              THREE.MathUtils.degToRad(7),
+              0,
+              THREE.MathUtils.degToRad(-10 + rightSway)
+            );
+          }
+          if (this.leftLeg) {
+            var legStepL = this.walking ? Math.sin(this.stepPhase) * this.walkStrength * 5.2 : 0;
+            this.leftLeg.object3D.rotation.set(0, 0, THREE.MathUtils.degToRad(legStepL));
+          }
+          if (this.rightLeg) {
+            var legStepR = this.walking ? Math.sin(this.stepPhase + Math.PI) * this.walkStrength * 5.2 : 0;
+            this.rightLeg.object3D.rotation.set(0, 0, THREE.MathUtils.degToRad(legStepR));
+          }
+        }
+      });
+
+      AFRAME.registerComponent("showcase-chicken-wings", {
+        init: function () {
+          this.wingL = this.el.querySelector(".chicken-wing-l");
+          this.wingR = this.el.querySelector(".chicken-wing-r");
+          this.wingFlutterPh = 0;
+          this.wingFlutterRem = 0;
+          this.wingFlutterSpan = 0.5;
+          this.wingFlutterCd = 0.4 + Math.random();
+          this.wingFlutterOmega = 14 + Math.random() * 5;
+          this.wingFlutterWy = 0;
+          this.wingFlutterRz = 0;
+          this.wingFlutterRx = 0;
+        },
+        tick: function (_, deltaMs) {
+          var dt = Math.min((deltaMs || 16) / 1000, 0.05);
+          var wL = this.wingL;
+          var wR = this.wingR;
+          if (!wL || !wR) return;
+          this.wingFlutterCd -= dt;
+          if (this.wingFlutterCd <= 0 && this.wingFlutterRem <= 0) {
+            this.wingFlutterRem = 0.38 + Math.random() * 0.58;
+            this.wingFlutterSpan = this.wingFlutterRem;
+            this.wingFlutterCd = 2.1 + Math.random() * 8.9;
+          }
+          var flutterBell = 0;
+          var flutterSpan = this.wingFlutterSpan;
+          if (flutterSpan > 1e-7 && this.wingFlutterRem > 0) {
+            this.wingFlutterRem -= dt;
+            if (this.wingFlutterRem < 0) this.wingFlutterRem = 0;
+            var progressed = THREE.MathUtils.clamp(1 - this.wingFlutterRem / flutterSpan, 0, 1);
+            flutterBell = Math.pow(Math.sin(Math.PI * progressed), 1.55);
+          }
+          this.wingFlutterPh += dt * this.wingFlutterOmega * flutterBell;
+          var ph = this.wingFlutterPh;
+          var wyBurstTar = flutterBell * Math.sin(ph) * 26;
+          var rzTar = flutterBell * Math.sin(ph * 2.08) * 16;
+          var rxTar = flutterBell * Math.cos(ph * 1.45) * 11;
+          var smActive = flutterBell > 0.12;
+          var smK = Math.min(1, dt * (smActive ? 38 : 5.5));
+          this.wingFlutterWy += (wyBurstTar - this.wingFlutterWy) * smK;
+          this.wingFlutterRz += (rzTar - this.wingFlutterRz) * smK;
+          this.wingFlutterRx += (rxTar - this.wingFlutterRx) * smK;
+          if (this.wingFlutterRem <= 0 && flutterBell < 1e-6) {
+            var dec = Math.min(1, dt * 6.2);
+            this.wingFlutterWy *= 1 - dec;
+            this.wingFlutterRz *= 1 - dec;
+            this.wingFlutterRx *= 1 - dec;
+          }
+          var lx = 14;
+          var lyL = -34;
+          var lzL = 131;
+          var wy = this.wingFlutterWy;
+          var rz = this.wingFlutterRz;
+          var rx = this.wingFlutterRx;
+          wL.setAttribute("rotation", lx + rx + " " + (lyL + wy) + " " + (lzL + rz));
+          wR.setAttribute("rotation", lx + rx + " " + (-lyL - wy) + " " + (-lzL - rz));
+        }
+      });
+
+      AFRAME.registerComponent("showcase-smoke-puff", {
+        schema: {
+          baseOpacity: { type: "number", default: 0.34 },
+          delay: { type: "number", default: 0 },
+          dur: { type: "number", default: 3800 }
+        },
+        init: function () {
+          this.mesh = null;
+        },
+        tick: function (time) {
+          if (!this.mesh) {
+            this.mesh = this.el.getObject3D("mesh");
+            if (!this.mesh || !this.mesh.material) return;
+            this.mesh.material.transparent = true;
+            this.mesh.material.depthWrite = false;
+          }
+          var dur = Math.max(1, this.data.dur);
+          var local = ((time - this.data.delay) % dur + dur) % dur;
+          var phase = local / dur;
+          var envelope = Math.sin(phase * Math.PI);
+          envelope = Math.pow(Math.max(0, envelope), 1.25);
+          this.mesh.material.opacity = this.data.baseOpacity * envelope;
+          this.mesh.material.needsUpdate = true;
+        }
+      });
+
+      AFRAME.registerComponent("showcase-beach-ball", {
+        init: function () {
+          var radius = 0.37;
+          var colors = [0x1f5fe0, 0xe53935, 0xf7f4ea, 0xe747a9, 0xf7c744, 0x39c778];
+          var group = new THREE.Group();
+          var i;
+          for (i = 0; i < colors.length; i++) {
+            var geom = new THREE.SphereGeometry(
+              radius,
+              18,
+              28,
+              (i / colors.length) * Math.PI * 2,
+              Math.PI * 2 / colors.length,
+              0,
+              Math.PI
+            );
+            var mat = new THREE.MeshStandardMaterial({
+              color: colors[i],
+              roughness: 0.34,
+              metalness: 0.02,
+              fog: true
+            });
+            group.add(new THREE.Mesh(geom, mat));
+          }
+          var capMat = new THREE.MeshStandardMaterial({
+            color: 0xf7f4ea,
+            roughness: 0.28,
+            metalness: 0.01,
+            fog: true,
+            side: THREE.DoubleSide
+          });
+          var capGeom = new THREE.CircleGeometry(radius * 0.24, 36);
+          var capTop = new THREE.Mesh(capGeom, capMat);
+          capTop.position.y = radius * 1.006;
+          capTop.rotation.x = -Math.PI / 2;
+          group.add(capTop);
+          var capBottom = new THREE.Mesh(capGeom.clone(), capMat);
+          capBottom.position.y = -radius * 1.006;
+          capBottom.rotation.x = Math.PI / 2;
+          group.add(capBottom);
+          this.meshGroup = group;
+          this.el.object3D.add(group);
+        },
+        remove: function () {
+          if (!this.meshGroup) return;
+          this.el.object3D.remove(this.meshGroup);
+          this.meshGroup.traverse(function (node) {
+            if (node.geometry) node.geometry.dispose();
+            if (node.material) node.material.dispose();
+          });
+        }
+      });
+
+      /* Pasture cow head look + tail sway (same math as index.html globe-cow-graze, idle). */
+      AFRAME.registerComponent("showcase-cow-idle", {
+        init: function () {
+          this.stridePhase = Math.random() * Math.PI * 2;
+          this.tailT = Math.random() * 20;
+          this.headCow = this.el.querySelector(".cow-head");
+          this.tailCow = this.el.querySelector(".cow-tail");
+        },
+        tick: function (_, deltaMs) {
+          var dt = Math.min((deltaMs || 16) / 1000, 0.05);
+          this.stridePhase += dt * 0.94;
+          if (this.headCow) {
+            this.headCow.setAttribute(
+              "rotation",
+              Math.sin(this.stridePhase * 0.52) * 5 +
+                " " +
+                Math.sin(this.stridePhase * 0.38) * 7 +
+                " 0"
+            );
+          }
+          if (this.tailCow) {
+            this.tailT += dt;
+            var tailGate = Math.max(0, Math.sin(this.tailT * 0.42 + 1.7));
+            tailGate = tailGate * tailGate;
+            var tailSway =
+              tailGate *
+              (Math.sin(this.tailT * 1.38) * 18 +
+                Math.sin(this.tailT * 2.17 + 1.1) * 7);
+            this.tailCow.setAttribute("rotation", "0 " + tailSway + " 0");
+          }
+        }
+      });
+
+      AFRAME.registerComponent("grid-hover-scale", {
+        schema: {
+          amount: { type: "number", default: 1.13 },
+          duration: { type: "number", default: 360 }
+        },
+        init: function () {
+          this.current = 1;
+          this.start = 1;
+          this.target = 1;
+          this.elapsed = this.data.duration;
+          this.hitEl = this.el.querySelector(".grid-cell-hit");
+          var onEnter = this.setHover.bind(this, true);
+          var onLeave = this.setHover.bind(this, false);
+          if (this.hitEl) {
+            this.hitEl.addEventListener("mouseenter", onEnter);
+            this.hitEl.addEventListener("mouseleave", onLeave);
+          } else {
+            this.el.addEventListener("mouseenter", onEnter);
+            this.el.addEventListener("mouseleave", onLeave);
+          }
+        },
+        setHover: function (hovered) {
+          if (hovered && !SHOWCASE_POINTER_ACTIVE) return;
+          this.start = this.current;
+          this.target = hovered ? this.data.amount : 1;
+          this.elapsed = 0;
+        },
+        bezierEase: function (t) {
+          var inv = 1 - t;
+          var y1 = 1;
+          var y2 = 1;
+          return 3 * inv * inv * t * y1 + 3 * inv * t * t * y2 + t * t * t;
+        },
+        tick: function (_, dt) {
+          if (this.elapsed >= this.data.duration && this.current === this.target) return;
+          this.elapsed = Math.min(this.data.duration, this.elapsed + (dt || 16));
+          var p = this.elapsed / this.data.duration;
+          var eased = this.bezierEase(p);
+          this.current = this.start + (this.target - this.start) * eased;
+          var s = this.current;
+          this.el.setAttribute("scale", s + " " + s + " " + s);
+        }
+      });
+
+      /* Four ropes: rim corners to exact points on the envelope ellipsoid (scaled sphere). */
+      AFRAME.registerComponent("balloon-rig-ropes", {
+        schema: {
+          rimY: { type: "number", default: 0.48 },
+          rimXZ: { type: "number", default: 0.31 },
+          attachXZ: { type: "number", default: 0.352 },
+          envelopeCy: { type: "number", default: 2.61 },
+          radiusAx: { type: "number", default: 1.265 },
+          radiusBy: { type: "number", default: 1.686 },
+          ropeRadius: { type: "number", default: 0.015 }
+        },
+        init: function () {
+          var d = this.data;
+          var ax = d.radiusAx;
+          var by = d.radiusBy;
+          var cy = d.envelopeCy;
+          var x = d.attachXZ;
+          var horiz = (2 * x * x) / (ax * ax);
+          var vySq = (1 - horiz) * by * by;
+          if (vySq < 1e-10) vySq = 0;
+          var attachY = cy - Math.sqrt(vySq);
+
+          var corners = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
+          var mat = "shader: standard; roughness: 0.84; metalness: 0";
+          var deg = THREE.MathUtils.radToDeg;
+          var euler = new THREE.Euler();
+          var q = new THREE.Quaternion();
+          var vUp = new THREE.Vector3(0, 1, 0);
+          var pi;
+          for (pi = 0; pi < 4; pi++) {
+            var sx = corners[pi][0];
+            var sz = corners[pi][1];
+            var x0 = sx * d.rimXZ;
+            var z0 = sz * d.rimXZ;
+            var y0 = d.rimY;
+            var x1 = sx * d.attachXZ;
+            var z1 = sz * d.attachXZ;
+            var y1 = attachY;
+            var dx = x1 - x0;
+            var dy = y1 - y0;
+            var dz = z1 - z0;
+            var len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (len < 1e-6) continue;
+            var mx = (x0 + x1) * 0.5;
+            var my = (y0 + y1) * 0.5;
+            var mz = (z0 + z1) * 0.5;
+            var dir = new THREE.Vector3(dx / len, dy / len, dz / len);
+            q.setFromUnitVectors(vUp, dir);
+            euler.setFromQuaternion(q, "XYZ");
+            var cyl = document.createElement("a-cylinder");
+            cyl.setAttribute("radius", d.ropeRadius);
+            cyl.setAttribute("height", len);
+            cyl.setAttribute("position", mx + " " + my + " " + mz);
+            cyl.setAttribute(
+              "rotation",
+              deg(euler.x) + " " + deg(euler.y) + " " + deg(euler.z)
+            );
+            cyl.setAttribute("color", "#665544");
+            cyl.setAttribute("material", mat);
+            this.el.appendChild(cyl);
+          }
+        }
+      });
+
+      /*
+       * Canvas phrase projected onto the envelope mesh: thin shell shares the balloon transform so ink
+       * sits on the real surface (depth-tested, not free-floating Troika).
+       * Projection is a tangent-plane map onto a spherical cap from stickerCenter — it follows curvature
+       * on that patch but does not cylindrical-wrap around the whole balloon; edges are bounded by cosCone.
+       */
+      AFRAME.registerComponent("balloon-envelope-phrase", {
+        schema: {
+          anchorSelector: { type: "string", default: "#balloonPhraseAnchor" },
+          /* Empty string = single decal only. */
+          secondAnchorSelector: {
+            type: "string",
+            default: "#balloonPhraseAnchorOpposite"
+          },
+          canvasWidth: { type: "int", default: 1024 },
+          canvasHeight: { type: "int", default: 256 },
+          inflate: { type: "number", default: 1.0012 },
+          invTanHalf: { type: "number", default: 0.57 },
+          /* Tan projection (/lz): lower horizontalTanScale = wider phrase; higher verticalTanScale = shorter glyphs (less tall/skinny). */
+          horizontalTanScale: { type: "number", default: 0.56 },
+          verticalTanScale: { type: "number", default: 1.1 },
+          /* Lower = wider cone on sphere (fewer edge fragments discarded); tighten only if decal bleeds around the horizon. */
+          cosCone: { type: "number", default: 0.615 },
+          renderOrder: { type: "int", default: 2 },
+          polygonOffsetFactor: { type: "number", default: -28 },
+          polygonOffsetUnits: { type: "number", default: -28 },
+          /* Opposite hemisphere: PNG/JPEG path (same folder as this page unless relative). Portrait shots: tune tan scales below. */
+          oppositeImageSrc: { type: "string", default: "" },
+          oppositeText: { type: "string", default: "" },
+          oppositeHorizontalTanScale: { type: "number", default: 0.52 },
+          oppositeVerticalTanScale: { type: "number", default: 0.84 }
+        },
+        init: function () {
+          var d = this.data;
+          var THREE = AFRAME.THREE;
+          var el = this.el;
+          var canvas = document.createElement("canvas");
+          canvas.width = d.canvasWidth;
+          canvas.height = d.canvasHeight;
+          var ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var fontPx = Math.round(d.canvasHeight * 0.48);
+          ctx.font =
+            '900 ' +
+            fontPx +
+            'px system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "left";
+          var cy = canvas.height * 0.52;
+          var letterGap = fontPx * 0.28;
+          /* Serif-style capital I: top/bottom bars plus stem (reads clearly on curved decal). */
+          var stemW = fontPx * 0.265;
+          var capH = fontPx * 0.125;
+          var capW = stemW + fontPx * 0.52;
+          var stemBody = fontPx * 0.62;
+          var fullIH = stemBody + 2 * capH;
+          var stemSlot = capW + fontPx * 0.14;
+          var wHeart = ctx.measureText("\u2665").width;
+          var wMom = ctx.measureText("Mom").width;
+          var phraseW = stemSlot + letterGap + wHeart + letterGap + wMom;
+          /* Match projection origin uv=(0.5,0.5): phrase centroid stays near canvas center so cone discard doesn't crop only one side. */
+          var x = (canvas.width - phraseW) * 0.5;
+          ctx.fillStyle = "#25252d";
+          var cx = x + stemSlot * 0.5;
+          var stemLeft = cx - stemW * 0.5;
+          var topY = cy - fullIH * 0.5;
+          ctx.fillRect(cx - capW * 0.5, topY, capW, capH);
+          ctx.fillRect(stemLeft, topY + capH, stemW, stemBody);
+          ctx.fillRect(cx - capW * 0.5, topY + capH + stemBody, capW, capH);
+          x += stemSlot + letterGap;
+          ctx.fillStyle = "#DC2626";
+          ctx.fillText("\u2665", x, cy);
+          x += wHeart + letterGap;
+          ctx.fillStyle = "#25252d";
+          ctx.fillText("Mom", x, cy);
+
+          function makeOppositeTextTexture(text) {
+            var oc = document.createElement("canvas");
+            oc.width = d.canvasWidth;
+            oc.height = d.canvasHeight;
+            var octx = oc.getContext("2d");
+            octx.clearRect(0, 0, oc.width, oc.height);
+            var oFont = Math.round(d.canvasHeight * 0.36);
+            octx.font =
+              "900 " +
+              oFont +
+              "px system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif";
+            octx.textBaseline = "middle";
+            octx.textAlign = "center";
+            octx.fillStyle = "#0000FF";
+            octx.fillText(text, oc.width * 0.5, oc.height * 0.49);
+            var tw = octx.measureText(text).width;
+            var uy = oc.height * 0.49 + oFont * 0.42;
+            octx.strokeStyle = "#0000FF";
+            octx.lineWidth = Math.max(5, oFont * 0.06);
+            octx.lineCap = "round";
+            octx.beginPath();
+            octx.moveTo(oc.width * 0.5 - tw * 0.5, uy);
+            octx.lineTo(oc.width * 0.5 + tw * 0.5, uy);
+            octx.stroke();
+            var ot = new THREE.CanvasTexture(oc);
+            if (THREE.SRGBColorSpace !== undefined) {
+              ot.colorSpace = THREE.SRGBColorSpace;
+            }
+            ot.minFilter = THREE.LinearFilter;
+            ot.magFilter = THREE.LinearFilter;
+            ot.wrapS = THREE.ClampToEdgeWrapping;
+            ot.wrapT = THREE.ClampToEdgeWrapping;
+            ot.needsUpdate = true;
+            return ot;
+          }
+
+          var tex = new THREE.CanvasTexture(canvas);
+          if (THREE.SRGBColorSpace !== undefined) {
+            tex.colorSpace = THREE.SRGBColorSpace;
+          }
+          tex.minFilter = THREE.LinearFilter;
+          tex.magFilter = THREE.LinearFilter;
+          tex.wrapS = THREE.ClampToEdgeWrapping;
+          tex.wrapT = THREE.ClampToEdgeWrapping;
+          tex.needsUpdate = true;
+
+          var radius = parseFloat(el.getAttribute("radius"));
+          if (!radius || radius <= 0 || !isFinite(radius)) radius = 1.36;
+
+          var sw =
+            parseInt(el.getAttribute("segments-width"), 10) ||
+            parseInt(el.getAttribute("segmentsWidth"), 10);
+          var sh =
+            parseInt(el.getAttribute("segments-height"), 10) ||
+            parseInt(el.getAttribute("segmentsHeight"), 10);
+          if (!sw || sw <= 8) sw = 48;
+          if (!sh || sh <= 8) sh = 32;
+
+          var geom = new THREE.SphereGeometry(radius * d.inflate, sw, sh);
+          var uniforms = {
+            map: { value: tex },
+            stickerCenterModel: { value: new THREE.Vector3(1, 0, 0) },
+            stickerUpModel: { value: new THREE.Vector3(0, 1, 0) },
+            invTanHalfX: { value: d.invTanHalf * d.horizontalTanScale },
+            invTanHalfY: { value: d.invTanHalf * d.verticalTanScale },
+            cosCone: { value: d.cosCone }
+          };
+
+          var vert =
+            "varying vec3 vLocalPos;\n" +
+            "void main() {\n" +
+            "  vLocalPos = position;\n" +
+            "  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n" +
+            "}";
+
+          var frag =
+            "precision mediump float;\n" +
+            "uniform sampler2D map;\n" +
+            "uniform vec3 stickerCenterModel;\n" +
+            "uniform vec3 stickerUpModel;\n" +
+            "uniform float invTanHalfX;\n" +
+            "uniform float invTanHalfY;\n" +
+            "uniform float cosCone;\n" +
+            "varying vec3 vLocalPos;\n" +
+            "void main() {\n" +
+            "  vec3 dir = normalize(vLocalPos);\n" +
+            "  vec3 cdir = normalize(stickerCenterModel);\n" +
+            "  vec3 up = normalize(stickerUpModel);\n" +
+            "  vec3 ref = up - dot(up, cdir) * cdir;\n" +
+            "  float refLen = length(ref);\n" +
+            "  if (refLen < 0.001) ref = vec3(1.0, 0.0, 0.0);\n" +
+            "  else ref = ref / refLen;\n" +
+            "  vec3 tangent = normalize(cross(ref, cdir));\n" +
+            "  vec3 bitangent = normalize(cross(cdir, tangent));\n" +
+            "  float lz = dot(dir, cdir);\n" +
+            "  if (lz < cosCone) discard;\n" +
+            "  vec2 planar = vec2(dot(dir, tangent), dot(dir, bitangent)) / max(lz, 0.001);\n" +
+            "  vec2 uv = vec2(planar.x * invTanHalfX, planar.y * invTanHalfY) + vec2(0.5);\n" +
+            "  if (uv.x < -0.08 || uv.x > 1.08 || uv.y < -0.08 || uv.y > 1.08) discard;\n" +
+            "  vec4 col = texture2D(map, uv);\n" +
+            "  if (col.a < 0.022) discard;\n" +
+            "  gl_FragColor = col;\n" +
+            "}";
+
+          var mat = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vert,
+            fragmentShader: frag,
+            transparent: true,
+            depthTest: true,
+            depthWrite: false,
+            polygonOffset: true,
+            polygonOffsetFactor: d.polygonOffsetFactor,
+            polygonOffsetUnits: d.polygonOffsetUnits,
+            side: THREE.DoubleSide
+          });
+
+          var mesh = new THREE.Mesh(geom, mat);
+          mesh.renderOrder = d.renderOrder;
+          mesh.frustumCulled = false;
+          mesh.name = "balloonEnvelopePhraseDecal";
+
+          el.object3D.add(mesh);
+          this.decalMesh = mesh;
+          this.uniforms = uniforms;
+          this.decalMeshOpposite = null;
+          this.uniformsOpposite = null;
+          this._texOpposite = null;
+          this._oppMapPlaceholder = null;
+
+          var secSel = (d.secondAnchorSelector || "").trim();
+          if (secSel.length > 0) {
+            var oppImgSrc = (d.oppositeImageSrc || "").trim();
+            var oppText = (d.oppositeText || "").trim();
+            var useOppositePhoto = oppImgSrc.length > 0;
+            var useOppositeText = oppText.length > 0;
+            var oppInvX =
+              d.invTanHalf *
+              (useOppositePhoto || useOppositeText ? d.oppositeHorizontalTanScale : d.horizontalTanScale);
+            var oppInvY =
+              d.invTanHalf *
+              (useOppositePhoto || useOppositeText ? d.oppositeVerticalTanScale : d.verticalTanScale);
+
+            var oppTexMap = tex;
+            if (useOppositeText) {
+              oppTexMap = makeOppositeTextTexture(oppText);
+              this._texOpposite = oppTexMap;
+            } else if (useOppositePhoto) {
+              var pc = document.createElement("canvas");
+              pc.width = 4;
+              pc.height = 4;
+              pc.getContext("2d").clearRect(0, 0, 4, 4);
+              oppTexMap = new THREE.CanvasTexture(pc);
+              oppTexMap.needsUpdate = true;
+              oppTexMap.minFilter = THREE.LinearFilter;
+              oppTexMap.magFilter = THREE.LinearFilter;
+              this._oppMapPlaceholder = oppTexMap;
+
+              var comp = this;
+              new THREE.TextureLoader().load(
+                oppImgSrc,
+                function (photoTex) {
+                  photoTex.needsUpdate = true;
+                  if (THREE.SRGBColorSpace !== undefined) {
+                    photoTex.colorSpace = THREE.SRGBColorSpace;
+                  }
+                  photoTex.minFilter = THREE.LinearFilter;
+                  photoTex.magFilter = THREE.LinearFilter;
+                  photoTex.wrapS = THREE.ClampToEdgeWrapping;
+                  photoTex.wrapT = THREE.ClampToEdgeWrapping;
+                  if (comp.uniformsOpposite) {
+                    comp.uniformsOpposite.map.value = photoTex;
+                  }
+                  if (comp._oppMapPlaceholder) {
+                    comp._oppMapPlaceholder.dispose();
+                    comp._oppMapPlaceholder = null;
+                  }
+                  comp._texOpposite = photoTex;
+                },
+                undefined,
+                function () {
+                  console.warn(
+                    "[balloon-envelope-phrase] opposite-image-src failed:",
+                    oppImgSrc
+                  );
+                }
+              );
+            }
+
+            var uniformsOpp = {
+              map: { value: oppTexMap },
+              stickerCenterModel: { value: new THREE.Vector3(-1, 0, 0) },
+              stickerUpModel: { value: new THREE.Vector3(0, 1, 0) },
+              invTanHalfX: { value: oppInvX },
+              invTanHalfY: { value: oppInvY },
+              cosCone: { value: d.cosCone }
+            };
+            var matOpp = new THREE.ShaderMaterial({
+              uniforms: uniformsOpp,
+              vertexShader: vert,
+              fragmentShader: frag,
+              transparent: true,
+              depthTest: true,
+              depthWrite: false,
+              polygonOffset: true,
+              polygonOffsetFactor: d.polygonOffsetFactor,
+              polygonOffsetUnits: d.polygonOffsetUnits,
+              side: THREE.DoubleSide
+            });
+            var meshOpp = new THREE.Mesh(geom, matOpp);
+            meshOpp.renderOrder = d.renderOrder;
+            meshOpp.frustumCulled = false;
+            meshOpp.name = useOppositePhoto
+              ? "balloonEnvelopePortraitDecalOpposite"
+              : "balloonEnvelopePhraseDecalOpposite";
+            el.object3D.add(meshOpp);
+            this.decalMeshOpposite = meshOpp;
+            this.uniformsOpposite = uniformsOpp;
+          }
+
+          this._tex = tex;
+          this._anchorWorld = new THREE.Vector3();
+          this._tmpVec = new THREE.Vector3();
+        },
+        tick: function () {
+          var d = this.data;
+          var sceneEl = this.el.sceneEl;
+          if (!this.decalMesh || !this.uniforms) return;
+
+          this.el.object3D.updateMatrixWorld(true);
+
+          var anchorSel = d.anchorSelector;
+          var anchor =
+            sceneEl &&
+            anchorSel &&
+            anchorSel.charAt(0) === "#"
+              ? sceneEl.querySelector(anchorSel)
+              : sceneEl
+                ? sceneEl.querySelector("#balloonPhraseAnchor")
+                : document.querySelector("#balloonPhraseAnchor");
+          if (anchor && anchor.object3D) {
+            anchor.object3D.updateMatrixWorld(true);
+            anchor.object3D.getWorldPosition(this._anchorWorld);
+            this._tmpVec.copy(this._anchorWorld);
+            this.el.object3D.worldToLocal(this._tmpVec);
+            var lenSq = this._tmpVec.lengthSq();
+            if (lenSq >= 1e-14) {
+              this._tmpVec.multiplyScalar(1 / Math.sqrt(lenSq));
+              this.uniforms.stickerCenterModel.value.copy(this._tmpVec);
+            }
+          }
+
+          if (this.uniformsOpposite && this.decalMeshOpposite && sceneEl) {
+            var secSel = (d.secondAnchorSelector || "").trim();
+            var anchor2 =
+              secSel && secSel.charAt(0) === "#"
+                ? sceneEl.querySelector(secSel)
+                : null;
+            if (anchor2 && anchor2.object3D) {
+              anchor2.object3D.updateMatrixWorld(true);
+              anchor2.object3D.getWorldPosition(this._anchorWorld);
+              this._tmpVec.copy(this._anchorWorld);
+              this.el.object3D.worldToLocal(this._tmpVec);
+              var lenSq2 = this._tmpVec.lengthSq();
+              if (lenSq2 >= 1e-14) {
+                this._tmpVec.multiplyScalar(1 / Math.sqrt(lenSq2));
+                this.uniformsOpposite.stickerCenterModel.value.copy(this._tmpVec);
+              }
+            }
+          }
+        },
+        remove: function () {
+          var sharedGeom = this.decalMesh && this.decalMesh.geometry;
+          if (this.decalMesh) {
+            this.el.object3D.remove(this.decalMesh);
+            if (this.decalMesh.material) this.decalMesh.material.dispose();
+          }
+          if (this.decalMeshOpposite) {
+            this.el.object3D.remove(this.decalMeshOpposite);
+            if (this.decalMeshOpposite.material) {
+              this.decalMeshOpposite.material.dispose();
+            }
+          }
+          if (sharedGeom) sharedGeom.dispose();
+          if (this._tex) this._tex.dispose();
+          if (this._oppMapPlaceholder) {
+            this._oppMapPlaceholder.dispose();
+            this._oppMapPlaceholder = null;
+          }
+          if (this._texOpposite) {
+            this._texOpposite.dispose();
+            this._texOpposite = null;
+          }
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var grid = document.getElementById("directoryGrid");
+        var scene = document.querySelector("a-scene");
+        var spacer = document.getElementById("scrollSpacer");
+        var cells = [];
+        var cfg = SHOWCASE_CONFIG;
+        var layoutState = { rowStep: 3.14, pxPerRow: 360 };
+        var cameraEl = null;
+        var mat = "shader: standard; roughness: 0.68; metalness: 0";
+
+        function objectSizeMul(key) {
+          var m = cfg.objectSize[key];
+          return m === undefined || m === null ? 1 : m;
+        }
+
+        function objectScaleStr(key, base) {
+          var s = base * objectSizeMul(key);
+          return s + " " + s + " " + s;
+        }
+
+        function objectY(key) {
+          var y = cfg.objectY[key];
+          return y === undefined || y === null ? 0 : y;
+        }
+
+        function objectPosition(key) {
+          return "0 " + objectY(key) + " 0";
+        }
+
+        function objectRotation(key) {
+          var r = cfg.objectRotation && cfg.objectRotation[key];
+          if (!r) return { x: 0, y: 0, z: 0 };
+          return {
+            x: r.x === undefined || r.x === null ? 0 : r.x,
+            y: r.y === undefined || r.y === null ? 0 : r.y,
+            z: r.z === undefined || r.z === null ? 0 : r.z
+          };
+        }
+
+        function objectRotationStr(key) {
+          var r = objectRotation(key);
+          return r.x + " " + r.y + " " + r.z;
+        }
+
+        function showcaseSpinStr(key) {
+          var s = "speed: " + cfg.showcaseSpinSpeed;
+          var y = objectRotation(key).y;
+          if (y) return s + "; baseY: " + y;
+          return s;
+        }
+
+        function showcaseLabelTroika(value) {
+          return (
+            "value: " +
+            value +
+            "; align: center; baseline: middle; color: #000000; font: " +
+            cfg.labelFontFile +
+            "; fontSize: " +
+            cfg.labelFontSize +
+            "; maxWidth: " +
+            cfg.labelTextWidth +
+            "; anchorX: center; anchorY: middle; sdfGlyphSize: 128; outlineWidth: 0; depthOffset: 0.001"
+          );
+        }
+
+        function viewportFitScale() {
+          return window.innerWidth / cfg.referenceViewportWidth;
+        }
+
+        function hoverAmountFor(key, modelBase) {
+          var h = cfg.objectHover && cfg.objectHover[key];
+          if (h !== undefined && h !== null) return h;
+          var ref = cfg.hoverReferenceScale || 1.25;
+          var boost = cfg.hoverScaleAmount - 1;
+          return 1 + boost * (ref / modelBase);
+        }
+
+        function el(tag, parent, attrs) {
+          var node = document.createElement(tag);
+          Object.keys(attrs || {}).forEach(function (key) {
+            node.setAttribute(key, attrs[key]);
+          });
+          if (parent) parent.appendChild(node);
+          return node;
+        }
+
+        function cell(title, key, modelBase) {
+          var c = el("a-entity", grid, {
+            position: "0 0 0"
+          });
+          cells.push(c);
+          return c;
+        }
+
+        function makeHuman(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("character"),
+            rotation: objectRotationStr("character"),
+            scale: objectScaleStr("character", 1.25),
+            "character-idle-gestures": ""
+          });
+          var torso = el("a-entity", root, { class: "human-torso", position: "0 0.45 0" });
+          var ys = [-0.261, -0.203, -0.145, -0.087, -0.029, 0.029, 0.087, 0.145, 0.203, 0.261];
+          ys.forEach(function (yy, i) {
+            el("a-cylinder", torso, {
+              position: "0 " + yy + " 0",
+              radius: "0.11",
+              height: "0.058",
+              "segments-radial": "48",
+              color: i % 2 ? "#4D9FFF" : "#FF4FB8",
+              material: mat
+            });
+          });
+          var head = el("a-entity", root, { class: "human-head", position: "0 0.88 0" });
+          el("a-sphere", head, { radius: "0.14", color: "#F2B28D", material: mat });
+          [["-0.054", "#F2F2F2", "0.028", "-0.114"], ["0.054", "#F2F2F2", "0.028", "-0.114"], ["-0.054", "#4D9FFF", "0.0185", "-0.128"], ["0.054", "#4D9FFF", "0.0185", "-0.128"], ["-0.054", "#1E293B", "0.0078", "-0.139"], ["0.054", "#1E293B", "0.0078", "-0.139"]].forEach(function (p) {
+            el("a-sphere", head, { position: p[0] + " 0.012 " + p[3], radius: p[2], color: p[1], material: mat });
+          });
+          el("a-sphere", head, { position: "0 0.13 -0.015", radius: "0.145", scale: "1 0.42 0.9", color: "#F7D35A", material: mat });
+          el("a-sphere", head, { position: "0 0.07 -0.06", radius: "0.08", scale: "1.2 0.55 0.7", color: "#F7D35A", material: mat });
+          [-1, 1].forEach(function (side) {
+            var arm = el("a-entity", root, {
+              class: side < 0 ? "human-arm-left" : "human-arm-right",
+              position: side * 0.16 + " 0.43 -0.07",
+              rotation: "7 0 " + side * -10
+            });
+            ys.slice(1, 9).forEach(function (yy, i) {
+              el("a-cylinder", arm, {
+                position: "0 " + (yy - 0.03) + " 0",
+                radius: "0.035",
+                height: "0.059",
+                "segments-radial": "48",
+                color: i % 2 ? "#4D9FFF" : "#FF4FB8",
+                material: mat
+              });
+            });
+          });
+          el("a-cylinder", root, { class: "human-leg-left", position: "-0.07 0.06 0", radius: "0.04", height: "0.45", color: "#6B4423", material: mat });
+          el("a-cylinder", root, { class: "human-leg-right", position: "0.07 0.06 0", radius: "0.04", height: "0.45", color: "#6B4423", material: mat });
+        }
+
+        function appendBalloonBurner(parent) {
+          var burner = el("a-entity", parent, {
+            class: "balloon-burner",
+            position: "0 0.54 0"
+          });
+          el("a-cylinder", burner, {
+            position: "0 0.16 0",
+            radius: "0.046",
+            height: "0.28",
+            color: "#3D3D3D",
+            material: "shader: standard; roughness: 0.36; metalness: 0.48"
+          });
+          el("a-cone", burner, {
+            class: "balloon-burner-flame",
+            position: "0 0.42 0",
+            "radius-bottom": "0.028",
+            "radius-top": "0.13",
+            height: "0.44",
+            color: "#FF7A33",
+            material: "shader: standard; roughness: 0.26; metalness: 0; emissive: #FF5208; emissiveIntensity: 0.92",
+            "animation__flScale": "property: scale; dir: alternate; loop: true; dur: 340; easing: easeInOutSine; from: 1 1 1; to: 1.18 1.32 1.18",
+            "animation__flEm": "property: material.emissiveIntensity; dir: alternate; loop: true; dur: 280; easing: easeInOutSine; from: 0.68; to: 1.48"
+          });
+          el("a-sphere", burner, {
+            position: "0 0.58 0",
+            radius: "0.1",
+            color: "#FFE08A",
+            material: "shader: standard; roughness: 0.2; metalness: 0; emissive: #FFDA44; emissiveIntensity: 1.15",
+            "animation__coreScale": "property: scale; dir: alternate; loop: true; dur: 240; easing: easeInOutSine; from: 1 1 1; to: 1.32 1.42 1.32",
+            "animation__coreEm": "property: material.emissiveIntensity; dir: alternate; loop: true; dur: 210; easing: easeInOutSine; from: 0.88; to: 2.1"
+          });
+          el("a-sphere", burner, {
+            position: "0 0.66 0",
+            radius: "0.048",
+            color: "#FFFDF5",
+            material: "shader: standard; roughness: 0.12; metalness: 0; emissive: #FFFFFF; emissiveIntensity: 1.85",
+            "animation__hotPulse": "property: material.emissiveIntensity; dir: alternate; loop: true; dur: 165; easing: easeInOutSine; from: 1.2; to: 3"
+          });
+          el("a-entity", burner, {
+            position: "0 0.52 0",
+            light: "type: point; intensity: 0.52; distance: 5.2; decay: 1.95; color: #FFB347"
+          });
+          return burner;
+        }
+
+        function makeBalloon(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("balloon"),
+            rotation: objectRotationStr("balloon"),
+            scale: objectScaleStr("balloon", 0.54),
+            "showcase-spin": showcaseSpinStr("balloon")
+          });
+          el("a-cylinder", root, {
+            position: "0 0.26 0",
+            radius: "0.39",
+            height: "0.48",
+            "segments-radial": "16",
+            color: "#6E4E38",
+            material: "shader: standard; roughness: 0.86; metalness: 0"
+          });
+          el("a-torus", root, {
+            position: "0 0.48 0",
+            radius: "0.43",
+            "radius-tubular": "0.032",
+            "segments-radial": "10",
+            "segments-tubular": "24",
+            rotation: "90 0 0",
+            color: "#4A3426",
+            material: "shader: standard; roughness: 0.8; metalness: 0.06"
+          });
+          appendBalloonBurner(root);
+          el("a-entity", root, { "balloon-rig-ropes": "" });
+          el("a-sphere", root, {
+            position: "0 2.61 0",
+            radius: "1.36",
+            scale: "0.93 1.24 0.93",
+            "segments-width": "48",
+            "segments-height": "32",
+            color: "#FF4FD8",
+            material: "shader: standard; roughness: 0.3; metalness: 0.06; emissive: #C9188E; emissiveIntensity: 0.14",
+            "balloon-envelope-phrase": "horizontal-tan-scale: 0.46; vertical-tan-scale: 1.34; opposite-text: kilian123.com; opposite-horizontal-tan-scale: 0.52; opposite-vertical-tan-scale: 1.25"
+          });
+          var phraseRig = el("a-entity", root, { position: "0 2.61 0", rotation: "0 -72 0" });
+          el("a-entity", phraseRig, { id: "balloonPhraseAnchor", position: "1.82 0.118 0", rotation: "0 90 0" });
+          var oppRig = el("a-entity", root, { position: "0 2.61 0", rotation: "0 108 0" });
+          el("a-entity", oppRig, { id: "balloonPhraseAnchorOpposite", position: "1.82 0.132 0", rotation: "0 90 0" });
+        }
+
+        function makeGiraffe(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("giraffe"),
+            rotation: objectRotationStr("giraffe"),
+            scale: objectScaleStr("giraffe", 1.42),
+            "showcase-spin": showcaseSpinStr("giraffe")
+          });
+          el("a-box", root, { position: "0 0.46 0", width: "0.42", height: "0.36", depth: "0.56", color: "#F4CA62", material: "shader: standard; roughness: 0.66; metalness: 0" });
+          el("a-cylinder", root, { class: "giraffe-neck", position: "0 0.86 -0.1", radius: "0.072", height: "0.64", color: "#F2C555", material: "shader: standard; roughness: 0.65; metalness: 0" });
+          el("a-sphere", root, { class: "giraffe-head", position: "0 1.28 -0.16", radius: "0.13", color: "#F0C24E", material: "shader: standard; roughness: 0.64; metalness: 0" });
+          el("a-sphere", root, { position: "0.06 1.26 -0.28", radius: "0.035", color: "#4A3728", material: "shader: standard; roughness: 0.45; metalness: 0.08" });
+          el("a-sphere", root, { position: "-0.06 1.26 -0.28", radius: "0.035", color: "#4A3728", material: "shader: standard; roughness: 0.45; metalness: 0.08" });
+          el("a-cylinder", root, { position: "0.065 1.44 -0.14", radius: "0.018", height: "0.14", color: "#6B5344", material: "shader: standard; roughness: 0.68; metalness: 0" });
+          el("a-cylinder", root, { position: "-0.065 1.44 -0.14", radius: "0.018", height: "0.14", color: "#6B5344", material: "shader: standard; roughness: 0.68; metalness: 0" });
+          el("a-cone", root, { position: "0 1.22 -0.38", "radius-bottom": "0.045", "radius-top": "0", height: "0.12", rotation: "-90 0 0", color: "#6B5344", material: "shader: standard; roughness: 0.72; metalness: 0" });
+          [["giraffe-leg-fl", "0.14 0.24 0.2"], ["giraffe-leg-fr", "-0.14 0.24 0.2"], ["giraffe-leg-bl", "0.14 0.24 -0.22"], ["giraffe-leg-br", "-0.14 0.24 -0.22"]].forEach(function (p) {
+            el("a-cylinder", root, { class: p[0], position: p[1], radius: "0.052", height: "0.58", color: "#ECC455", material: "shader: standard; roughness: 0.67; metalness: 0" });
+          });
+        }
+
+        function makeFish(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("fish"),
+            rotation: objectRotationStr("fish"),
+            scale: objectScaleStr("fish", 1.38),
+            "showcase-spin": showcaseSpinStr("fish")
+          });
+          el("a-sphere", root, { position: "-0.03 0 0", radius: "0.088", scale: "3.35 1.08 0.92", color: "#4DABF7", material: "shader: standard; roughness: 0.38; metalness: 0.15" });
+          el("a-sphere", root, { position: "-0.06 -0.038 0", radius: "0.072", scale: "1.85 0.72 0.85", color: "#74C0FC", material: "shader: standard; roughness: 0.38; metalness: 0.15" });
+          el("a-cone", root, { position: "0.28 0.012 0", rotation: "0 0 -90", "radius-bottom": "0.062", height: "0.2", color: "#4DABF7", material: "shader: standard; roughness: 0.38; metalness: 0.15" });
+          el("a-cone", root, { position: "-0.38 0 0", rotation: "0 0 90", "radius-bottom": "0.13", height: "0.22", scale: "1 0.18 1", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-cone", root, { position: "-0.42 0 0.05", rotation: "0 24 90", "radius-bottom": "0.055", height: "0.14", scale: "1 0.35 0.65", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-cone", root, { position: "-0.42 0 -0.05", rotation: "0 -24 90", "radius-bottom": "0.055", height: "0.14", scale: "1 0.35 0.65", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-cone", root, { position: "-0.08 0.11 0", "radius-bottom": "0.075", height: "0.16", scale: "1 1 0.28", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-cone", root, { position: "0.02 -0.03 0.11", rotation: "90 0 -49", "radius-bottom": "0.048", height: "0.14", scale: "1 0.4 1", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-cone", root, { position: "0.02 -0.03 -0.11", rotation: "90 0 49", "radius-bottom": "0.048", height: "0.14", scale: "1 0.4 1", color: "#FFAB46", material: "shader: standard; roughness: 0.35; metalness: 0.1" });
+          el("a-sphere", root, { position: "0.22 0.038 0.058", radius: "0.032", color: "#F5F5F5", material: "shader: standard; roughness: 0.45; metalness: 0" });
+          el("a-sphere", root, { position: "0.234 0.042 0.068", radius: "0.018", color: "#1A1A1A", material: "shader: standard; roughness: 0.25; metalness: 0.35" });
+          el("a-sphere", root, { position: "0.22 0.038 -0.058", radius: "0.032", color: "#F5F5F5", material: "shader: standard; roughness: 0.45; metalness: 0" });
+          el("a-sphere", root, { position: "0.234 0.042 -0.068", radius: "0.018", color: "#1A1A1A", material: "shader: standard; roughness: 0.25; metalness: 0.35" });
+        }
+
+        function makeHouse(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("house"),
+            rotation: objectRotationStr("house"),
+            scale: objectScaleStr("house", 1.05),
+            "showcase-spin": showcaseSpinStr("house")
+          });
+          el("a-box", root, { position: "0 0.38 0", width: "1.05", height: "0.84", depth: "0.9", color: "#F2D4A7", material: "shader: standard; roughness: 0.75; metalness: 0" });
+          el("a-cone", root, { position: "0 1.1 0", "radius-bottom": "0.78", "radius-top": "0", height: "0.58", "segments-radial": "4", rotation: "0 45 0", color: "#CC5636", material: "shader: standard; roughness: 0.48; metalness: 0.03; emissive: #40180C; emissiveIntensity: 0.042" });
+          el("a-box", root, { position: "0 0.25 -0.46", width: "0.24", height: "0.46", depth: "0.04", color: "#6B3F24" });
+          [-0.34, 0.34].forEach(function (x) {
+            el("a-box", root, { position: x + " 0.52 -0.47", width: "0.2", height: "0.18", depth: "0.035", color: "#BDEFFF", material: "shader: standard; roughness: 0.04; metalness: 0.25; opacity: 0.72; transparent: true; emissive: #5CCBFF; emissiveIntensity: 0.18" });
+          });
+          el("a-box", root, { position: "0.28 1.18 0.16", width: "0.12", height: "0.32", depth: "0.12", color: "#7B4A34", material: "shader: standard; roughness: 0.72; metalness: 0" });
+          function createSmokePuff(index, offsetX, delay) {
+            var startY = 1.42 + index * 0.04;
+            var endY = 2.08 + index * 0.08;
+            var ox = 0.28 + offsetX;
+            return el("a-sphere", root, {
+              position: ox + " " + startY + " 0.16",
+              radius: "0.076",
+              color: "#D0D0D0",
+              material: "shader: standard; roughness: 1; metalness: 0; opacity: 0.51; transparent: true; depthWrite: false",
+              "animation__rise": "property: position; from: " + ox + " " + startY + " 0.16; to: " + (0.28 + offsetX * 2.2) + " " + endY + " 0.2; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true",
+              "animation__grow": "property: scale; from: 0.6 0.6 0.6; to: 1.78 1.78 1.78; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true",
+              "animation__fade": "property: material.opacity; from: 0.51; to: 0; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true"
+            });
+          }
+          createSmokePuff(0, -0.02, 0);
+          createSmokePuff(1, 0.03, 850);
+          createSmokePuff(2, -0.04, 1700);
+        }
+
+        function makeChicken(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("chicken"),
+            rotation: objectRotationStr("chicken"),
+            scale: objectScaleStr("chicken", 4.15),
+            "showcase-spin": showcaseSpinStr("chicken"),
+            "showcase-chicken-wings": ""
+          });
+          var chickenMat = "shader: standard; roughness: 0.71; metalness: 0";
+          el("a-sphere", root, { position: "0 0.041 0", radius: "0.026", scale: "1 0.88 1.05", color: "#EDE4D3", material: chickenMat });
+          el("a-box", root, { class: "chicken-wing-l", position: "0.031 0.041 -0.002", rotation: "14 -34 131", width: "0.0048", height: "0.019", depth: "0.028", color: "#BFB3A5", material: chickenMat });
+          el("a-box", root, { class: "chicken-wing-r", position: "-0.031 0.041 -0.002", rotation: "14 34 -131", width: "0.0048", height: "0.019", depth: "0.028", color: "#BFB3A5", material: chickenMat });
+          el("a-sphere", root, { class: "chicken-head", position: "0 0.066 0.02", radius: "0.0165", color: "#EFE6D5", material: chickenMat });
+          el("a-sphere", root, { position: "0.007 0.069 0.035", radius: "0.0026", color: "#111111", material: "shader: standard; roughness: 0.45; metalness: 0" });
+          el("a-sphere", root, { position: "-0.007 0.069 0.035", radius: "0.0026", color: "#111111", material: "shader: standard; roughness: 0.45; metalness: 0" });
+          el("a-box", root, { position: "0 0.074 -0.001", width: "0.017", height: "0.010", depth: "0.014", color: "#C62828", material: chickenMat });
+          el("a-cone", root, { position: "0 0.045 -0.034", rotation: "-90 0 0", "radius-bottom": "0.014", "radius-top": "0.0015", height: "0.028", color: "#DDD2C4", material: chickenMat });
+          el("a-cone", root, { position: "0 0.062 0.038", rotation: "90 -7 -4", "radius-bottom": "0.0088", "radius-top": "0", height: "0.026", color: "#E89C3A", material: chickenMat });
+          el("a-cylinder", root, { class: "chicken-leg-l", position: "0.011 0.011 0.006", radius: "0.0058", height: "0.024", color: "#E8BF6A", material: chickenMat });
+          el("a-cylinder", root, { class: "chicken-leg-r", position: "-0.011 0.011 0.006", radius: "0.0058", height: "0.024", color: "#E8BF6A", material: chickenMat });
+        }
+
+        function makeCow(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("cow"),
+            rotation: objectRotationStr("cow"),
+            scale: objectScaleStr("cow", 3.35),
+            "showcase-spin": showcaseSpinStr("cow"),
+            "showcase-cow-idle": ""
+          });
+          el("a-box", root, { position: "0 0.076 0", width: "0.138", height: "0.096", depth: "0.252", color: "#AE8F6F", material: mat });
+          el("a-box", root, { position: "0 0.057 0.012", width: "0.106", height: "0.052", depth: "0.192", color: "#D8C9B9", material: mat });
+          var head = el("a-entity", root, {
+            class: "cow-head",
+            position: "-0.002 0.124 0.132"
+          });
+          el("a-sphere", head, { radius: "0.056", scale: "1.02 1.06 1.12", color: "#A58468", material: mat });
+          el("a-sphere", head, { position: "-0.024 0.01 0.02", radius: "0.032", scale: "0.82 0.55 0.55", color: "#7A604D", material: mat });
+          [[0.058, 0.006, -0.002, -22], [-0.058, 0.006, -0.002, 22]].forEach(function (p) {
+            el("a-sphere", head, { position: p[0] + " " + p[1] + " " + p[2], radius: "0.026", scale: "0.38 0.72 0.22", rotation: "0 0 " + p[3], color: "#8A6B54", material: mat });
+          });
+          [[0.031, 0.016, 0.042], [-0.031, 0.016, 0.042]].forEach(function (p) {
+            el("a-sphere", head, { position: p.join(" "), radius: "0.009", color: "#F5F1EB", material: mat });
+          });
+          [[0.033, 0.016, 0.047], [-0.033, 0.016, 0.047]].forEach(function (p) {
+            el("a-sphere", head, { position: p.join(" "), radius: "0.0044", color: "#263238", material: mat });
+          });
+          el("a-box", head, { position: "0.002 -0.012 0.044", width: "0.064", height: "0.042", depth: "0.076", color: "#C79A88", material: mat });
+          [[0.0145, -0.02, 0.08], [-0.0105, -0.02, 0.08]].forEach(function (p) {
+            el("a-sphere", head, { position: p.join(" "), radius: "0.0074", color: "#221A16", material: mat });
+          });
+          [[0.05, 0.178, 0.118, "-12 35 26"], [-0.05, 0.178, 0.118, "-12 -35 -26"]].forEach(function (p) {
+            el("a-cone", root, { position: p[0] + " " + p[1] + " " + p[2], rotation: p[3], "radius-bottom": "0.012", "radius-top": "0.004", height: "0.05", color: "#BDBDBD", material: mat });
+          });
+          [[0.048, 0.025, -0.11], [-0.048, 0.025, -0.11], [0.05, 0.025, 0.124], [-0.05, 0.025, 0.124]].forEach(function (p) {
+            el("a-cylinder", root, { position: p.join(" "), radius: "0.023", height: "0.066", color: "#84654D", material: mat });
+            el("a-box", root, { position: p[0] + " -0.012 " + (p[2] + 0.006), width: "0.042", height: "0.018", depth: "0.036", color: "#D2B899", material: mat });
+          });
+          var tailRoot = el("a-entity", root, {
+            class: "cow-tail",
+            position: "0 0.071 -0.119"
+          });
+          el("a-cylinder", tailRoot, {
+            position: "0 -0.018 -0.034",
+            rotation: "28 0 0",
+            radius: "0.0065",
+            height: "0.09",
+            color: "#6F5643",
+            material: mat
+          });
+          el("a-sphere", tailRoot, {
+            class: "cow-tail-tuft",
+            position: "0 -0.04 -0.07",
+            radius: "0.018",
+            scale: "0.7 1.05 0.75",
+            color: "#2F241E",
+            material: mat
+          });
+          el("a-sphere", root, { position: "0 0.026 0.02", radius: "0.026", scale: "1.15 0.58 0.82", color: "#D9A0A6", material: mat });
+        }
+
+        function makeButterfly(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("butterfly"),
+            rotation: objectRotationStr("butterfly"),
+            scale: objectScaleStr("butterfly", 1.75),
+            "showcase-spin": showcaseSpinStr("butterfly")
+          });
+          el("a-sphere", root, { position: "0 0 0", radius: "0.055", scale: "0.55 0.9 1.25", color: "#5A2D45" });
+          el("a-sphere", root, { position: "0 0.08 -0.08", radius: "0.045", color: "#5A2D45" });
+          var left = el("a-entity", root, { position: "-0.055 0.01 0", animation__flap: "property: rotation; from: 0 0 16; to: 0 0 72; dur: 420; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-sphere", left, { position: "-0.16 0.08 0", radius: "0.16", scale: "1.0 0.65 0.08", color: "#FF82CF", material: "shader: standard; roughness: 0.22; metalness: 0; opacity: 0.82; transparent: true; emissive: #FF4FBC; emissiveIntensity: 0.08" });
+          el("a-sphere", left, { position: "-0.13 -0.08 0", radius: "0.12", scale: "0.9 0.62 0.08", color: "#FFB0E4", material: "shader: standard; roughness: 0.25; metalness: 0; opacity: 0.78; transparent: true" });
+          var right = el("a-entity", root, { position: "0.055 0.01 0", animation__flap: "property: rotation; from: 0 0 -16; to: 0 0 -72; dur: 420; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-sphere", right, { position: "0.16 0.08 0", radius: "0.16", scale: "1.0 0.65 0.08", color: "#FF82CF", material: "shader: standard; roughness: 0.22; metalness: 0; opacity: 0.82; transparent: true; emissive: #FF4FBC; emissiveIntensity: 0.08" });
+          el("a-sphere", right, { position: "0.13 -0.08 0", radius: "0.12", scale: "0.9 0.62 0.08", color: "#FFB0E4", material: "shader: standard; roughness: 0.25; metalness: 0; opacity: 0.78; transparent: true" });
+        }
+
+        function makeBird(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("bird"),
+            rotation: objectRotationStr("bird"),
+            scale: objectScaleStr("bird", 1.16),
+            "showcase-spin": showcaseSpinStr("bird")
+          });
+          el("a-sphere", root, { position: "0 0 0", radius: "0.22", scale: "0.75 0.52 1.25", color: "#5C4033" });
+          el("a-sphere", root, { position: "0 0.08 -0.34", radius: "0.15", color: "#6B4A3A" });
+          el("a-cone", root, { position: "0 0.08 -0.52", "radius-bottom": "0.055", "radius-top": "0", height: "0.18", rotation: "90 0 0", color: "#E0A12B" });
+          el("a-sphere", root, { position: "-0.055 0.14 -0.45", radius: "0.018", color: "#111111" });
+          el("a-sphere", root, { position: "0.055 0.14 -0.45", radius: "0.018", color: "#111111" });
+          var wingL = el("a-entity", root, { position: "-0.22 0.02 0", animation__flap: "property: rotation; from: 0 0 22; to: 0 0 72; dur: 820; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-box", wingL, { position: "-0.36 0 0", width: "0.78", height: "0.045", depth: "0.28", color: "#7A5A48" });
+          var wingR = el("a-entity", root, { position: "0.22 0.02 0", animation__flap: "property: rotation; from: 0 0 -22; to: 0 0 -72; dur: 820; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-box", wingR, { position: "0.36 0 0", width: "0.78", height: "0.045", depth: "0.28", color: "#7A5A48" });
+          el("a-cone", root, { position: "-0.045 -0.16 0.02", "radius-bottom": "0.028", "radius-top": "0", height: "0.09", rotation: "-55 0 -25", color: "#D9A620", material: "shader: standard; roughness: 0.5; metalness: 0.12" });
+          el("a-cone", root, { position: "0.045 -0.16 0.02", "radius-bottom": "0.028", "radius-top": "0", height: "0.09", rotation: "-55 0 25", color: "#D9A620", material: "shader: standard; roughness: 0.5; metalness: 0.12" });
+          el("a-cone", root, { position: "0 0 0.36", "radius-bottom": "0.19", "radius-top": "0.02", height: "0.38", rotation: "-90 0 0", color: "#4A332B" });
+        }
+
+        function makeHelicopter(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("helicopter"),
+            rotation: objectRotationStr("helicopter"),
+            scale: objectScaleStr("helicopter", 1.02),
+            "showcase-spin": showcaseSpinStr("helicopter")
+          });
+          el("a-box", root, { position: "0 0 0", width: "0.68", height: "0.2", depth: "0.24", color: "#1E2528", material: "shader: standard; roughness: 0.74; metalness: 0.1" });
+          el("a-sphere", root, { position: "0 0 -0.2", radius: "0.17", scale: "0.88 0.68 0.66", color: "#2C363A", material: "shader: standard; roughness: 0.7; metalness: 0.08" });
+          el("a-box", root, { position: "0 0 0.58", width: "0.1", height: "0.065", depth: "0.88", color: "#182024", material: "shader: standard; roughness: 0.76; metalness: 0.1" });
+          el("a-box", root, { position: "0 0.18 0", width: "1.35", height: "0.032", depth: "0.055", color: "#11191C", material: "shader: standard; roughness: 0.65; metalness: 0.16", animation__rotor: "property: rotation; from: 0 0 0; to: 0 360 0; dur: 210; easing: linear; loop: true" });
+        }
+
+        function makeTree(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("tree"),
+            rotation: objectRotationStr("tree"),
+            scale: objectScaleStr("tree", 0.96),
+            "showcase-spin": showcaseSpinStr("tree")
+          });
+          var treeScale = 1.04;
+          var tallMul = 1.22;
+          el("a-cylinder", root, { position: "0 " + 0.44 * treeScale * tallMul + " 0", radius: String(0.072 * treeScale), height: String(0.88 * treeScale * tallMul), color: "#8B5A2B" });
+          el("a-sphere", root, { position: "0 " + 1.07 * treeScale * tallMul + " 0", radius: String(0.4 * treeScale), scale: "1 1 1.22", color: "#2FA36A" });
+        }
+
+        function makeFlower(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("flower"),
+            rotation: objectRotationStr("flower"),
+            scale: objectScaleStr("flower", 1.88),
+            "showcase-spin": showcaseSpinStr("flower")
+          });
+          var s = 1;
+          el("a-cylinder", root, { position: "0 " + 0.12 * s + " 0", radius: String(0.024 * s), height: String(0.31 * s), color: "#2F8A3F" });
+          for (var petalIndex = 0; petalIndex < 6; petalIndex++) {
+            var angle = (petalIndex / 6) * Math.PI * 2;
+            var px = Math.cos(angle) * 0.092 * s;
+            var pz = Math.sin(angle) * 0.092 * s;
+            el("a-sphere", root, { position: px + " " + 0.28 * s + " " + pz, radius: String(0.054 * s), scale: "1 0.52 0.95", color: "#FF7AD9", material: "shader: standard; roughness: 0.5; metalness: 0" });
+          }
+          el("a-sphere", root, { position: "0 " + 0.28 * s + " 0", radius: String(0.044 * s), color: "#FFD94D", material: "shader: standard; roughness: 0.45; metalness: 0" });
+        }
+
+        function makeSun(parent) {
+          var spin = el("a-entity", parent, {
+            position: objectPosition("sun"),
+            rotation: objectRotationStr("sun"),
+            "showcase-spin": showcaseSpinStr("sun")
+          });
+          var root = el("a-entity", spin, {
+            scale: objectScaleStr("sun", 0.48)
+          });
+          el("a-sphere", root, {
+            radius: "2.4",
+            "segments-width": "64",
+            "segments-height": "64",
+            color: "#FFD45A",
+            material: "shader: standard; roughness: 0.45; metalness: 0; emissive: #FFB000; emissiveIntensity: 1.2"
+          });
+          el("a-sphere", root, {
+            radius: "3.05",
+            "segments-width": "48",
+            "segments-height": "48",
+            color: "#FFE08A",
+            material: "shader: flat; opacity: 0.22; transparent: true; side: double; depthWrite: false"
+          });
+          el("a-sphere", root, {
+            radius: "3.8",
+            "segments-width": "48",
+            "segments-height": "48",
+            color: "#FFF0B8",
+            material: "shader: flat; opacity: 0.09; transparent: true; side: double; depthWrite: false"
+          });
+          el("a-entity", root, {
+            light: "type: point; intensity: 0.55; distance: 14; decay: 1.2; color: #FFD45A"
+          });
+        }
+
+        function appendNightFlameCluster(parent, px, py, pz, scale, delay, includeInner) {
+          var cluster = el("a-entity", parent, {
+            position: px + " " + py + " " + pz,
+            scale: scale + " " + scale + " " + scale
+          });
+          el("a-cone", cluster, {
+            position: "0 0.16 0",
+            "radius-bottom": "0.12",
+            "radius-top": "0.007",
+            height: "0.4",
+            color: "#FF5A12",
+            material: "shader: standard; roughness: 0.22; metalness: 0; emissive: #FF3300; emissiveIntensity: 1.45",
+            "animation__flicker":
+              "property: scale; from: 0.92 0.95 0.9; to: 1.35 1.48 1.18; dir: alternate; dur: " +
+              (330 + delay % 140) +
+              "; delay: " +
+              delay +
+              "; easing: easeInOutSine; loop: true"
+          });
+          if (includeInner) {
+            el("a-cone", cluster, {
+              position: "0.012 0.19 -0.006",
+              "radius-bottom": "0.06",
+              "radius-top": "0.004",
+              height: "0.29",
+              color: "#FFE06A",
+              material: "shader: standard; roughness: 0.14; metalness: 0; emissive: #FFC928; emissiveIntensity: 1.85",
+              "animation__flicker":
+                "property: scale; from: 1.12 0.9 1; to: 0.86 1.28 1.18; dir: alternate; dur: " +
+                (260 + delay % 100) +
+                "; delay: " +
+                (delay + 80) +
+                "; easing: easeInOutSine; loop: true"
+            });
+          }
+          el("a-entity", cluster, {
+            light: "type: point; intensity: 0.48; distance: 5.5; decay: 1.85; color: #FF6A18"
+          });
+          return cluster;
+        }
+
+        function appendShowcaseSmokePuff(parent, px, py, pz, scale, delay) {
+          var smokeDur = 4200 + delay % 900;
+          var endX = px + 0.2 * scale;
+          var endY = py + 0.95 * scale;
+          var endZ = pz + 0.09 * scale;
+          return el("a-sphere", parent, {
+            position: px + " " + py + " " + pz,
+            radius: String(0.115 * scale),
+            scale: "1.15 0.7 1.15",
+            color: "#342F2C",
+            material: "shader: standard; roughness: 1; metalness: 0; opacity: 0; transparent: true; depthWrite: false",
+            "showcase-smoke-puff": "baseOpacity: 0.34; delay: " + delay + "; dur: " + smokeDur,
+            "animation__rise":
+              "property: position; from: " +
+              px +
+              " " +
+              py +
+              " " +
+              pz +
+              "; to: " +
+              endX +
+              " " +
+              endY +
+              " " +
+              endZ +
+              "; dur: " +
+              smokeDur +
+              "; delay: " +
+              delay +
+              "; easing: easeOutSine; loop: true",
+            "animation__spread":
+              "property: scale; from: 0.7 0.42 0.7; to: 3.0 1.65 3.0; dur: " +
+              smokeDur +
+              "; delay: " +
+              delay +
+              "; easing: easeOutSine; loop: true"
+          });
+        }
+
+        function makeSign(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("sign"),
+            rotation: objectRotationStr("sign"),
+            scale: objectScaleStr("sign", 0.62),
+            "showcase-spin": showcaseSpinStr("sign")
+          });
+          el("a-cylinder", root, {
+            position: "-1 0.3 0",
+            radius: "0.08",
+            height: "1.6",
+            color: "#B98956",
+            material: "shader: standard; roughness: 0.78; metalness: 0"
+          });
+          el("a-cylinder", root, {
+            position: "1 0.3 0",
+            radius: "0.08",
+            height: "1.6",
+            color: "#B98956",
+            material: "shader: standard; roughness: 0.78; metalness: 0"
+          });
+          el("a-box", root, {
+            position: "0 1.45 0",
+            width: "2.35",
+            height: "0.9",
+            depth: "0.08",
+            color: "#F2F2F2",
+            material: "shader: standard; roughness: 0.65; metalness: 0"
+          });
+          el("a-entity", root, {
+            position: "0 1.43 0.06",
+            "troika-text": TROIKA_SIGN
+          });
+          el("a-entity", root, {
+            position: "0 1.43 -0.06",
+            rotation: "0 180 0",
+            "troika-text": TROIKA_SIGN
+          });
+        }
+
+        function makeFlame(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("flame"),
+            rotation: objectRotationStr("flame"),
+            scale: objectScaleStr("flame", 1.35),
+            "showcase-spin": showcaseSpinStr("flame")
+          });
+          appendNightFlameCluster(root, 0, 0, 0, 1, 0, false);
+          appendShowcaseSmokePuff(root, -0.06, 0.38, 0.02, 0.55, 220);
+          appendShowcaseSmokePuff(root, 0.08, 0.4, -0.02, 0.48, 780);
+        }
+
+        function makeFloatie(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("floatie"),
+            rotation: objectRotationStr("floatie"),
+            scale: objectScaleStr("floatie", 1.2),
+            "showcase-spin": showcaseSpinStr("floatie")
+          });
+          el("a-entity", root, { geometry: "primitive: torus; radius: 0.352; radiusTubular: 0.054; segmentsRadial: 32; segmentsTubular: 96", material: "shader: standard; color: #FF7A1A; emissive: #662900; emissiveIntensity: 0.12; roughness: 0.48; metalness: 0.08", position: "0 0.036 0.018", rotation: "90 0 0" });
+        }
+
+        function makeChair(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("chair"),
+            rotation: objectRotationStr("chair"),
+            scale: objectScaleStr("chair", 1.45),
+            "showcase-spin": showcaseSpinStr("chair")
+          });
+          var chair = el("a-entity", root, { position: "0 0.04 0" });
+          var plastic = "#E8F3FF";
+          var plasticMat =
+            "shader: standard; roughness: 0.42; metalness: 0";
+          el("a-box", chair, { position: "0 0.25 0", rotation: "0 0 0", width: "0.48", height: "0.065", depth: "0.46", color: plastic, material: plasticMat });
+          el("a-box", chair, { position: "0 0.55 0.25", rotation: "0 0 0", width: "0.52", height: "0.52", depth: "0.07", color: plastic, material: plasticMat });
+          el("a-box", chair, { position: "-0.34 0.39 0.02", rotation: "0 0 0", width: "0.07", height: "0.06", depth: "0.52", color: plastic, material: plasticMat });
+          el("a-box", chair, { position: "0.34 0.39 0.02", rotation: "0 0 0", width: "0.07", height: "0.06", depth: "0.52", color: plastic, material: plasticMat });
+          [
+            [-0.18, 0.1, -0.18],
+            [0.18, 0.1, -0.18],
+            [-0.18, 0.1, 0.18],
+            [0.18, 0.1, 0.18]
+          ].forEach(function (p) {
+            el("a-box", chair, { position: p.join(" "), rotation: "0 0 0", width: "0.052", height: "0.28", depth: "0.052", color: plastic, material: plasticMat });
+          });
+        }
+
+        function makeUmbrella(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("umbrella"),
+            rotation: objectRotationStr("umbrella"),
+            scale: objectScaleStr("umbrella", 1.32)
+          });
+          var poleMat = "shader: standard; roughness: 0.42; metalness: 0.35";
+          el("a-cylinder", root, { position: "0 0.91 0", radius: "0.035", height: "1.86", color: "#D7DCE2", material: poleMat });
+          el("a-cylinder", root, { position: "0 -0.025 0", radius: "0.044", height: "0.16", color: "#B7BCC2", material: poleMat });
+          var canopy = el("a-entity", root, {
+            position: "0 1.5 0",
+            animation__spin: "property: rotation; from: 0 0 0; to: 0 360 0; dur: 9000; easing: linear; loop: true"
+          });
+          var colors = ["#FF4F79", "#FFD447", "#31C7F5", "#FFFFFF"];
+          var panels = 16;
+          var radius = 0.78;
+          for (var ui = 0; ui < panels; ui++) {
+            var a0 = (ui / panels) * Math.PI * 2;
+            var a1 = ((ui + 1) / panels) * Math.PI * 2;
+            var p0x = Math.cos(a0) * radius;
+            var p0z = Math.sin(a0) * radius;
+            var p1x = Math.cos(a1) * radius;
+            var p1z = Math.sin(a1) * radius;
+            el("a-entity", canopy, {
+              geometry:
+                "primitive: triangle; vertexA: 0 0.34 0; vertexB: " +
+                p0x +
+                " 0 " +
+                p0z +
+                "; vertexC: " +
+                p1x +
+                " 0 " +
+                p1z,
+              material:
+                "shader: standard; color: " +
+                colors[ui % colors.length] +
+                "; roughness: 0.38; metalness: 0; side: double"
+            });
+          }
+          el("a-cylinder", canopy, { position: "0 0.31 0", radius: "0.07", height: "0.07", color: "#FFFFFF" });
+        }
+
+        function makeFishingRod(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("fishingRod"),
+            rotation: objectRotationStr("fishingRod"),
+            scale: objectScaleStr("fishingRod", 1.18),
+            "showcase-spin": showcaseSpinStr("fishingRod")
+          });
+          var model = el("a-entity", root, { position: "-0.61 -0.42 0.96" });
+
+          function cylinderBetween(from, to, radius, color, material) {
+            var a = new THREE.Vector3(from[0], from[1], from[2]);
+            var b = new THREE.Vector3(to[0], to[1], to[2]);
+            var mid = a.clone().add(b).multiplyScalar(0.5);
+            var dir = b.clone().sub(a);
+            var len = dir.length();
+            if (len < 1e-6) return;
+            dir.normalize();
+            var c = el("a-cylinder", model, {
+              position: mid.x + " " + mid.y + " " + mid.z,
+              radius: String(radius),
+              height: String(len),
+              color: color,
+              material: material
+            });
+            c.object3D.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+          }
+
+          cylinderBetween([0.465, 0.422, -0.445], [0.75, 1.02, -1.34], 0.014, "#5B3A23", "shader: standard; roughness: 0.7; metalness: 0.08");
+          cylinderBetween([0.75, 1.02, -1.34], [0.6, 0.015, -1.48], 0.005, "#FFFFFF", "shader: standard; roughness: 0.38; metalness: 0.02; opacity: 0.86; transparent: true");
+        }
+
+        function makeBeachBall(parent) {
+          var root = el("a-entity", parent, {
+            position: objectPosition("beachBall"),
+            rotation: objectRotationStr("beachBall"),
+            scale: objectScaleStr("beachBall", 1.55),
+            "showcase-spin": showcaseSpinStr("beachBall"),
+            "showcase-beach-ball": ""
+          });
+        }
+
+        var makers = [
+          ["character", makeHuman, 1.25]
+        ];
+
+        function playSubtreeAnimations(node) {
+          if (!node || !node.components) return;
+          Object.keys(node.components).forEach(function (name) {
+            if (name.indexOf("animation__") === 0) {
+              var anim = node.components[name];
+              if (anim && typeof anim.play === "function") anim.play();
+            }
+          });
+          var ch = node.children;
+          var i;
+          for (i = 0; i < ch.length; i++) playSubtreeAnimations(ch[i]);
+        }
+
+        function buildShowcaseCells() {
+          while (grid.firstChild) {
+            grid.removeChild(grid.firstChild);
+          }
+          cells.length = 0;
+          makers.forEach(function (item) {
+            var key = item[0];
+            var title = SHOWCASE_LABELS[key] || key;
+            var c = cell(title, key, item[2]);
+            item[1](c);
+          });
+          playSubtreeAnimations(grid);
+        }
+
+        function initShowcase() {
+          buildShowcaseCells();
+          layoutGrid();
+          forceSceneAspect();
+        }
+
+        function updateScrollPosition() {
+          grid.setAttribute("position", "0 0 -1");
+        }
+
+        function forceSceneAspect() {
+          if (!scene || !scene.renderer || !scene.camera) return;
+          scene.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          scene.renderer.setSize(window.innerWidth, window.innerHeight, true);
+          scene.camera.aspect = window.innerWidth / Math.max(1, window.innerHeight);
+          scene.camera.updateProjectionMatrix();
+        }
+
+        function layoutGrid() {
+          var fit = Math.min(window.innerWidth / 1200, window.innerHeight / 820);
+          var gridScale = Math.max(1.08, Math.min(1.72, fit * 1.42));
+          grid.setAttribute("scale", gridScale + " " + gridScale + " " + gridScale);
+
+          cells.forEach(function (c) {
+            c.setAttribute("position", "0 0 0");
+          });
+
+          spacer.style.height = window.innerHeight + "px";
+
+          if (cameraEl && cfg.camera) {
+            cameraEl.setAttribute("position", cfg.camera.position);
+          }
+          forceSceneAspect();
+          updateScrollPosition();
+        }
+
+        function handleResize() {
+          layoutGrid();
+          forceSceneAspect();
+        }
+
+        window.addEventListener("resize", handleResize);
+        scene.addEventListener("wheel", function (event) {
+          event.preventDefault();
+        }, { passive: false });
+        cameraEl = document.querySelector("[camera]");
+        if (scene.hasLoaded) initShowcase();
+        else scene.addEventListener("loaded", initShowcase);
+        scene.addEventListener("render-target-loaded", forceSceneAspect);
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      renderer="alpha: true; antialias: true; precision: high; colorManagement: true"
+      background="transparent: true">
+
+      <a-entity light="type: ambient; intensity: 0.66"></a-entity>
+      <a-entity light="type: directional; intensity: 1.05" position="3 7 6"></a-entity>
+      <a-entity light="type: directional; intensity: 0.44" position="-5 2.5 4"></a-entity>
+
+      <a-entity id="directoryGrid" position="0 0 -1" scale="1 1 1"></a-entity>
+
+      <a-camera
+        camera
+        position="0 0.88 3.45"
+        rotation="0 0 0"
+        look-controls="enabled: false"
+        wasd-controls="enabled: false"
+        near="0.05"
+        far="100">
+      </a-camera>
+    </a-scene>
+    <div id="scrollSpacer" aria-hidden="true"></div>
+  </body>
+</html>

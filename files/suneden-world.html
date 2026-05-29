@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>World</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+      a-scene {
+        display: block;
+        height: 100%;
+        width: 100%;
+        touch-action: pan-y;
+      }
+      canvas {
+        touch-action: pan-y !important;
+      }
+      .a-enter-vr,
+      .a-enter-ar,
+      .a-orientation-modal,
+      .a-loader-title {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    </style>
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      var PLANET_RADIUS = 8;
+      var PLANET_CENTER = new THREE.Vector3(0, 0, 0);
+      function makeRng(seed) {
+        return function () {
+          seed = (seed * 1664525 + 1013904223) >>> 0;
+          return seed / 4294967296;
+        };
+      }
+
+      function placeYUpEntityOnPlanet(el, normal, heightOffset) {
+        var position = PLANET_CENTER.clone().add(
+          normal.clone().multiplyScalar(PLANET_RADIUS + (heightOffset || 0))
+        );
+        var quaternion = new THREE.Quaternion().setFromUnitVectors(
+          new THREE.Vector3(0, 1, 0),
+          normal.clone().normalize()
+        );
+        el.setAttribute("position", position.x + " " + position.y + " " + position.z);
+        el.object3D.quaternion.copy(quaternion);
+      }
+
+      AFRAME.registerComponent("globe-spin-controls", {
+        schema: {
+          baseSpeed: { type: "number", default: 1.38 },
+          yawSteer: { type: "number", default: 52 },
+          pitchSteer: { type: "number", default: 48 }
+        },
+        init: function () {
+          this.keys = {};
+          this.onKeyDown = this.onKeyDown.bind(this);
+          this.onKeyUp = this.onKeyUp.bind(this);
+          window.addEventListener("keydown", this.onKeyDown);
+          window.addEventListener("keyup", this.onKeyUp);
+          this._qYaw = new THREE.Quaternion();
+          this._qPitch = new THREE.Quaternion();
+          this._yawAxis = new THREE.Vector3(0, 1, 0);
+          this._pitchAxis = new THREE.Vector3(1, 0, 0);
+        },
+        remove: function () {
+          window.removeEventListener("keydown", this.onKeyDown);
+          window.removeEventListener("keyup", this.onKeyUp);
+        },
+        onKeyDown: function (event) {
+          this.keys[event.key.toLowerCase()] = true;
+        },
+        onKeyUp: function (event) {
+          this.keys[event.key.toLowerCase()] = false;
+        },
+        tick: function (_, deltaMs) {
+          var dt = Math.min(deltaMs / 1000, 0.05);
+          var forwardAmount =
+            (this.keys.z || this.keys.w || this.keys.arrowup ? 1 : 0) -
+            (this.keys.s || this.keys.arrowdown ? 1 : 0);
+          var sideAmount =
+            (this.keys.d || this.keys.arrowright ? 1 : 0) -
+            (this.keys.q || this.keys.arrowleft ? 1 : 0);
+
+          var yawDegPerSec = this.data.baseSpeed - this.data.yawSteer * sideAmount;
+          var yawRad = THREE.MathUtils.degToRad(yawDegPerSec) * dt;
+          var pitchRad =
+            THREE.MathUtils.degToRad(this.data.pitchSteer) * forwardAmount * dt;
+
+          var q = this.el.object3D.quaternion;
+          this._qYaw.setFromAxisAngle(this._yawAxis, yawRad);
+          this._qPitch.setFromAxisAngle(this._pitchAxis, pitchRad);
+          q.premultiply(this._qYaw);
+          q.multiply(this._qPitch);
+          q.normalize();
+        }
+      });
+
+      AFRAME.registerComponent("wheel-dolly-zoom", {
+        schema: {
+          minDistance: { type: "number", default: 5 },
+          maxDistance: { type: "number", default: 46 },
+          sensitivity: { type: "number", default: 0.038 },
+          focusX: { type: "number", default: 0 },
+          focusY: { type: "number", default: 1 },
+          focusZ: { type: "number", default: -15 }
+        },
+        init: function () {
+          this.focus = new THREE.Vector3(
+            this.data.focusX,
+            this.data.focusY,
+            this.data.focusZ
+          );
+          this.onWheel = this.onWheel.bind(this);
+          this.onMessage = this.onMessage.bind(this);
+          window.addEventListener("message", this.onMessage);
+        },
+        play: function () {
+        },
+        pause: function () {
+          if (this._wheelCanvas) {
+            this._wheelCanvas.removeEventListener("wheel", this.onWheel);
+            this._wheelCanvas = null;
+          }
+        },
+        remove: function () {
+          window.removeEventListener("message", this.onMessage);
+          this.pause();
+        },
+        onMessage: function (event) {
+          if (!event.data || event.data.type !== "suneden-zoom") return;
+          this.dolly(Number(event.data.step) || 0);
+        },
+        dolly: function (step) {
+          if (Math.abs(step) < 1e-8) return;
+
+          var dir = new THREE.Vector3();
+          this.el.object3D.getWorldDirection(dir);
+
+          var pos = this.el.object3D.position;
+          var prev = pos.clone();
+          pos.addScaledVector(dir, step);
+
+          var dist = pos.distanceTo(this.focus);
+          if (dist < this.data.minDistance || dist > this.data.maxDistance) {
+            pos.copy(prev);
+          }
+        },
+        onWheel: function (event) {
+          var dy = event.deltaY;
+          if (event.deltaMode === 1) dy *= 16;
+          if (event.deltaMode === 2) dy *= 120;
+
+          var step = dy * this.data.sensitivity;
+          this.dolly(step);
+
+          event.preventDefault();
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var lake = document.getElementById("lake");
+        var trees = document.getElementById("trees");
+        var worldRoot = document.getElementById("worldRoot");
+        if (!lake || !trees || !worldRoot) return;
+
+        var random = makeRng(20260511);
+        var crownPalette = ["#2E8B57", "#2F9E44", "#3FA34D", "#3D9140", "#4AAE55"];
+        function riverLatitude(longitude) {
+          return 0.18 * Math.sin(longitude * 2.0) + 0.08 * Math.sin(longitude * 5.0 + 0.8);
+        }
+
+        function isNearRiver(longitude, latitude, margin) {
+          var width = 0.11 + (margin || 0);
+          return Math.abs(latitude - riverLatitude(longitude)) < width;
+        }
+
+        function riverPoint(longitude, latitude, heightOffset) {
+          var cosLat = Math.cos(latitude);
+          var normal = new THREE.Vector3(
+            Math.sin(longitude) * cosLat,
+            Math.sin(latitude),
+            Math.cos(longitude) * cosLat
+          ).normalize();
+          return PLANET_CENTER.clone().add(normal.multiplyScalar(PLANET_RADIUS + heightOffset));
+        }
+
+        var riverSegments = 180;
+        var riverWidthSteps = 8;
+        var riverGeometry = new THREE.BufferGeometry();
+        var riverVertices = [];
+        var riverUvs = [];
+        var riverIndices = [];
+        var rowSize = riverWidthSteps + 1;
+        for (var r = 0; r <= riverSegments; r++) {
+          var t = r / riverSegments;
+          var centerLongitude = t * Math.PI * 2;
+          var centerLatitude = riverLatitude(centerLongitude);
+          var width = 0.11 + 0.015 * Math.sin(t * Math.PI * 6);
+          for (var w = 0; w <= riverWidthSteps; w++) {
+            var sideIndex = -1 + (w / riverWidthSteps) * 2;
+            var longitude = centerLongitude;
+            var latitude = centerLatitude + sideIndex * width;
+            var riverWorld = riverPoint(longitude, latitude, 0.05);
+            riverVertices.push(riverWorld.x, riverWorld.y, riverWorld.z);
+            riverUvs.push(t, w / riverWidthSteps);
+          }
+          if (r === riverSegments) continue;
+          var base = r * rowSize;
+          var nextBase = (r + 1) * rowSize;
+          for (var wi = 0; wi < riverWidthSteps; wi++) {
+            riverIndices.push(base + wi, base + wi + 1, nextBase + wi);
+            riverIndices.push(base + wi + 1, nextBase + wi + 1, nextBase + wi);
+          }
+        }
+        riverGeometry.setAttribute("position", new THREE.Float32BufferAttribute(riverVertices, 3));
+        riverGeometry.setAttribute("uv", new THREE.Float32BufferAttribute(riverUvs, 2));
+        riverGeometry.setIndex(riverIndices);
+        riverGeometry.computeVertexNormals();
+
+        var riverMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            time: { value: 0 } 
+          },
+          vertexShader: [
+            "varying vec2 vUv;",
+            "void main() {",
+            "  vUv = uv;",
+            "  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
+            "}"
+          ].join("\n"),
+          fragmentShader: [
+            "uniform float time;",
+            "varying vec2 vUv;",
+            "void main() {",
+            "  float edge = abs(vUv.y - 0.5) * 2.0;",
+            "  vec3 edgeColor = vec3(0.23, 0.72, 0.90);",
+            "  vec3 midColor = vec3(0.03, 0.35, 0.65);",
+            "  vec3 color = mix(midColor, edgeColor, smoothstep(0.28, 1.0, edge));",
+            "  float flowA = sin((vUv.x * 18.8495559) - time * 2.25 + sin(vUv.y * 5.5) * 0.55);",
+            "  float flowB = sin((vUv.x * 12.5663706) - time * 1.2 + vUv.y * 6.2831853);",
+            "  float softFlow = smoothstep(-0.05, 0.82, flowA * 0.62 + flowB * 0.32);",
+            "  float centerMask = 1.0 - smoothstep(0.62, 1.0, edge);",
+            "  color += vec3(0.30, 0.70, 0.86) * softFlow * centerMask * 0.52;",
+            "  color += vec3(0.02, 0.10, 0.18) * (1.0 - softFlow) * centerMask * 0.16;",
+            "  gl_FragColor = vec4(color, 1.0);",
+            "}"
+          ].join("\n"),
+          side: THREE.DoubleSide
+        });
+        var riverMesh = new THREE.Mesh(riverGeometry, riverMaterial);
+        lake.object3D.add(riverMesh);
+
+        function animateRiver(timeMs) {
+          riverMaterial.uniforms.time.value = timeMs * 0.0003;
+        }
+        if (typeof AFRAME !== "undefined") {
+          if (!AFRAME.components["river-animation-loop"]) {
+            AFRAME.registerComponent("river-animation-loop", {
+              tick: function (timeMs) {
+                animateRiver(timeMs);
+              }
+            });
+          }
+          lake.setAttribute("river-animation-loop", "");
+        } else {
+          function animateRiverFallback(timeMs) {
+            animateRiver(timeMs);
+            requestAnimationFrame(animateRiverFallback);
+          }
+          requestAnimationFrame(animateRiverFallback);
+        }
+
+        function createTree(normal, scale) {
+          var tree = document.createElement("a-entity");
+          var trunk = document.createElement("a-cylinder");
+          var crown = document.createElement("a-sphere");
+
+          var tallMul = 1.22;
+          trunk.setAttribute("position", "0 " + (0.44 * scale * tallMul) + " 0");
+          trunk.setAttribute("radius", 0.072 * scale);
+          trunk.setAttribute("height", 0.88 * scale * tallMul);
+          trunk.setAttribute("color", "#8B5A2B");
+
+          crown.setAttribute("position", "0 " + (1.07 * scale * tallMul) + " 0");
+          crown.setAttribute("radius", 0.4 * scale);
+          crown.setAttribute("scale", "1 1 1.22");
+          crown.setAttribute("color", crownPalette[Math.floor(random() * crownPalette.length)]);
+
+          tree.appendChild(trunk);
+          tree.appendChild(crown);
+          trees.appendChild(tree);
+          placeYUpEntityOnPlanet(tree, normal, 0.02);
+        }
+
+        var placed = [];
+        var attempts = 0;
+        while (placed.length < 260 && attempts < 10000) {
+          attempts++;
+          var longitude = random() * Math.PI * 2;
+          var latitude = -1.47 + random() * 2.94;
+
+          var tooClose = false;
+          for (var i = 0; i < placed.length; i++) {
+            var dLong = Math.abs(longitude - placed[i].longitude);
+            dLong = Math.min(dLong, Math.PI * 2 - dLong);
+            var dLat = latitude - placed[i].latitude;
+            if (dLong * dLong + dLat * dLat < 0.022) {
+              tooClose = true;
+              break;
+            }
+          }
+          if (tooClose) continue;
+          if (isNearRiver(longitude, latitude, 0.038)) continue;
+
+          var cosLat = Math.cos(latitude);
+          var normal = new THREE.Vector3(
+            Math.sin(longitude) * cosLat,
+            Math.sin(latitude),
+            Math.cos(longitude) * cosLat
+          ).normalize();
+          createTree(normal, 1.12 + random() * 0.48);
+          placed.push({ longitude: longitude, latitude: latitude });
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" renderer="alpha: true; antialias: true; precision: high; colorManagement: true" background="transparent: true">
+      <!-- Lighting -->
+      <a-entity id="ambientLight" light="type: ambient; intensity: 0.78"></a-entity>
+      <a-entity id="keyLight" light="type: directional; intensity: 0.95" position="5 8 4"></a-entity>
+
+      <!-- Globe: quaternion spin — steady yaw + Q/D; pitch inverted so Z/W/up = forward tilt, S/down = back -->
+      <a-entity id="worldRoot" position="0 1 -15" globe-spin-controls="baseSpeed: 1.38; yawSteer: 52; pitchSteer: 48">
+        <!-- Mini planet -->
+        <a-sphere
+          id="planet"
+          radius="8"
+          segments-width="64"
+          segments-height="48"
+          color="#39B54A"
+          material="shader: standard; roughness: 1; metalness: 0; emissive: #2f4f1f; emissiveIntensity: 0.05">
+        </a-sphere>
+
+        <!-- River and trees on globe -->
+        <a-entity id="lake"></a-entity>
+        <a-entity id="trees"></a-entity>
+      </a-entity>
+
+      <!-- Parent page +/− controls dolly the camera; wheel/pinch zoom is disabled for scrolling. -->
+      <a-entity
+        position="0 2.4 4"
+        rotation="-8 0 0"
+        camera="active: true; fov: 95; near: 0.01; far: 1000"
+        look-controls="touchEnabled: false"
+        wheel-dolly-zoom="minDistance: 5; maxDistance: 46; sensitivity: 0.038; focusX: 0; focusY: 1; focusZ: -15">
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
