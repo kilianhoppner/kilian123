@@ -41,7 +41,7 @@
   const BACK = [1, 1, 3, 3];
 
   const anim = book.animate(
-    [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }],
+    [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-360deg)' }],
     { duration: DURATION_MS, iterations: Number.POSITIVE_INFINITY, easing: 'linear' }
   );
 

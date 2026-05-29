@@ -673,6 +673,7 @@ main.gallery-detail--globe-sphere {
   }
 }
 
+
 /* 3D detail pages (head, toilet roll, globe): calm gallery chrome — no lift on hover */
 body:has(main.gallery-detail--head) .nav-button:hover,
 body:has(main.gallery-detail--toiletroll) .nav-button:hover,
@@ -1939,6 +1940,7 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   margin: 0 auto;
   overflow: hidden;
 }
+
 
 main.gallery-detail--dollhouse .gallery-detail__carousel-media {
   aspect-ratio: 3 / 4;
@@ -3303,9 +3305,16 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   object-position: center;
   display: block;
   transition: transform 180ms ease;
+  -webkit-user-drag: none;
+  user-select: none;
 }
-.gallery img:hover {
+.gallery a.gallery-item-link:hover img {
   transform: scale(1.26);
+}
+
+.gallery a[href],
+.gallery a[href] :is(img, svg, span, div, time) {
+  cursor: pointer;
 }
 
 /* Dotline A–Z animation tile (span + inline SVG) should behave like gallery images. */
@@ -3434,6 +3443,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   transform: scale(1.26);
 }
 
+
 .gallery .gallery-globe-wireframe--with-overlay {
   cursor: pointer;
 }
@@ -3461,6 +3471,20 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   height: 100%;
   background: transparent;
 }
+
+.gallery .gallery-suneden-world {
+  --img-max-height: 108%;
+  --img-max-width: 108%;
+  overflow: visible;
+  background: transparent;
+}
+
+.gallery .gallery-suneden-world .suneden-world-embed {
+  background: transparent;
+  transform: scale(1.18);
+  transform-origin: center;
+}
+
 
 /* The Big Issue — very slight colour grade (faces; on __face not __book so 3D isn’t flattened) */
 .gallery .gallery-magazine-slot .gallery-magazine-3d__face {
@@ -4012,6 +4036,205 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
   color: inherit;
 }
 
+
+
+/* Sun Eden logo tile + detail page. */
+.gallery img.suneden-logo {
+  --img-max-height: 82%;
+  --img-max-width: 82%;
+}
+
+.gallery a.gallery-item-link:hover img.suneden-logo {
+  transform: scale(1.18);
+}
+
+@media (max-width: 768px) {
+  .gallery img.suneden-logo {
+    --img-max-height: 96%;
+    --img-max-width: 96%;
+  }
+}
+
+main.gallery-detail--suneden {
+  --gallery-detail-media-max-w: min(86vw, var(--gallery-detail-art-max-w));
+  --gallery-detail-media-max-h: min(66vh, var(--gallery-detail-art-max-h));
+  --gallery-detail-carousel-cap-h: min(58vh, calc(var(--gallery-detail-media-max-h) * 1.08));
+  --gallery-detail-carousel-cap-w: min(
+    var(--gallery-detail-media-max-w),
+    calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
+  );
+}
+
+main.gallery-detail--suneden .gallery-detail__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.375rem, 1.5vw, 0.875rem);
+  width: 100%;
+  max-width: calc(var(--gallery-detail-carousel-rail-max-w) + 7rem);
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-viewport {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-width: var(--gallery-detail-carousel-rail-max-w);
+  overflow: visible;
+  clip-path: inset(-40% 0 -40% 0);
+  opacity: 1;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-track {
+  display: flex;
+  align-items: center;
+  transition: transform 0.42s ease;
+  will-change: transform;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-track--no-transition {
+  transition: none;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-media {
+  box-sizing: border-box;
+  position: relative;
+  width: min(100%, var(--gallery-detail-carousel-cap-w));
+  max-width: 100%;
+  max-height: var(--gallery-detail-carousel-cap-h);
+  aspect-ratio: 3 / 2;
+  height: auto;
+  flex: 0 0 auto;
+  margin: 0 auto;
+  overflow: hidden;
+  background: transparent;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character .gallery-detail__carousel-media {
+  overflow: visible;
+}
+
+main.gallery-detail--suneden .suneden-world-embed {
+  position: absolute;
+  inset: -34% -30% -26%;
+  transform: translateY(-2.5%);
+  transform-origin: center;
+  display: block;
+  width: 160%;
+  height: 160%;
+  border: 0;
+  background: transparent;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+main.gallery-detail--suneden .suneden-logo-detail {
+  display: block;
+  width: min(80%, 31rem);
+  height: auto;
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  background: transparent;
+}
+
+main.gallery-detail--suneden .suneden-character-embed {
+  position: absolute;
+  inset: -14%;
+  display: block;
+  width: 128%;
+  height: 128%;
+  border: 0;
+  background: transparent;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn {
+  background: none;
+  border: none;
+  padding: 0.625rem 0.875rem;
+  margin: 0;
+  cursor: pointer;
+  color: #ff00d9;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn:active {
+  opacity: 0.65;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__icon {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  animation: mobile-scroll-hint-blink 1.55s ease-in-out infinite;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-chevron--left {
+  transform: rotate(90deg);
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
+  transform: rotate(-90deg);
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .gallery-detail__carousel {
+    width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
+    max-width: none;
+    margin-left: calc(-1 * var(--gallery-detail-main-pad-x));
+    margin-right: calc(-1 * var(--gallery-detail-main-pad-x));
+    gap: 0;
+    padding-left: max(0.5rem, env(safe-area-inset-left, 0));
+    padding-right: max(0.5rem, env(safe-area-inset-right, 0));
+  }
+
+  main.gallery-detail--suneden .gallery-detail__carousel-viewport {
+    max-width: none;
+  }
+
+  main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0;
+  }
+
+  main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
 /* Recycling-style arrows (gallery/arrows.png): infinite rotation around centre */
 .gallery .gallery-arrow-spin__link {
   display: flex;
@@ -4107,12 +4330,14 @@ main.gallery-detail--hump-bridge .gallery-detail__carousel-media img.bridge {
 .gallery img.typeface { --img-max-height: 30%; }
 .gallery img.menarefrommars {
   --img-max-height: 65%;
-  --img-max-width: 100%;
+  --img-max-width: 65%;
+  aspect-ratio: 360.85 / 120.33;
 }
 
 @media (min-width: 769px) {
   .gallery img.menarefrommars {
     --img-max-height: 78%;
+    --img-max-width: 78%;
   }
 }
 
@@ -4470,3 +4695,135 @@ main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-specimen .
   overflow: visible !important;
 }
 
+/* Sun Eden index tile: hover/click only on the visible globe area. */
+.gallery .gallery-suneden-world {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery .gallery-suneden-world:hover {
+  transform: none !important;
+}
+
+.gallery .gallery-suneden-world .suneden-world-embed {
+  transition: transform 180ms ease;
+  transform: scale(1.18);
+  transform-origin: center;
+}
+
+.gallery .gallery-suneden-world .gallery-tile-overlay-link {
+  inset: 50% auto auto 50%;
+  width: min(52%, 9rem);
+  height: min(52%, 9rem);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.gallery .gallery-suneden-world .gallery-tile-overlay-link:hover + .suneden-world-embed {
+  transform: scale(1.42);
+}
+
+@keyframes suneden-logo-slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+main.gallery-detail--suneden .suneden-logo-detail {
+  animation: suneden-logo-slow-spin 32s linear infinite;
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-world-embed {
+    inset: -46% -42% -38%;
+    width: 184%;
+    height: 184%;
+  }
+
+  main.gallery-detail--suneden .suneden-character-embed {
+    inset: -62% -48%;
+    width: 196%;
+    height: 224%;
+  }
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+main.gallery-detail--suneden .suneden-giraffes-detail {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 82%;
+  max-height: 112%;
+  object-fit: contain;
+}
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-world-embed {
+    inset: -54% -50% -46%;
+    width: 200%;
+    height: 200%;
+  }
+
+  main.gallery-detail--suneden .suneden-giraffes-detail {
+    max-width: 96%;
+    max-height: 126%;
+  }
+}
+
+/* Index gallery: limit hover targets to the visible Up your ass and Surveillancecore artwork. */
+.gallery .gallery-toiletroll-3d:hover,
+.gallery .face-track-slot:hover {
+  transform: none;
+}
+
+.gallery .gallery-toiletroll-3d .gallery-tile-overlay-link {
+  inset: 12.5%;
+  border-radius: 50%;
+}
+
+.gallery .gallery-toiletroll-3d .gallery-toiletroll-3d__viewer {
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.gallery .gallery-toiletroll-3d .gallery-tile-overlay-link:hover + .gallery-toiletroll-3d__viewer {
+  transform: scale(1.26);
+}
+
+.gallery .face-track-slot .gallery-tile-overlay-link {
+  border-radius: 0;
+}
+
+.gallery .face-track-slot:hover .face-track-outline {
+  transform: scale(1);
+}
+
+.gallery .face-track-slot .gallery-tile-overlay-link:hover ~ .face-track-outline {
+  transform: scale(1.32);
+}
+
+section.gallery .face-track-slot .gallery-tile-overlay-link {
+  inset: auto;
+  left: 33%;
+  top: 33%;
+  width: 34%;
+  aspect-ratio: 1;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  section.gallery .face-track-slot .gallery-tile-overlay-link {
+    left: 28%;
+    top: 28%;
+    width: 44%;
+  }
+}
