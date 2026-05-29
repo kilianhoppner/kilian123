@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Sun Eden</title>
 <link rel="stylesheet" href="../style.css">
 <link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
@@ -45,14 +45,14 @@
                 <img src="../files/suneden-logo.svg" alt="Sun Eden" class="suneden-logo-detail" decoding="async">
               </div>
             </div>
-            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--suneden-giraffes">
-              <div class="gallery-detail__carousel-media">
-                <img src="../files/suneden-giraffes.png" alt="Sun Eden giraffes" class="suneden-giraffes-detail" decoding="async" loading="eager">
-              </div>
-            </div>
             <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--suneden-character">
               <div class="gallery-detail__carousel-media">
                 <iframe class="suneden-character-embed" src="../files/suneden-character.html" title="Sun Eden animated character" loading="eager"></iframe>
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--suneden-giraffes">
+              <div class="gallery-detail__carousel-media">
+                <img src="../files/suneden-giraffes.png" alt="Sun Eden giraffes" class="suneden-giraffes-detail" decoding="async" loading="eager">
               </div>
             </div>
           </div>
@@ -79,6 +79,19 @@
   </section>
 </main>
 
+<script>
+  (function () {
+    function blockGesture(event) {
+      if (event.cancelable) event.preventDefault();
+    }
+    document.addEventListener("gesturestart", blockGesture, { passive: false });
+    document.addEventListener("gesturechange", blockGesture, { passive: false });
+    document.addEventListener("gestureend", blockGesture, { passive: false });
+    document.addEventListener("touchmove", function (event) {
+      if (event.touches && event.touches.length > 1) blockGesture(event);
+    }, { passive: false });
+  })();
+</script>
 <script src="../script.js"></script>
 <script src="../carousel.js"></script>
 <footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
