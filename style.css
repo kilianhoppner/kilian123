@@ -4140,8 +4140,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character 
 
 main.gallery-detail--suneden .suneden-world-embed {
   position: absolute;
-  inset: -34% -30% -26%;
-  transform: translateY(-2.5%);
+  inset: -30%;
   transform-origin: center;
   display: block;
   width: 160%;
@@ -4739,7 +4738,7 @@ main.gallery-detail--suneden .suneden-logo-detail {
 
 @media (max-width: 768px) {
   main.gallery-detail--suneden .suneden-world-embed {
-    inset: -46% -42% -38%;
+    inset: -42%;
     width: 184%;
     height: 184%;
   }
@@ -4768,7 +4767,7 @@ main.gallery-detail--suneden .suneden-giraffes-detail {
 }
 @media (max-width: 768px) {
   main.gallery-detail--suneden .suneden-world-embed {
-    inset: -54% -50% -46%;
+    inset: -50%;
     width: 200%;
     height: 200%;
   }
@@ -4849,12 +4848,35 @@ main.gallery-detail--suneden .suneden-character-embed {
 
 @media (max-width: 768px) {
   section.gallery > .gallery-suneden-world {
-    margin-top: clamp(-3.65rem, -12.5vw, -2.25rem);
-    margin-bottom: clamp(1.85rem, 6.8vw, 2.65rem);
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .gallery img.menarefrommars {
     --img-max-height: 88%;
     --img-max-width: 88%;
+  }
+}
+
+/* Sun Eden A-Frame previews are passive animations, not draggable scenes. */
+.gallery .gallery-suneden-world .suneden-world-embed,
+main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-character-embed {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Sun Eden globe: optical centering only; layout frames stay fixed. */
+.gallery .gallery-suneden-world .suneden-world-embed {
+  translate: 0 2.5%;
+}
+
+main.gallery-detail--suneden .suneden-world-embed {
+  translate: 0 5%;
+}
+
+@media (min-width: 769px) {
+  .gallery .gallery-suneden-world .suneden-world-embed {
+    translate: 0 4%;
   }
 }
