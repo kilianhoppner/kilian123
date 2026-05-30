@@ -4848,8 +4848,8 @@ main.gallery-detail--suneden .suneden-character-embed {
 
 @media (max-width: 768px) {
   section.gallery > .gallery-suneden-world {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: clamp(-4.25rem, -14vw, -2.65rem);
+    margin-bottom: clamp(1.75rem, 6vw, 2.5rem);
   }
 
   .gallery img.menarefrommars {
