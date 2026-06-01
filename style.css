@@ -4133,6 +4133,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-media {
 
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-couple .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character .gallery-detail__carousel-media {
@@ -4768,6 +4769,7 @@ main.gallery-detail--suneden .suneden-logo-detail {
   }
 }
 
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-couple .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media {
   display: flex;
   align-items: center;
@@ -4775,6 +4777,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .
   overflow: visible;
 }
 
+main.gallery-detail--suneden .suneden-couple-detail,
 main.gallery-detail--suneden .suneden-giraffes-detail {
   display: block;
   width: auto;
@@ -4790,6 +4793,7 @@ main.gallery-detail--suneden .suneden-giraffes-detail {
     height: 200%;
   }
 
+  main.gallery-detail--suneden .suneden-couple-detail,
   main.gallery-detail--suneden .suneden-giraffes-detail {
     max-width: 96%;
     max-height: 126%;
@@ -4909,5 +4913,20 @@ main.gallery-detail--suneden .suneden-world-embed {
     width: min(96%, 34rem);
     max-width: 96%;
     max-height: 96%;
+  }
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-giraffes-detail {
+    max-width: 112%;
+    max-height: 148%;
+  }
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-world-embed {
+    inset: -62%;
+    width: 224%;
+    height: 224%;
   }
 }
