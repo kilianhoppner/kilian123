@@ -4132,6 +4132,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-media {
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character .gallery-detail__carousel-media {
@@ -4154,6 +4155,23 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gall
   align-items: center;
   justify-content: center;
   overflow: visible;
+}
+
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+main.gallery-detail--suneden .suneden-inflatable-detail {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 82%;
+  max-height: 112%;
+  object-fit: contain;
+  background: transparent;
 }
 
 main.gallery-detail--suneden .suneden-logo-detail {
@@ -4878,5 +4896,18 @@ main.gallery-detail--suneden .suneden-world-embed {
 @media (min-width: 769px) {
   .gallery .gallery-suneden-world .suneden-world-embed {
     translate: 0 4%;
+  }
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-inflatable-detail {
+    max-width: 118%;
+    max-height: 210%;
+  }
+
+  main.gallery-detail--suneden .suneden-logo-detail {
+    width: min(96%, 34rem);
+    max-width: 96%;
+    max-height: 96%;
   }
 }
