@@ -230,35 +230,6 @@ function registerGalleryScrollRestoreOnPageshow() {
   });
 }
 
-/** Gallery detail + bio: “Back” to gallery index, above footer (all breakpoints). */
-/** Bio: mobile only — one-way expand after “re-constructing” + “... more” (no Read less). */
-function setupBioBiographyReadMore() {
-  if (!document.body.classList.contains('page-bio')) return;
-  const block = document.querySelector('[data-bio-biography]');
-  const btn = block?.querySelector('.bio-biography__more-btn');
-  if (!block || !btn) return;
-
-  const mq = window.matchMedia('(max-width: 768px)');
-
-  function setStateFromWidth() {
-    if (!mq.matches) {
-      block.classList.remove('bio-biography--expanded');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.hidden = false;
-    }
-  }
-
-  btn.addEventListener('click', () => {
-    if (!mq.matches) return;
-    if (block.classList.contains('bio-biography--expanded')) return;
-    block.classList.add('bio-biography--expanded');
-    btn.setAttribute('aria-expanded', 'true');
-    btn.hidden = true;
-  });
-
-  mq.addEventListener('change', setStateFromWidth);
-}
-
 function setupPageBackButton() {
   if (document.querySelector('.page-back-wrap')) return;
   const footer = document.querySelector('footer.footer');
@@ -1172,7 +1143,6 @@ if (document.readyState === 'loading') {
     setupHyperlinks();
     setupGalleryMidnightStamp();
     setupPageBackButton();
-    setupBioBiographyReadMore();
     setupGalleryScrollRestore();
     tryRestoreGalleryScrollOnIndex();
     setupMobileGalleryScrollHint();
@@ -1189,7 +1159,6 @@ if (document.readyState === 'loading') {
   setupHyperlinks();
   setupGalleryMidnightStamp();
   setupPageBackButton();
-  setupBioBiographyReadMore();
   setupGalleryScrollRestore();
   tryRestoreGalleryScrollOnIndex();
   setupMobileGalleryScrollHint();

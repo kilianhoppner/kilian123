@@ -434,55 +434,9 @@ body {
   margin-bottom: 0;
 }
 
-/* Bio: desktop = full paragraph. Mobile = teaser + “re-constructing” + grey “... more” (one tap expands; no collapse). */
-body.page-bio .bio-biography__more-btn {
-  display: none;
-}
-
 .bio-dotline-check {
   font-family: "Diatype", sans-serif;
   font-weight: 400;
-}
-
-@media (max-width: 768px) {
-  body.page-bio .bio-biography:not(.bio-biography--expanded) .bio-biography__rest {
-    display: none;
-  }
-
-  body.page-bio .bio-biography--expanded .bio-biography__more-btn {
-    display: none;
-  }
-
-  /* Plain text only: same grey as .nav-button background (#c8c8c8). No pill chrome. */
-  body.page-bio .bio-biography__more-btn {
-    display: inline;
-    margin: 0;
-    margin-left: 0.15em;
-    padding: 0;
-    border: none;
-    background: none;
-    font: inherit;
-    line-height: inherit;
-    color: #c8c8c8;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: left;
-    vertical-align: baseline;
-  }
-
-  body.page-bio .bio-biography__more-btn:hover,
-  body.page-bio .bio-biography__more-btn:focus,
-  body.page-bio .bio-biography__more-btn:active {
-    color: #c8c8c8;
-    text-decoration: none;
-  }
-
-  body.page-bio .bio-biography__more-btn:focus-visible {
-    color: #c8c8c8;
-    text-decoration: none;
-    outline: 0.125rem solid #000000;
-    outline-offset: 0.125rem;
-  }
 }
 
 /* Detail pages: center in the visible viewport. min-height is required or main collapses to image height
