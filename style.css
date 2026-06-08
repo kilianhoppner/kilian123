@@ -1317,8 +1317,8 @@ main.gallery-detail--dotline .gallery-detail__carousel-slide--dotline-wrench .ga
     aspect-ratio: 3 / 2;
     width: auto;
     max-width: 100%;
-    height: min(63vh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
-    max-height: min(63vh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+    height: min(67vh, calc(var(--gallery-detail-carousel-cap-h) * 1.26));
+    max-height: min(67vh, calc(var(--gallery-detail-carousel-cap-h) * 1.26));
   }
 }
 
