@@ -1508,16 +1508,20 @@ main.gallery-detail--life-cycles {
 }
 
 /*
- * Daddy's Girl — slide 2 (Hello Kitty, 500×530): the shared 3:2 frame uses width min(100%, cap_w),
+ * Daddy's Girl — slide 2 (500×500): the shared 3:2 frame uses width min(100%, cap_w),
  * which is usually already the full slide width — so bumping cap_w/cap_h does nothing visible.
  * Size this slide from height + native aspect ratio (cf. t-shirt first slide).
  */
 main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second .gallery-detail__carousel-media {
-  aspect-ratio: 500 / 530;
+  aspect-ratio: 1 / 1;
   width: auto;
   max-width: 100%;
-  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.22));
-  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.22));
+  height: min(64vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
+  max-height: min(64vh, calc(var(--gallery-detail-carousel-cap-h) * 1.14));
+}
+
+main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second img {
+  filter: contrast(0.9);
 }
 
 /* Life Cycles — slide 1 (recycling arrows): square frame; inner spin fills carousel cell (not full-stage .gallery-arrow-spin widths). */
@@ -2919,7 +2923,7 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
     aspect-ratio: 1 / 1;
   }
 
-  /* Daddy's Girl — Hello Kitty: slightly smaller on phone (width still auto from 500/530 AR) */
+  /* Daddy's Girl — slide 2: slightly smaller on phone (width still auto from square AR) */
   main.gallery-detail--daddys-girl .gallery-detail__carousel-slide--daddys-girl-second .gallery-detail__carousel-media {
     height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
     max-height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
@@ -4539,6 +4543,10 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
   /* Man at the centre of Earth — globe tile + canvas slightly larger on phones */
   .gallery .gallery-globe-wireframe {
     --img-max-height: 94%;
+  }
+
+  .gallery .gallery-toiletroll-3d {
+    --img-max-height: 92%;
   }
 
   .gallery .gallery-globe-wireframe__canvas {
