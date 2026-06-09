@@ -4909,14 +4909,14 @@ main.gallery-detail--suneden .suneden-world-embed {
   }
 
   main.gallery-detail .gallery-detail__carousel .gallery-detail__carousel-chevron--left {
-    transform: rotate(90deg) scale(1.32);
+    transform: rotate(90deg) scale(1.26);
   }
 
   main.gallery-detail .gallery-detail__carousel .gallery-detail__carousel-chevron--right {
-    transform: rotate(-90deg) scale(1.32);
+    transform: rotate(-90deg) scale(1.26);
   }
 
   main.gallery-detail .gallery-detail__carousel .mobile-scroll-hint__icon path {
-    stroke-width: 2.5;
+    stroke-width: 2.4;
   }
 }
