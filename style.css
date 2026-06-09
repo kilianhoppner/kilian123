@@ -1773,6 +1773,13 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
   max-width: var(--gallery-detail-carousel-rail-max-w);
   overflow: hidden;
   opacity: 1;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+main.gallery-detail .gallery-detail__carousel-viewport:active {
+  cursor: grabbing;
 }
 
 /* TBI: flex min-height:0 + overflow:hidden on viewport need a tall enough min-height (see --tbi-magazine-clip-min-h) */
@@ -4050,6 +4057,9 @@ main.gallery-detail--suneden .gallery-detail__carousel-viewport {
   overflow: visible;
   clip-path: inset(-40% 0 -40% 0);
   opacity: 1;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-track {
@@ -4890,5 +4900,23 @@ main.gallery-detail--suneden .suneden-world-embed {
     inset: -62%;
     width: 224%;
     height: 224%;
+  }
+}
+
+@media (min-width: 769px) {
+  main.gallery-detail .gallery-detail__carousel .gallery-detail__carousel-nav {
+    overflow: visible;
+  }
+
+  main.gallery-detail .gallery-detail__carousel .gallery-detail__carousel-chevron--left {
+    transform: rotate(90deg) scale(1.32);
+  }
+
+  main.gallery-detail .gallery-detail__carousel .gallery-detail__carousel-chevron--right {
+    transform: rotate(-90deg) scale(1.32);
+  }
+
+  main.gallery-detail .gallery-detail__carousel .mobile-scroll-hint__icon path {
+    stroke-width: 2.5;
   }
 }

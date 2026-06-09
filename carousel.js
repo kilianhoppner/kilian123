@@ -275,6 +275,13 @@
       track.style.transform = 'translateX(' + -trackIndex * w + 'px)';
     }
 
+    function applyDragTransform(deltaX) {
+      var w = slideWidth();
+      if (!w) return;
+      track.classList.add('gallery-detail__carousel-track--no-transition');
+      track.style.transform = 'translateX(' + (-trackIndex * w + deltaX) + 'px)';
+    }
+
     function bindIfNeeded() {
       if (typeof window.bindSurveillanceIframePlaceholders === 'function') {
         window.bindSurveillanceIframePlaceholders(root);
@@ -300,7 +307,7 @@
     });
 
     function go(delta) {
-      if (locked) return;
+      if (locked) return false;
       if (stopTbiCloneFollow) {
         stopTbiCloneFollow();
         stopTbiCloneFollow = null;
@@ -317,7 +324,7 @@
       if (finiteCarousel) {
         if (trackIndex < 0) trackIndex = 0;
         if (trackIndex > realN - 1) trackIndex = realN - 1;
-        if (trackIndex === prevTi) return;
+        if (trackIndex === prevTi) return false;
       } else {
         if (trackIndex < 0) trackIndex = 0;
         if (trackIndex > realN + 1) trackIndex = realN + 1;
@@ -344,7 +351,7 @@
         }
         applyTransform(false);
         syncFromTrackIndex();
-        return;
+        return true;
       }
 
       if (!finiteCarousel && trackIndex === realN + 1) {
@@ -366,6 +373,7 @@
       locked = true;
       triggerViewportSlideFade();
       applyTransform(true);
+      return true;
     }
 
     track.addEventListener('transitionend', function (e) {
@@ -395,6 +403,103 @@
     });
     nextBtn.addEventListener('click', function () {
       go(1);
+    });
+
+    var drag = {
+      active: false,
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      lastY: 0,
+      moved: false,
+      horizontal: false
+    };
+
+    function resetDrag() {
+      drag.active = false;
+      drag.pointerId = null;
+      drag.startX = 0;
+      drag.startY = 0;
+      drag.lastX = 0;
+      drag.lastY = 0;
+      drag.moved = false;
+      drag.horizontal = false;
+    }
+
+    function onPointerDown(e) {
+      if (locked) return;
+      if (e.button != null && e.button !== 0) return;
+      if (e.target && e.target.closest && e.target.closest('.gallery-detail__carousel-nav')) return;
+      drag.active = true;
+      drag.pointerId = e.pointerId;
+      drag.startX = e.clientX;
+      drag.startY = e.clientY;
+      drag.lastX = e.clientX;
+      drag.lastY = e.clientY;
+      drag.moved = false;
+      drag.horizontal = false;
+      if (viewport.setPointerCapture) {
+        try {
+          viewport.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!drag.active || e.pointerId !== drag.pointerId) return;
+      var dx = e.clientX - drag.startX;
+      var dy = e.clientY - drag.startY;
+      drag.lastX = e.clientX;
+      drag.lastY = e.clientY;
+      if (!drag.horizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+        drag.horizontal = true;
+      }
+      if (!drag.horizontal) return;
+      e.preventDefault();
+      drag.moved = Math.abs(dx) > 4;
+      applyDragTransform(dx);
+    }
+
+    function onPointerEnd(e) {
+      if (!drag.active || e.pointerId !== drag.pointerId) return;
+      var dx = drag.lastX - drag.startX;
+      var w = slideWidth();
+      var threshold = Math.min(96, Math.max(42, w * 0.14));
+      var shouldAdvance = drag.horizontal && Math.abs(dx) >= threshold;
+      var delta = dx < 0 ? 1 : -1;
+      var wasMoved = drag.moved;
+      resetDrag();
+      if (viewport.releasePointerCapture) {
+        try {
+          viewport.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+      if (shouldAdvance) {
+        if (!go(delta)) {
+          applyTransform(true);
+        }
+      } else {
+        applyTransform(true);
+      }
+      if (wasMoved) {
+        root.addEventListener(
+          'click',
+          function preventDraggedClick(clickEvent) {
+            clickEvent.preventDefault();
+            clickEvent.stopPropagation();
+          },
+          { capture: true, once: true }
+        );
+      }
+    }
+
+    viewport.addEventListener('pointerdown', onPointerDown);
+    viewport.addEventListener('pointermove', onPointerMove);
+    viewport.addEventListener('pointerup', onPointerEnd);
+    viewport.addEventListener('pointercancel', onPointerEnd);
+    viewport.addEventListener('dragstart', function (e) {
+      e.preventDefault();
     });
 
     window.addEventListener(
