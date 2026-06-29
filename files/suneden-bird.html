@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Bird</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+        touch-action: pan-y;
+        overscroll-behavior: none;
+      }
+
+      a-scene {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        background: transparent;
+        touch-action: pan-y;
+      }
+
+      a-scene canvas {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        touch-action: pan-y !important;
+      }
+
+      .a-enter-vr,
+      .a-enter-ar,
+      .a-orientation-modal,
+      .a-loader-title {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    </style>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      AFRAME.registerComponent("showcase-spin", {
+        schema: {
+          speed: { type: "number", default: 6.3 },
+          baseY: { type: "number", default: 145 }
+        },
+        init: function () {
+          this.t = 0;
+          this.baseRot = this.el.getAttribute("rotation") || { x: 0, y: 0, z: 0 };
+        },
+        tick: function (_, dt) {
+          this.t += (dt || 16) / 1000;
+          var y = this.data.baseY + this.t * this.data.speed;
+          this.el.setAttribute("rotation", this.baseRot.x + " " + y + " " + this.baseRot.z);
+        }
+      });
+
+      AFRAME.registerComponent("bird-hover", {
+        tick: function (timeMs) {
+          var t = timeMs * 0.001;
+          this.el.setAttribute("position", "0 " + (0.02 + Math.sin(t * 1.6) * 0.055) + " -1");
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var scene = document.querySelector("a-scene");
+        var root = document.getElementById("birdRoot");
+        if (!scene || !root) return;
+
+        function el(tag, parent, attrs) {
+          var node = document.createElement(tag);
+          Object.keys(attrs || {}).forEach(function (key) {
+            node.setAttribute(key, attrs[key]);
+          });
+          if (parent) parent.appendChild(node);
+          return node;
+        }
+
+        function makeBird(parent) {
+          var mat = "shader: standard; roughness: 0.68; metalness: 0";
+          var rootEntity = el("a-entity", parent, {
+            position: "0 0 0",
+            rotation: "0 145 0",
+            scale: "2.8 2.8 2.8",
+            "showcase-spin": "speed: 6.3; baseY: 145"
+          });
+          el("a-sphere", rootEntity, { position: "0 0 0", radius: "0.22", scale: "0.75 0.52 1.25", color: "#5C4033", material: mat });
+          el("a-sphere", rootEntity, { position: "0 0.08 -0.34", radius: "0.15", color: "#6B4A3A", material: mat });
+          el("a-cone", rootEntity, { position: "0 0.08 -0.52", "radius-bottom": "0.055", "radius-top": "0", height: "0.18", rotation: "90 0 0", color: "#E0A12B", material: mat });
+          el("a-sphere", rootEntity, { position: "-0.055 0.14 -0.45", radius: "0.018", color: "#111111", material: mat });
+          el("a-sphere", rootEntity, { position: "0.055 0.14 -0.45", radius: "0.018", color: "#111111", material: mat });
+          var wingL = el("a-entity", rootEntity, { position: "-0.22 0.02 0", animation__flap: "property: rotation; from: 0 0 22; to: 0 0 72; dur: 820; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-box", wingL, { position: "-0.36 0 0", width: "0.78", height: "0.045", depth: "0.28", color: "#7A5A48", material: mat });
+          var wingR = el("a-entity", rootEntity, { position: "0.22 0.02 0", animation__flap: "property: rotation; from: 0 0 -22; to: 0 0 -72; dur: 820; dir: alternate; easing: easeInOutSine; loop: true" });
+          el("a-box", wingR, { position: "0.36 0 0", width: "0.78", height: "0.045", depth: "0.28", color: "#7A5A48", material: mat });
+          el("a-cone", rootEntity, { position: "-0.045 -0.16 0.02", "radius-bottom": "0.028", "radius-top": "0", height: "0.09", rotation: "-55 0 -25", color: "#D9A620", material: "shader: standard; roughness: 0.5; metalness: 0.12" });
+          el("a-cone", rootEntity, { position: "0.045 -0.16 0.02", "radius-bottom": "0.028", "radius-top": "0", height: "0.09", rotation: "-55 0 25", color: "#D9A620", material: "shader: standard; roughness: 0.5; metalness: 0.12" });
+          el("a-cone", rootEntity, { position: "0 0 0.36", "radius-bottom": "0.19", "radius-top": "0.02", height: "0.38", rotation: "-90 0 0", color: "#4A332B", material: mat });
+        }
+
+        function build() {
+          makeBird(root);
+        }
+
+        if (scene.hasLoaded) build();
+        else scene.addEventListener("loaded", build);
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      renderer="alpha: true; antialias: true; precision: high; colorManagement: true"
+      background="transparent: true">
+      <a-entity light="type: ambient; intensity: 0.72"></a-entity>
+      <a-entity light="type: directional; intensity: 1.08" position="3 7 6"></a-entity>
+      <a-entity light="type: directional; intensity: 0.42" position="-5 2.5 4"></a-entity>
+      <a-entity id="birdRoot" bird-hover></a-entity>
+      <a-camera
+        camera
+        position="0 0.08 3.45"
+        rotation="0 0 0"
+        look-controls="enabled: false"
+        wasd-controls="enabled: false"
+        near="0.05"
+        far="100">
+      </a-camera>
+    </a-scene>
+    <script>
+      (function () {
+        function blockGesture(event) {
+          if (event.cancelable) event.preventDefault();
+        }
+        document.addEventListener("gesturestart", blockGesture, { passive: false });
+        document.addEventListener("gesturechange", blockGesture, { passive: false });
+        document.addEventListener("gestureend", blockGesture, { passive: false });
+        document.addEventListener("touchmove", function (event) {
+          if (event.touches && event.touches.length > 1) blockGesture(event);
+        }, { passive: false });
+      })();
+    </script>
+  </body>
+</html>

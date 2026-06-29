@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>House</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+        touch-action: pan-y;
+        overscroll-behavior: none;
+      }
+
+      a-scene {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        background: transparent;
+        touch-action: pan-y;
+      }
+
+      a-scene canvas {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        touch-action: pan-y !important;
+      }
+
+      .a-enter-vr,
+      .a-enter-ar,
+      .a-orientation-modal,
+      .a-loader-title {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    </style>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var scene = document.querySelector("a-scene");
+        var root = document.getElementById("houseRoot");
+        var camera = document.querySelector("a-camera");
+        if (!scene || !root) return;
+        var houseEntity = null;
+
+        function el(tag, parent, attrs) {
+          var node = document.createElement(tag);
+          Object.keys(attrs || {}).forEach(function (key) {
+            node.setAttribute(key, attrs[key]);
+          });
+          if (parent) parent.appendChild(node);
+          return node;
+        }
+
+        function createFlameCluster(px, py, pz, scale, delay) {
+          var cluster = document.createElement("a-entity");
+          cluster.setAttribute("position", px + " " + py + " " + pz);
+          cluster.setAttribute("scale", scale + " " + scale + " " + scale);
+
+          el("a-cone", cluster, {
+            position: "0 0.16 0",
+            "radius-bottom": "0.12",
+            "radius-top": "0.007",
+            height: "0.4",
+            color: "#E84D10",
+            material: "shader: standard; roughness: 0.22; metalness: 0; emissive: #D92C00; emissiveIntensity: 1.12",
+            animation__flicker: "property: scale; from: 0.92 0.95 0.9; to: 1.35 1.48 1.18; dir: alternate; dur: " + (330 + delay % 140) + "; delay: " + delay + "; easing: easeInOutSine; loop: true"
+          });
+          el("a-cone", cluster, {
+            position: "0.012 0.19 -0.006",
+            "radius-bottom": "0.06",
+            "radius-top": "0.004",
+            height: "0.29",
+            color: "#F2C84F",
+            material: "shader: standard; roughness: 0.14; metalness: 0; emissive: #E6B422; emissiveIntensity: 1.42",
+            animation__flicker: "property: scale; from: 1.12 0.9 1; to: 0.86 1.28 1.18; dir: alternate; dur: " + (260 + delay % 100) + "; delay: " + (delay + 80) + "; easing: easeInOutSine; loop: true"
+          });
+
+          return cluster;
+        }
+
+        function makeHouse(parent) {
+          var rootEntity = el("a-entity", parent, {
+            position: "0 -0.9 -1",
+            rotation: "0 192 0",
+            scale: "2.65 2.65 2.65"
+          });
+          houseEntity = rootEntity;
+          el("a-box", rootEntity, { position: "0 0.38 0", width: "1.05", height: "0.84", depth: "0.9", color: "#E6BE87", material: "shader: standard; roughness: 0.75; metalness: 0" });
+          el("a-cone", rootEntity, { position: "0 1.1 0", "radius-bottom": "0.78", "radius-top": "0", height: "0.58", "segments-radial": "4", rotation: "0 45 0", color: "#B9492E", material: "shader: standard; roughness: 0.48; metalness: 0.03; emissive: #351208; emissiveIntensity: 0.03" });
+          el("a-box", rootEntity, { position: "0 0.25 -0.46", width: "0.24", height: "0.46", depth: "0.04", color: "#6B3F24" });
+          [-0.34, 0.34].forEach(function (x) {
+            el("a-box", rootEntity, { position: x + " 0.52 -0.47", width: "0.2", height: "0.18", depth: "0.035", color: "#9CDCEB", material: "shader: standard; roughness: 0.04; metalness: 0.25; opacity: 0.72; transparent: true; emissive: #3CAFD9; emissiveIntensity: 0.12" });
+          });
+          el("a-box", rootEntity, { position: "0.28 1.15 0.16", width: "0.12", height: "0.32", depth: "0.12", color: "#7B4A34", material: "shader: standard; roughness: 0.72; metalness: 0" });
+
+          function createSmokePuff(index, offsetX, delay) {
+            var startY = 1.42 + index * 0.04;
+            var endY = 2.08 + index * 0.08;
+            var ox = 0.28 + offsetX;
+            el("a-sphere", rootEntity, {
+              position: ox + " " + startY + " 0.16",
+              radius: "0.076",
+              color: "#D0D0D0",
+              material: "shader: standard; roughness: 1; metalness: 0; opacity: 0.51; transparent: true; depthWrite: false",
+              animation__rise: "property: position; from: " + ox + " " + startY + " 0.16; to: " + (0.28 + offsetX * 2.2) + " " + endY + " 0.2; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true",
+              animation__grow: "property: scale; from: 0.6 0.6 0.6; to: 1.78 1.78 1.78; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true",
+              animation__fade: "property: material.opacity; from: 0.51; to: 0; dur: 2600; delay: " + delay + "; easing: easeOutSine; loop: true"
+            });
+          }
+
+          createSmokePuff(0, -0.02, 0);
+          createSmokePuff(1, 0.03, 850);
+          createSmokePuff(2, -0.04, 1700);
+          rootEntity.appendChild(createFlameCluster(-0.48, 0.96, -0.36, 0.92, 0));
+          rootEntity.appendChild(createFlameCluster(-0.06, 1.25, -0.22, 1.0, 360));
+          rootEntity.appendChild(createFlameCluster(0.42, 0.86, -0.39, 0.88, 720));
+          rootEntity.appendChild(createFlameCluster(0.18, 0.56, -0.53, 0.72, 1080));
+          el("a-entity", rootEntity, {
+            position: "0 0.42 0",
+            light: "type: point; intensity: 0.5; distance: 4.8; decay: 1.9; color: #E88738"
+          });
+        }
+
+        function applyViewportTuning() {
+          var isMobile = window.matchMedia("(max-width: 768px)").matches;
+          var cameraPosition = "0 1.24 4.05";
+          var cameraRotation = "-10 0 0";
+          if (houseEntity) {
+            var scale = isMobile ? 2.3 : 1.78;
+            var x = isMobile ? 0 : -0.04;
+            var y = isMobile ? -1.25 : -0.86;
+            houseEntity.setAttribute("scale", scale + " " + scale + " " + scale);
+            houseEntity.setAttribute("position", x + " " + y + " -1");
+          }
+          if (camera) {
+            camera.setAttribute("position", cameraPosition);
+            camera.setAttribute("rotation", cameraRotation);
+          }
+        }
+
+        function build() {
+          makeHouse(root);
+          applyViewportTuning();
+        }
+
+        if (scene.hasLoaded) build();
+        else scene.addEventListener("loaded", build);
+        window.addEventListener("resize", applyViewportTuning);
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      renderer="alpha: true; antialias: true; precision: high; colorManagement: true"
+      background="transparent: true">
+      <a-entity light="type: ambient; intensity: 0.74"></a-entity>
+      <a-entity light="type: directional; intensity: 1.05" position="3 7 6"></a-entity>
+      <a-entity light="type: directional; intensity: 0.42" position="-5 2.5 4"></a-entity>
+      <a-entity id="houseRoot"></a-entity>
+      <a-camera
+        camera
+        position="0 0.25 3.45"
+        rotation="0 0 0"
+        look-controls="enabled: false"
+        wasd-controls="enabled: false"
+        near="0.05"
+        far="100">
+      </a-camera>
+    </a-scene>
+    <script>
+      (function () {
+        function blockGesture(event) {
+          if (event.cancelable) event.preventDefault();
+        }
+        document.addEventListener("gesturestart", blockGesture, { passive: false });
+        document.addEventListener("gesturechange", blockGesture, { passive: false });
+        document.addEventListener("gestureend", blockGesture, { passive: false });
+        document.addEventListener("touchmove", function (event) {
+          if (event.touches && event.touches.length > 1) blockGesture(event);
+        }, { passive: false });
+      })();
+    </script>
+  </body>
+</html>

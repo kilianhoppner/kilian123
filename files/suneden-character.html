@@ -1121,7 +1121,7 @@
           });
           var torso = el("a-entity", root, { class: "human-torso", position: "0 0.45 0" });
           var ys = [-0.261, -0.203, -0.145, -0.087, -0.029, 0.029, 0.087, 0.145, 0.203, 0.261];
-          ys.forEach(function (yy, i) {
+          ys.slice(2).forEach(function (yy, i) {
             el("a-cylinder", torso, {
               position: "0 " + yy + " 0",
               radius: "0.11",
