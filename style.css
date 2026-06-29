@@ -1542,6 +1542,201 @@ main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-wh
   max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
 }
 
+/* Life Cycles — slide 3: seamless blue oval rain, no cloud. */
+main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-rain .gallery-detail__carousel-media {
+  aspect-ratio: 1 / 1;
+  width: auto;
+  max-width: 100%;
+  height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
+  max-height: min(68vh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain {
+  --rain-speed-mult: 2.05;
+  position: relative;
+  width: 72%;
+  height: 72%;
+  overflow: hidden;
+  background: transparent;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop {
+  --drop-x: 50%;
+  --drop-delay: 0s;
+  --drop-duration: 1.9s;
+  --drop-opacity: 0.78;
+  position: absolute;
+  top: -18%;
+  left: var(--drop-x);
+  width: 5.3%;
+  aspect-ratio: 1 / 1.58;
+  border-radius: 50%;
+  background: #2487ff;
+  opacity: 0;
+  transform: translateX(-50%);
+  animation-name: life-cycles-rain-fall, life-cycles-rain-fade-a;
+  animation-duration: calc(var(--drop-duration) * var(--rain-speed-mult)), calc(var(--drop-duration) * var(--rain-speed-mult));
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+  animation-delay: var(--drop-delay), var(--drop-delay);
+  will-change: top, opacity;
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--life-cycles .life-cycles-rain {
+    --rain-speed-mult: 2.85;
+  }
+
+  main.gallery-detail--life-cycles .life-cycles-rain__drop {
+    width: 8.2%;
+  }
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(3n + 2) {
+  animation-name: life-cycles-rain-fall, life-cycles-rain-fade-b;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(3n + 3) {
+  animation-name: life-cycles-rain-fall, life-cycles-rain-fade-c;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(1) {
+  --drop-x: 12%;
+  --drop-delay: -0.2s;
+  --drop-duration: 1.95s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(2) {
+  --drop-x: 18%;
+  --drop-delay: -1.15s;
+  --drop-duration: 2.15s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(3) {
+  --drop-x: 27%;
+  --drop-delay: -0.75s;
+  --drop-duration: 1.85s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(4) {
+  --drop-x: 36%;
+  --drop-delay: -1.65s;
+  --drop-duration: 2.05s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(5) {
+  --drop-x: 45%;
+  --drop-delay: -0.45s;
+  --drop-duration: 2.25s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(6) {
+  --drop-x: 54%;
+  --drop-delay: -1.35s;
+  --drop-duration: 1.9s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(7) {
+  --drop-x: 63%;
+  --drop-delay: -0.95s;
+  --drop-duration: 2.1s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(8) {
+  --drop-x: 72%;
+  --drop-delay: -1.85s;
+  --drop-duration: 1.8s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(9) {
+  --drop-x: 82%;
+  --drop-delay: -0.55s;
+  --drop-duration: 2.2s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(10) {
+  --drop-x: 88%;
+  --drop-delay: -1.45s;
+  --drop-duration: 2s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(11) {
+  --drop-x: 14%;
+  --drop-delay: -1.85s;
+  --drop-duration: 2.35s;
+}
+
+main.gallery-detail--life-cycles .life-cycles-rain__drop:nth-child(12) {
+  --drop-x: 68%;
+  --drop-delay: -0.15s;
+  --drop-duration: 2.3s;
+}
+
+@keyframes life-cycles-rain-fall {
+  from {
+    top: -18%;
+  }
+
+  to {
+    top: 118%;
+  }
+}
+
+@keyframes life-cycles-rain-fade-a {
+  0%,
+  18% {
+    opacity: 0;
+  }
+
+  36%,
+  58% {
+    opacity: var(--drop-opacity);
+  }
+
+  78%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes life-cycles-rain-fade-b {
+  0%,
+  22% {
+    opacity: 0;
+  }
+
+  40%,
+  62% {
+    opacity: var(--drop-opacity);
+  }
+
+  82%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes life-cycles-rain-fade-c {
+  0%,
+  15% {
+    opacity: 0;
+  }
+
+  33%,
+  54% {
+    opacity: var(--drop-opacity);
+  }
+
+  74%,
+  100% {
+    opacity: 0;
+  }
+}
+
 main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-spin {
   width: 100%;
   height: 100%;
@@ -1568,6 +1763,11 @@ main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-
   main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
     height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
     max-height: min(70vh, calc(var(--gallery-detail-carousel-cap-h) * 1.16));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-rain .gallery-detail__carousel-media {
+    height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
+    max-height: min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24));
   }
 
   main.gallery-detail--life-cycles .gallery-detail__carousel-media .gallery-arrow-spin__img {
@@ -2863,7 +3063,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--ilove-daddy,
   main.gallery-detail--head,
   main.gallery-detail--daddys-girl,
-  main.gallery-detail--life-cycles {
+  main.gallery-detail--life-cycles,
+  main.gallery-detail--suneden {
     --gallery-detail-media-max-w: var(--gallery-detail-carousel-mobile-media-max-w);
     --gallery-detail-media-max-h: var(--gallery-detail-carousel-mobile-media-max-h);
     --gallery-detail-carousel-cap-h: var(--gallery-detail-carousel-mobile-cap-h);
@@ -2937,13 +3138,18 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   }
 
   main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-arrows .gallery-detail__carousel-media {
-    height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
-    max-height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+    height: min(54svh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
+    max-height: min(54svh, calc(var(--gallery-detail-carousel-cap-h) * 1.08));
   }
 
   main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-white-book .gallery-detail__carousel-media {
     height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
     max-height: min(62svh, calc(var(--gallery-detail-carousel-cap-h) * 1.32));
+  }
+
+  main.gallery-detail--life-cycles .gallery-detail__carousel-slide--life-cycles-rain .gallery-detail__carousel-media {
+    height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
+    max-height: min(58svh, calc(var(--gallery-detail-carousel-cap-h) * 1.2));
   }
 
   main.gallery-detail--typeface .gallery-detail__carousel-slide--nonsense-glyphs .gallery-detail__carousel-media {
@@ -2993,8 +3199,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   }
 
   /*
-   * First t-shirt slide: portrait asset in a full-width×tall box is limited by WIDTH, so the photo
-   * stays tiny. Match the frame to the file aspect (869×966) and cap by height so contain fills it.
+   * First t-shirt slide: keep the same portrait frame as the second slide on mobile so the arrow
+   * columns and caption spacing don't jump between this page and the shared carousel pattern.
    */
   main.gallery-detail--tshirt .gallery-detail__carousel-slide--tshirt-first {
     min-height: 0;
@@ -3003,11 +3209,11 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
 
   main.gallery-detail--tshirt .gallery-detail__carousel-slide--tshirt-first .gallery-detail__carousel-media {
     flex-shrink: 0;
-    aspect-ratio: 869 / 966;
-    height: min(86svh, 92dvh);
-    width: auto;
+    aspect-ratio: 3 / 4;
+    height: auto;
+    width: min(100%, var(--gallery-detail-carousel-cap-w));
     max-width: 100%;
-    max-height: min(86svh, 92dvh);
+    max-height: var(--gallery-detail-carousel-cap-h);
   }
 
   main.gallery-detail--tshirt .gallery-detail__carousel-slide--tshirt-first .gallery-detail__carousel-media > img {
@@ -3156,7 +3362,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--daddys-girl .gallery-detail__carousel,
   main.gallery-detail--life-cycles .gallery-detail__carousel,
   main.gallery-detail--thebigissue .gallery-detail__carousel,
-  main.gallery-detail--dollhouse .gallery-detail__carousel {
+  main.gallery-detail--dollhouse .gallery-detail__carousel,
+  main.gallery-detail--suneden .gallery-detail__carousel {
     width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
     max-width: 100vw;
     margin-left: calc(-1 * var(--gallery-detail-main-pad-x));
@@ -3182,7 +3389,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--daddys-girl .gallery-detail__carousel-viewport,
   main.gallery-detail--life-cycles .gallery-detail__carousel-viewport,
   main.gallery-detail--thebigissue .gallery-detail__carousel-viewport,
-  main.gallery-detail--dollhouse .gallery-detail__carousel-viewport {
+  main.gallery-detail--dollhouse .gallery-detail__carousel-viewport,
+  main.gallery-detail--suneden .gallery-detail__carousel-viewport {
     max-width: none;
   }
 
@@ -3201,7 +3409,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__btn,
   main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__btn,
-  main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
+  main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__btn,
+  main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn {
     box-sizing: border-box;
     padding: 0.125rem 0;
     flex: 0 0 2.5rem;
@@ -3228,7 +3437,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   main.gallery-detail--daddys-girl .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--life-cycles .gallery-detail__carousel .mobile-scroll-hint__icon,
   main.gallery-detail--thebigissue .gallery-detail__carousel .mobile-scroll-hint__icon,
-  main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
+  main.gallery-detail--dollhouse .gallery-detail__carousel .mobile-scroll-hint__icon,
+  main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__icon {
     width: 2.5rem;
     height: 2.5rem;
   }
@@ -3641,6 +3851,40 @@ main.gallery-detail--thebigissue .thebigissue-magazine {
   display: block;
 }
 
+.gallery .gallery-head-3d__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.gallery .gallery-head-3d__fallback img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.gallery .gallery-head-3d__viewer {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.gallery .gallery-head-3d.gallery-head-3d--loaded .gallery-head-3d__viewer {
+  opacity: 1;
+}
+
+.gallery .gallery-head-3d.gallery-head-3d--loaded .gallery-head-3d__fallback {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /*
  * Green loading spinner while iframe is hidden. Sketch posts camera-active to reveal iframe;
  * camera-inactive / denied shows this again (no black box).
@@ -3858,8 +4102,7 @@ section.gallery .face-track-outline {
   left: 33%;
   top: 33%;
   width: 34%;
-  aspect-ratio: 1;
-  height: auto;
+  height: 34%;
 }
 
 @media (max-width: 768px) {
@@ -3867,6 +4110,7 @@ section.gallery .face-track-outline {
     left: 28%;
     top: 28%;
     width: 44%;
+    height: 44%;
   }
 }
 
@@ -4046,6 +4290,7 @@ main.gallery-detail--suneden .gallery-detail__carousel {
   max-width: calc(var(--gallery-detail-carousel-rail-max-w) + 7rem);
   margin-top: 0;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-viewport {
@@ -4055,7 +4300,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-viewport {
   width: 100%;
   max-width: var(--gallery-detail-carousel-rail-max-w);
   overflow: visible;
-  clip-path: inset(-40% 0 -40% 0);
+  clip-path: inset(-100vh 0 -40% 0);
   opacity: 1;
   cursor: grab;
   touch-action: pan-y;
@@ -4083,6 +4328,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide {
   align-items: center;
   justify-content: center;
   padding: 0.25rem 0;
+  overflow: visible;
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-media {
@@ -4100,10 +4346,11 @@ main.gallery-detail--suneden .gallery-detail__carousel-media {
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gallery-detail__carousel-media,
-main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-couple .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-house .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-bird .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character .gallery-detail__carousel-media {
   overflow: visible;
 }
@@ -4117,6 +4364,7 @@ main.gallery-detail--suneden .suneden-world-embed {
   height: 160%;
   border: 0;
   background: transparent;
+  max-width: none;
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media {
@@ -4126,21 +4374,14 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gall
   overflow: visible;
 }
 
-main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media {
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-house .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-bird .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-character .gallery-detail__carousel-media {
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
-}
-
-main.gallery-detail--suneden .suneden-inflatable-detail {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 82%;
-  max-height: 112%;
-  object-fit: contain;
-  background: transparent;
 }
 
 main.gallery-detail--suneden .suneden-logo-detail {
@@ -4161,6 +4402,28 @@ main.gallery-detail--suneden .suneden-character-embed {
   height: 128%;
   border: 0;
   background: transparent;
+  max-width: none;
+}
+
+main.gallery-detail--suneden .suneden-house-embed,
+main.gallery-detail--suneden .suneden-bird-embed {
+  position: absolute;
+  display: block;
+  border: 0;
+  background: transparent;
+  max-width: none;
+}
+
+main.gallery-detail--suneden .suneden-house-embed {
+  inset: -64% -24%;
+  width: 148%;
+  height: 228%;
+}
+
+main.gallery-detail--suneden .suneden-bird-embed {
+  inset: -12%;
+  width: 124%;
+  height: 124%;
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn {
@@ -4197,12 +4460,13 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
 @media (max-width: 768px) {
   main.gallery-detail--suneden .gallery-detail__carousel {
     width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
-    max-width: none;
+    max-width: 100vw;
     margin-left: calc(-1 * var(--gallery-detail-main-pad-x));
     margin-right: calc(-1 * var(--gallery-detail-main-pad-x));
     gap: 0;
-    padding-left: max(0.5rem, env(safe-area-inset-left, 0));
-    padding-right: max(0.5rem, env(safe-area-inset-right, 0));
+    box-sizing: border-box;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
   }
 
   main.gallery-detail--suneden .gallery-detail__carousel-viewport {
@@ -4210,9 +4474,15 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
   }
 
   main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__btn {
+    box-sizing: border-box;
+    padding: 0.125rem 0;
+    flex: 0 0 2.5rem;
     width: 2.5rem;
     min-width: 2.5rem;
-    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
   }
 
   main.gallery-detail--suneden .gallery-detail__carousel .mobile-scroll-hint__icon {
@@ -4734,6 +5004,12 @@ main.gallery-detail--suneden .suneden-logo-detail {
     height: 184%;
   }
 
+  main.gallery-detail--suneden .suneden-bird-embed {
+    inset: -24%;
+    width: 148%;
+    height: 148%;
+  }
+
   main.gallery-detail--suneden .suneden-character-embed {
     inset: -62% -48%;
     width: 196%;
@@ -4809,8 +5085,7 @@ section.gallery .face-track-slot .gallery-tile-overlay-link {
   left: 33%;
   top: 33%;
   width: 34%;
-  aspect-ratio: 1;
-  height: auto;
+  height: 34%;
 }
 
 @media (max-width: 768px) {
@@ -4818,6 +5093,7 @@ section.gallery .face-track-slot .gallery-tile-overlay-link {
     left: 28%;
     top: 28%;
     width: 44%;
+    height: 44%;
   }
 }
 
@@ -4831,16 +5107,26 @@ main.gallery-detail--suneden .gallery-detail__carousel,
 main.gallery-detail--suneden .gallery-detail__carousel-viewport,
 main.gallery-detail--suneden .gallery-detail__carousel-media,
 main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-house-embed,
+main.gallery-detail--suneden .suneden-bird-embed,
 main.gallery-detail--suneden .suneden-character-embed {
   touch-action: pan-y;
 }
 
 main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-house-embed,
+main.gallery-detail--suneden .suneden-bird-embed,
 main.gallery-detail--suneden .suneden-character-embed {
   overscroll-behavior: contain;
 }
 
 @media (max-width: 768px) {
+  main.gallery-detail--suneden .suneden-house-embed {
+    inset: -101% -48%;
+    width: 196%;
+    height: 302%;
+  }
+
   section.gallery > .gallery-suneden-world {
     margin-top: clamp(-4.25rem, -14vw, -2.65rem);
     margin-bottom: clamp(1.75rem, 6vw, 2.5rem);
@@ -4855,6 +5141,8 @@ main.gallery-detail--suneden .suneden-character-embed {
 /* Sun Eden A-Frame previews are passive animations, not draggable scenes. */
 .gallery .gallery-suneden-world .suneden-world-embed,
 main.gallery-detail--suneden .suneden-world-embed,
+main.gallery-detail--suneden .suneden-house-embed,
+main.gallery-detail--suneden .suneden-bird-embed,
 main.gallery-detail--suneden .suneden-character-embed {
   pointer-events: none;
   cursor: default;
@@ -4876,11 +5164,6 @@ main.gallery-detail--suneden .suneden-world-embed {
 }
 
 @media (max-width: 768px) {
-  main.gallery-detail--suneden .suneden-inflatable-detail {
-    max-width: 118%;
-    max-height: 210%;
-  }
-
   main.gallery-detail--suneden .suneden-logo-detail {
     width: min(96%, 34rem);
     max-width: 96%;

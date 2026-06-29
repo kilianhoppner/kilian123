@@ -1136,6 +1136,41 @@ function setupDotlineWrenchViewer() {
   }
 }
 
+function setupGalleryAsyncFallbacks() {
+  document.querySelectorAll('.gallery .gallery-head-3d__viewer').forEach((viewer) => {
+    const slot = viewer.closest('.gallery-head-3d');
+    if (!slot) return;
+    let done = false;
+    let tries = 0;
+    const markLoaded = () => {
+      done = true;
+      slot.classList.add('gallery-head-3d--loaded');
+    };
+    const checkLoaded = () => {
+      if (done) return true;
+      if (viewer.loaded || viewer.modelIsVisible) {
+        markLoaded();
+        return true;
+      }
+      return false;
+    };
+    if (checkLoaded()) {
+      return;
+    }
+    viewer.addEventListener('load', markLoaded, { once: true });
+    viewer.addEventListener('model-visibility', checkLoaded);
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('model-viewer').then(checkLoaded).catch(() => {});
+    }
+    const poll = window.setInterval(() => {
+      tries += 1;
+      if (checkLoaded() || tries > 80) {
+        window.clearInterval(poll);
+      }
+    }, 125);
+  });
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     setupLondonClock();
@@ -1152,6 +1187,7 @@ if (document.readyState === 'loading') {
     setupDotlineAZAnimation();
     setupDotlineCharacterOverview();
     setupDotlineWrenchViewer();
+    setupGalleryAsyncFallbacks();
   });
 } else {
   setupLondonClock();
@@ -1168,4 +1204,5 @@ if (document.readyState === 'loading') {
   setupDotlineAZAnimation();
   setupDotlineCharacterOverview();
   setupDotlineWrenchViewer();
+  setupGalleryAsyncFallbacks();
 }
