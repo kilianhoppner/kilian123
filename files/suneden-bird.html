@@ -60,7 +60,7 @@
       AFRAME.registerComponent("bird-hover", {
         tick: function (timeMs) {
           var t = timeMs * 0.001;
-          this.el.setAttribute("position", "0 " + (0.02 + Math.sin(t * 1.6) * 0.055) + " -1");
+          this.el.setAttribute("position", "0 " + (0.1 + Math.sin(t * 1.6) * 0.055) + " -1");
         }
       });
 
