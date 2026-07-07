@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Tree</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+        touch-action: pan-y;
+        overscroll-behavior: none;
+      }
+
+      a-scene {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        background: transparent;
+        touch-action: pan-y;
+      }
+
+      a-scene canvas {
+        display: block;
+        height: 100% !important;
+        width: 100% !important;
+        touch-action: pan-y !important;
+      }
+
+      .a-enter-vr,
+      .a-enter-ar,
+      .a-orientation-modal,
+      .a-loader-title {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    </style>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var scene = document.querySelector("a-scene");
+        var root = document.getElementById("treeRoot");
+        var camera = document.querySelector("a-camera");
+        if (!scene || !root) return;
+        var treeEntity = null;
+
+        function el(tag, parent, attrs) {
+          var node = document.createElement(tag);
+          Object.keys(attrs || {}).forEach(function (key) {
+            node.setAttribute(key, attrs[key]);
+          });
+          if (parent) parent.appendChild(node);
+          return node;
+        }
+
+        function makeTree(parent) {
+          var rootEntity = el("a-entity", parent, {
+            position: "0 -1.32 -1",
+            rotation: "0 0 0",
+            scale: "3.05 3.05 3.05"
+          });
+          treeEntity = rootEntity;
+
+          var treeScale = 1.04;
+          var tallMul = 1.22;
+          el("a-cylinder", rootEntity, {
+            position: "0 " + 0.44 * treeScale * tallMul + " 0",
+            radius: String(0.072 * treeScale),
+            height: String(0.88 * treeScale * tallMul),
+            color: "#8F5E2D",
+            material: "shader: standard; roughness: 0.72; metalness: 0"
+          });
+          el("a-sphere", rootEntity, {
+            position: "0 " + 1.07 * treeScale * tallMul + " 0",
+            radius: String(0.4 * treeScale),
+            "segments-width": 64,
+            "segments-height": 64,
+            color: "#31B06C",
+            material: "shader: standard; roughness: 0.65; metalness: 0"
+          });
+        }
+
+        function applyViewportTuning() {
+          var isMobile = window.matchMedia("(max-width: 768px)").matches;
+          if (treeEntity) {
+            var scale = isMobile ? 2.65 : 2.15;
+            var y = isMobile ? -1.48 : -1.02;
+            treeEntity.setAttribute("scale", scale + " " + scale + " " + scale);
+            treeEntity.setAttribute("position", "0 " + y + " -1");
+          }
+          if (camera) {
+            camera.setAttribute("position", "0 0.8 3.45");
+            camera.setAttribute("rotation", "0 0 0");
+          }
+        }
+
+        function build() {
+          makeTree(root);
+          applyViewportTuning();
+        }
+
+        if (scene.hasLoaded) build();
+        else scene.addEventListener("loaded", build);
+        window.addEventListener("resize", applyViewportTuning);
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      renderer="alpha: true; antialias: true; precision: high; colorManagement: true"
+      background="transparent: true">
+      <a-entity light="type: ambient; intensity: 0.74"></a-entity>
+      <a-entity light="type: directional; intensity: 1.1" position="3 7 6"></a-entity>
+      <a-entity light="type: directional; intensity: 0.44" position="-5 2.5 4"></a-entity>
+      <a-entity id="treeRoot"></a-entity>
+      <a-camera
+        camera
+        position="0 0.8 3.45"
+        rotation="0 0 0"
+        look-controls="enabled: false"
+        wasd-controls="enabled: false"
+        near="0.05"
+        far="100">
+      </a-camera>
+    </a-scene>
+    <script>
+      (function () {
+        function blockGesture(event) {
+          if (event.cancelable) event.preventDefault();
+        }
+        document.addEventListener("gesturestart", blockGesture, { passive: false });
+        document.addEventListener("gesturechange", blockGesture, { passive: false });
+        document.addEventListener("gestureend", blockGesture, { passive: false });
+        document.addEventListener("touchmove", function (event) {
+          if (event.touches && event.touches.length > 1) blockGesture(event);
+        }, { passive: false });
+      })();
+    </script>
+  </body>
+</html>
