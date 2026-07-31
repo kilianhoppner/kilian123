@@ -8,7 +8,8 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 // =============================================================================
 const COLORS = {
   paper: 0xe8e9ec,
-  core: 0xAA9878,
+  /** Kraft cardboard — light subdued beige */
+  core: 0xC0B6A6,
   lightAmbient: 0xffffff,
   lightHemisphereSky: 0xffffff,
   /** Slightly cooler/darker ground for clearer underside vs lit top */
@@ -75,7 +76,7 @@ const PAPER_END_STACK_RINGS = {
   /** 1 = opaque (stable when rotating). Below 1 enables transparency (may shimmer / sort badly) */
   opacity: 0.4,
   /** Vertices per ring (smoothness) */
-  lineSegments: 96,
+  lineSegments: 192,
   /**
    * Stroke width: radial thickness of each ring band (world units).
    * Inner/outer radii are `centerRadius ± ringThickness/2`. Typical range ~0.0007–0.0022.
@@ -98,7 +99,7 @@ const TOILET_ROLL = {
   /** Roll length along axis — one value so tile and detail match */
   rollWidth: 0.6,
   brownWall: 0.0045,
-  curveSegments: 100,
+  curveSegments: 160,
   coreDepthScale: 1.002,
 
   rotationOsc: { ...ROTATION_OSC },
@@ -116,8 +117,11 @@ const TOILET_ROLL = {
   },
 
   core: {
-    roughness: 0.88,
-    metalness: 0.04,
+    roughness: 0.92,
+    metalness: 0,
+    /** Soft warm lift so the tube interior doesn’t read as a black void */
+    emissive: 0x4A4338,
+    emissiveIntensity: 0.02,
   },
 
   camera: {
@@ -550,6 +554,65 @@ function createRoughnessVariationTexture(cfg) {
   return tex;
 }
 
+/** Kraft cardboard maps — fiber streaks + pulp noise so the tube reads as board, not flat paint. */
+function createCardboardMaps() {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.createImageData(size, size);
+  const d = img.data;
+  // Base kraft RGB — light, low-saturation beige
+  const br = 192;
+  const bg = 182;
+  const bb = 166;
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const i = (y * size + x) * 4;
+      // Axial fiber streaks (along v) + subtle circumferential pulp
+      const fiber =
+        (hashNoise(x * 0.55, Math.floor(y / 2) * 0.7) - 0.5) * 48 +
+        (hashNoise(x * 1.6 + 4, y * 0.12) - 0.5) * 28;
+      const pulp = (hashNoise(x * 1.2 + 11, y * 1.2 + 3) - 0.5) * 36;
+      const seam = Math.sin((x / size) * Math.PI * 2) * 10;
+      const n = fiber + pulp + seam;
+      d[i] = THREE.MathUtils.clamp(br + n * 0.4, 155, 220);
+      d[i + 1] = THREE.MathUtils.clamp(bg + n * 0.4, 145, 210);
+      d[i + 2] = THREE.MathUtils.clamp(bb + n * 0.38, 130, 200);
+      d[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const map = new THREE.CanvasTexture(canvas);
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.wrapS = map.wrapT = THREE.RepeatWrapping;
+  map.repeat.set(3.2, 1.6);
+  map.anisotropy = 8;
+
+  const roughCanvas = document.createElement('canvas');
+  roughCanvas.width = roughCanvas.height = size;
+  const rctx = roughCanvas.getContext('2d');
+  const rimg = rctx.createImageData(size, size);
+  const rd = rimg.data;
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const i = (y * size + x) * 4;
+      let n = 0.88 + (hashNoise(x * 0.25, y * 0.25) - 0.5) * 0.16;
+      n += (hashNoise(x * 0.8 + 2, Math.floor(y / 2) * 0.4) - 0.5) * 0.1;
+      n = THREE.MathUtils.clamp(n, 0.7, 0.98);
+      const v = Math.floor(n * 255);
+      rd[i] = rd[i + 1] = rd[i + 2] = v;
+      rd[i + 3] = 255;
+    }
+  }
+  rctx.putImageData(rimg, 0, 0);
+  const roughnessMap = new THREE.CanvasTexture(roughCanvas);
+  roughnessMap.colorSpace = THREE.NoColorSpace;
+  roughnessMap.wrapS = roughnessMap.wrapT = THREE.RepeatWrapping;
+  roughnessMap.repeat.set(3.2, 1.6);
+  return { map, roughnessMap };
+}
+
 /**
  * Concentric rings on roll end caps (YZ). Thin RingGeometry meshes; **opaque** so transparency sorting
  * and z-fighting don’t shimmer while the roll rotates. (Dense rings + rotation ≈ moiré — keep `count` modest.)
@@ -882,11 +945,22 @@ export function initToiletRoll(container) {
   });
   coreGeo.rotateY(Math.PI / 2);
   coreGeo.center();
+  applyCylindricalPaperUVs(coreGeo);
+  try {
+    coreGeo.computeTangents();
+  } catch {
+    /* ok */
+  }
+  const cardboardMaps = createCardboardMaps();
   const c = cfg.core;
   const coreMat = new THREE.MeshPhysicalMaterial({
     color: COLORS.core,
+    map: cardboardMaps.map,
     roughness: c.roughness,
+    roughnessMap: cardboardMaps.roughnessMap,
     metalness: c.metalness,
+    emissive: c.emissive ?? 0x000000,
+    emissiveIntensity: c.emissiveIntensity ?? 0,
     side: THREE.DoubleSide,
     polygonOffset: true,
     polygonOffsetFactor: 1,
@@ -894,6 +968,11 @@ export function initToiletRoll(container) {
   });
   const core = new THREE.Mesh(coreGeo, coreMat);
   group.add(core);
+
+  // Soft fill inside the tube so the kraft board stays readable when looking into the hole.
+  const coreFill = new THREE.PointLight(0xf5efe6, 0.16, 0.55, 2.0);
+  coreFill.position.set(0, 0, 0);
+  group.add(coreFill);
 
   scene.add(group);
 
@@ -941,6 +1020,7 @@ export function initToiletRoll(container) {
     Math.atan2(cam.position[0], cam.position[2]) +
     THREE.MathUtils.degToRad(osc.centerOffsetDeg ?? 0);
   function tick(now) {
+    if (sceneDisposed) return;
     const t = (now - oscT0) / 1000;
     group.rotation.y = baseYaw + oscAmp * Math.sin(oscOmega * t);
     renderer.render(scene, camera);
@@ -964,6 +1044,8 @@ export function initToiletRoll(container) {
     labelMap.dispose();
     coreGeo.dispose();
     coreMat.dispose();
+    cardboardMaps.map.dispose();
+    cardboardMaps.roughnessMap.dispose();
     if (renderer.domElement.parentNode === container) {
       container.removeChild(renderer.domElement);
     }
