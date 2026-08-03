@@ -4349,6 +4349,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-world .gal
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-couple .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-logo .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-house .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-tree .gallery-detail__carousel-media,
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-bird .gallery-detail__carousel-media,
@@ -5034,7 +5035,8 @@ main.gallery-detail--suneden .suneden-logo-detail {
 }
 
 main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-couple .gallery-detail__carousel-media,
-main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media {
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-giraffes .gallery-detail__carousel-media,
+main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5050,6 +5052,15 @@ main.gallery-detail--suneden .suneden-giraffes-detail {
   max-height: 112%;
   object-fit: contain;
 }
+
+main.gallery-detail--suneden .suneden-inflatable-detail {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 112%;
+  max-height: 136%;
+  object-fit: contain;
+}
 @media (max-width: 768px) {
   main.gallery-detail--suneden .suneden-world-embed {
     inset: -50%;
@@ -5061,6 +5072,15 @@ main.gallery-detail--suneden .suneden-giraffes-detail {
   main.gallery-detail--suneden .suneden-giraffes-detail {
     max-width: 96%;
     max-height: 126%;
+  }
+
+  main.gallery-detail--suneden .gallery-detail__carousel-slide--suneden-inflatable .gallery-detail__carousel-media {
+    overflow: hidden;
+  }
+
+  main.gallery-detail--suneden .suneden-inflatable-detail {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 
