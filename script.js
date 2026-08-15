@@ -30,7 +30,8 @@ function setupLondonClock() {
 }
 
 /**
- * Desktop (≥769px): click the clock to show it enlarged in the viewport centre; click again or Escape to close.
+ * Desktop (≥769px): click the clock to show it enlarged in the viewport centre;
+ * click again, click anywhere outside, or Escape to close.
  * Hover uses the same transform transition as nav buttons; expand/collapse snap instantly (transition cleared in JS).
  * Scale ~78% of shorter side. No dim overlay.
  */
@@ -100,6 +101,13 @@ function setupClockDesktopExpand() {
     if (e.key === 'Escape' && mq.matches && clockEl.classList.contains('clock--expanded')) {
       collapse();
     }
+  });
+
+  /* Collapse when clicking anywhere outside the clock (background, gallery, etc.). */
+  document.addEventListener('click', (e) => {
+    if (!mq.matches || !clockEl.classList.contains('clock--expanded')) return;
+    if (clockEl.contains(e.target)) return;
+    collapse();
   });
 
   window.addEventListener('resize', () => {
