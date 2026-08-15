@@ -3591,8 +3591,8 @@ main.gallery-detail--facetrack .surveillance-webcam-placeholder__spinner {
   .gallery .a-symbol {
     --img-max-height: 74%;
     --img-max-width: 74%;
-    margin-top: 6.5rem;
-    margin-bottom: 5.75rem;
+    margin-top: 5.25rem;
+    margin-bottom: 4.5rem;
   }
 }
 
@@ -4980,6 +4980,8 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
 
   .gallery .gallery-toiletroll-3d {
     --img-max-height: 92%;
+    margin-top: clamp(-2.15rem, -6.5vw, -1.15rem);
+    margin-bottom: clamp(-1.75rem, -5.2vw, -0.9rem);
   }
 
   .gallery .gallery-globe-wireframe__canvas {
@@ -5013,6 +5015,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
    */
   .gallery .gallery-weatherroom {
     --weatherroom-scale: 0.78;
+    margin-top: clamp(0.75rem, 2.8vw, 1.25rem);
   }
 
   .gallery-detail .gallery-weatherroom {
@@ -5290,27 +5293,28 @@ main.gallery-detail--suneden .suneden-character-embed {
   }
 
   .gallery .gallery-suneden-house {
-    --img-max-height: 90%;
-    --img-max-width: 90%;
+    --img-max-height: 87%;
+    --img-max-width: 87%;
   }
 
   .gallery .gallery-suneden-house .suneden-house-embed {
-    inset: -42% -12%;
-    width: 124%;
-    height: 184%;
+    inset: -39% -11%;
+    width: 122%;
+    height: 178%;
   }
 
   .gallery .gallery-gardenhouse-3d {
-    --img-max-height: 72%;
-    --img-max-width: 72%;
-    margin-top: clamp(-1.1rem, -3.5vw, -0.55rem);
+    --img-max-height: 58%;
+    --img-max-width: 58%;
+    margin-top: clamp(1.35rem, 4.2vw, 1.95rem);
+    margin-bottom: clamp(1.85rem, 5.5vw, 2.6rem);
   }
 
   .gallery img.typeface {
-    --img-max-height: 48%;
-    --img-max-width: 48%;
+    --img-max-height: 58%;
+    --img-max-width: 58%;
     margin-top: clamp(-0.55rem, -1.8vw, -0.25rem);
-    margin-bottom: clamp(-0.55rem, -1.8vw, -0.25rem);
+    margin-bottom: clamp(0.75rem, 2.8vw, 1.25rem);
   }
 
   .gallery img.menarefrommars {
