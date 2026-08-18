@@ -1386,6 +1386,233 @@ main.gallery-detail--gardenhouse .gallery-detail__gardenhouse-slot .gallery-gard
   height: 100%;
 }
 
+/* Garden House detail carousel (glyph + poster) — same rail/chevron pattern as peer pages */
+main.gallery-detail--gardenhouse {
+  --gallery-detail-media-max-w: min(86vw, var(--gallery-detail-art-max-w));
+  --gallery-detail-media-max-h: min(66vh, var(--gallery-detail-art-max-h));
+  --gallery-detail-carousel-cap-h: min(58vh, calc(var(--gallery-detail-media-max-h) * 1.08));
+  --gallery-detail-carousel-cap-w: min(
+    var(--gallery-detail-media-max-w),
+    calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
+  );
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.375rem, 1.5vw, 0.875rem);
+  width: 100%;
+  max-width: calc(var(--gallery-detail-carousel-rail-max-w) + 7rem);
+  margin-top: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-viewport {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-width: var(--gallery-detail-carousel-rail-max-w);
+  overflow: hidden;
+  opacity: 1;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-track {
+  display: flex;
+  align-items: center;
+  transition: transform 0.42s ease;
+  will-change: transform;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-track--no-transition {
+  transition: none;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0;
+  overflow: visible;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-media {
+  box-sizing: border-box;
+  position: relative;
+  width: min(100%, var(--gallery-detail-carousel-cap-w));
+  max-width: 100%;
+  max-height: var(--gallery-detail-carousel-cap-h);
+  aspect-ratio: 3 / 2;
+  height: auto;
+  flex: 0 0 auto;
+  margin: 0 auto;
+  overflow: hidden;
+  background: transparent;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-glyph .gallery-detail__carousel-media {
+  aspect-ratio: 1 / 1;
+  width: min(
+    100%,
+    var(--gallery-detail-media-max-w),
+    var(--gallery-detail-carousel-cap-h)
+  );
+  max-height: var(--gallery-detail-carousel-cap-h);
+  overflow: hidden;
+}
+
+main.gallery-detail--gardenhouse
+  .gallery-detail__carousel-slide--gardenhouse-glyph
+  .gallery-detail__gardenhouse-slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+/* Photograph slide — flat 2D PNG */
+main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-photo .gallery-detail__carousel-media {
+  aspect-ratio: 263 / 197;
+  width: min(
+    100%,
+    var(--gallery-detail-media-max-w),
+    calc(var(--gallery-detail-carousel-cap-h) * 263 / 197)
+  );
+  max-height: min(66vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-photo-detail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
+  background: none;
+  border: none;
+  padding: 0.625rem 0.875rem;
+  margin: 0;
+  cursor: pointer;
+  color: #ff00d9;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn:active {
+  opacity: 0.65;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  animation: mobile-scroll-hint-blink 1.55s ease-in-out infinite;
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--left {
+  transform: rotate(90deg);
+}
+
+main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--right {
+  transform: rotate(-90deg);
+}
+
+@media (max-width: 768px) {
+  main.gallery-detail--gardenhouse {
+    --gallery-detail-media-max-w: var(--gallery-detail-carousel-mobile-media-max-w);
+    --gallery-detail-media-max-h: var(--gallery-detail-carousel-mobile-media-max-h);
+    --gallery-detail-carousel-cap-h: var(--gallery-detail-carousel-mobile-cap-h);
+    --gallery-detail-carousel-cap-w: min(
+      var(--gallery-detail-media-max-w),
+      calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
+    );
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel {
+    width: calc(100% + 2 * var(--gallery-detail-main-pad-x));
+    max-width: 100vw;
+    margin-left: calc(-1 * var(--gallery-detail-main-pad-x));
+    margin-right: calc(-1 * var(--gallery-detail-main-pad-x));
+    gap: 0;
+    box-sizing: border-box;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel-viewport {
+    max-width: none;
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-glyph .gallery-detail__carousel-media {
+    height: min(44svh, calc(var(--gallery-detail-carousel-cap-h) * 1.02));
+    max-height: min(44svh, calc(var(--gallery-detail-carousel-cap-h) * 1.02));
+    width: auto;
+    max-width: min(100%, 78vw);
+    overflow: hidden;
+  }
+
+  main.gallery-detail--gardenhouse
+    .gallery-detail__carousel-slide--gardenhouse-glyph
+    .gallery-gardenhouse-3d__viewer {
+    transform: scale(0.78);
+    transform-origin: center center;
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-photo .gallery-detail__carousel-media {
+    height: min(42svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+    max-height: min(42svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+    width: auto;
+    max-width: 100%;
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
+    box-sizing: border-box;
+    padding: 0.125rem 0;
+    flex: 0 0 2.5rem;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
 /* Head model-viewer: hide default load progress UI (bar + dim mask) */
 model-viewer {
   --progress-bar-height: 0;

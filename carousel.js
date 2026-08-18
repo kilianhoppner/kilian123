@@ -166,6 +166,16 @@
     });
   }
 
+  /** Infinite-loop clones must not spin up a second Garden House Three.js viewer. */
+  function stripGardenhouseCarouselClone(cloneRoot) {
+    cloneRoot.querySelectorAll('[data-gardenhouse-init]').forEach(function (mount) {
+      mount.removeAttribute('data-gardenhouse-init');
+      mount.innerHTML = '';
+      mount.setAttribute('aria-hidden', 'true');
+      mount.classList.add('gallery-gardenhouse-3d__viewer--carousel-clone');
+    });
+  }
+
   function syncSurveillanceEmbedForSlide(root, originals, logicalIndex) {
     var slide = originals[logicalIndex];
     var embed = slide && slide.querySelector('.surveillance-embed');
@@ -217,6 +227,8 @@
       stripGlobeSphereCarouselClone(firstClone);
       stripModelViewerCarouselClone(lastClone);
       stripModelViewerCarouselClone(firstClone);
+      stripGardenhouseCarouselClone(lastClone);
+      stripGardenhouseCarouselClone(firstClone);
       stripTbiMagazineCarouselClone(firstClone);
       stripTbiMagazineCarouselClone(lastClone);
       syncTbiMagazineCloneVisual(originals[0], firstClone);
