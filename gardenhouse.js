@@ -6,7 +6,7 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 const SHAPE_URL = new URL('./files/gardenhouse-shape.json', import.meta.url).href;
 
 const COLORS = {
-  plastic: 0x2ce02c,
+  plastic: 0x2efc32,
   lightAmbient: 0xffffff,
   lightHemisphereSky: 0xffffff,
   lightHemisphereGround: 0x55555a,
@@ -36,9 +36,9 @@ const GARDENHOUSE = {
   material: {
     roughness: 0.26,
     metalness: 0.0,
-    clearcoat: 0.72,
-    clearcoatRoughness: 0.18,
-    reflectivity: 0.32,
+    clearcoat: 0.84,
+    clearcoatRoughness: 0.14,
+    reflectivity: 0.4,
     sheen: 0,
   },
   camera: {
@@ -48,15 +48,15 @@ const GARDENHOUSE = {
     position: [0.15, 0.04, 2.9],
   },
   renderer: {
-    toneMappingExposure: 0.9,
+    toneMappingExposure: 0.92,
     maxPixelRatio: 2,
   },
   lights: {
-    ambient: { intensity: 0.45 },
-    hemisphere: { intensity: 0.3 },
-    key: { intensity: 0.95, position: [2.2, 2.6, 2.8] },
-    fill: { intensity: 0.35, position: [-2.0, 0.5, 1.8] },
-    rim: { intensity: 0.4, position: [-0.6, 1.6, -2.4] },
+    ambient: { intensity: 0.24 },
+    hemisphere: { intensity: 0.2 },
+    key: { intensity: 1.35, position: [2.5, 2.9, 2.5] },
+    fill: { intensity: 0.14, position: [-2.1, 0.3, 1.7] },
+    rim: { intensity: 0.7, position: [-0.8, 1.8, -2.6] },
   },
 };
 
@@ -236,7 +236,7 @@ export async function initGardenhouse(container) {
     reflectivity: m.reflectivity,
     envMapIntensity: 0.18,
     emissive: COLORS.plastic,
-    emissiveIntensity: 0.08,
+    emissiveIntensity: 0.09,
     flatShading: false,
   });
 
