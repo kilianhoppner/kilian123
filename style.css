@@ -1571,20 +1571,29 @@ main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--right {
 
   main.gallery-detail--gardenhouse .gallery-detail__carousel-viewport {
     max-width: none;
+    overflow: hidden;
   }
 
+  /* Wider frame on phones so yaw swing has side room (Three.js aspect follows the box) */
   main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-glyph .gallery-detail__carousel-media {
-    height: min(44svh, calc(var(--gallery-detail-carousel-cap-h) * 1.02));
-    max-height: min(44svh, calc(var(--gallery-detail-carousel-cap-h) * 1.02));
-    width: auto;
-    max-width: min(100%, 78vw);
+    aspect-ratio: 5 / 4;
+    width: min(100%, 100%);
+    max-width: 100%;
+    height: auto;
+    max-height: min(82svh, calc(var(--gallery-detail-carousel-cap-h) * 1.9));
+    overflow: hidden;
+  }
+
+  main.gallery-detail--gardenhouse
+    .gallery-detail__carousel-slide--gardenhouse-glyph
+    .gallery-detail__gardenhouse-slot {
     overflow: hidden;
   }
 
   main.gallery-detail--gardenhouse
     .gallery-detail__carousel-slide--gardenhouse-glyph
     .gallery-gardenhouse-3d__viewer {
-    transform: scale(0.78);
+    transform: scale(1.22);
     transform-origin: center center;
   }
 
