@@ -5266,20 +5266,10 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
     min-height: 10.25rem;
   }
 
-  /* Index only: pull Surveillancecore + TACO closer on phones (face-track cell is otherwise a tall empty square) */
-  section.gallery > .face-track-slot {
-    --img-max-height: 52%;
-    --img-max-width: 52%;
-    max-height: var(--img-max-height);
-    max-width: var(--img-max-width);
-    margin-top: clamp(-0.85rem, -2.8vw, -0.4rem);
-    margin-bottom: clamp(-3.25rem, -10vw, -2rem);
-  }
-
-  /* Index only: last tile (TACO / midnight clock) — larger + less air above */
+  /* Index only: last tile (TACO / midnight clock) — keep Surveillancecore full size; pull TACO up to close the gap */
   section.gallery > a.gallery-item-link[href*="trump-always-chickens-out-taco"] > .gallery-midnight-tile {
     --img-max-height: 84%;
-    margin-top: clamp(-2.75rem, -9vw, -1.75rem);
+    margin-top: clamp(-8.5rem, -24vw, -5.5rem);
   }
 
   section.gallery > a.gallery-item-link[href*="trump-always-chickens-out-taco"] .gallery-midnight-time {
