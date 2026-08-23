@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+</head>
+
+<body class="page-draw">
+<div class="top-bar">
+  <div class="top-bar__cluster">
+  <div class="top-actions">
+    <a href="index.html" class="nav-button">Gallery</a>
+    <a href="draw.html" class="nav-button">Play</a>
+    <a href="bio.html" class="nav-button">Bio</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button nav-button--email" aria-label="Email"><svg class="nav-button__email-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="2.75" y="5.5" width="18.5" height="13" rx="2.25" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.75 L12 14 L20.25 7.75"/></svg></a>
+  </div>
+
+  <div class="time">
+    <div id="londonClock" class="clock" aria-label="London UTC analog clock">
+      <span class="clock-hand hour-hand"></span>
+      <span class="clock-hand minute-hand"></span>
+      <span class="clock-hand second-hand"></span>
+      <span class="clock-center"></span>
+    </div>
+  </div>
+  </div>
+</div>
+
+<main class="play-snake" aria-label="Snake game">
+  <p class="play-snake__score">Score: <span data-snake-score>0</span></p>
+  <div class="play-snake__stage">
+    <canvas class="play-snake__canvas" width="480" height="480" aria-label="Snake game board" tabindex="0"></canvas>
+  </div>
+</main>
+
+<script src="script.js"></script>
+<script src="snake.js"></script>
+
+<footer class="footer">Website developed by <a href="https://www.linkedin.com/in/kilian-h%C3%B6ppner-683737312/" class="hyperlink" rel="noopener noreferrer">Kilian Höppner</a>. Typeset in <a href="https://abcdinamo.com/typefaces/diatype" class="hyperlink" rel="noopener noreferrer">ABC Diatype</a>. Copyright © 2026. All rights reserved.</footer>
+</body>
+</html>

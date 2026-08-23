@@ -242,7 +242,7 @@ body {
   box-shadow:
     inset 0 0.0625rem 0 rgba(255, 255, 255, 0.45),
     0 0.375rem 1.375rem rgba(0, 0, 0, 0.12);
-  transform: scale(1.2) translateY(-0.125rem);
+  transform: scale(1.2) translateY(-0.2rem);
 }
 
 .clock:active {
@@ -306,7 +306,7 @@ body {
     box-shadow:
       inset 0 0.0625rem 0 rgba(255, 255, 255, 0.45),
       0 0.375rem 1.375rem rgba(0, 0, 0, 0.12);
-    transform: translate3d(0, -0.125rem, 0) scale(1.2);
+    transform: translate3d(0, -0.2rem, 0) scale(1.2);
   }
 
   .clock:active:not(.clock--expanded) {
@@ -371,11 +371,11 @@ body {
 }
 
 .nav-button:hover {
-  background: #bcbcbc;
+  background: #b0b0b0;
   box-shadow:
-    inset 0 0.0625rem 0 rgba(255, 255, 255, 0.4),
-    0 2px 6px rgba(0, 0, 0, 0.1);
-  transform: translateY(-0.125rem);
+    inset 0 0.0625rem 0 rgba(255, 255, 255, 0.38),
+    0 3px 10px rgba(0, 0, 0, 0.16);
+  transform: translateY(-0.2rem);
 }
 
 .nav-button:active {
@@ -389,6 +389,111 @@ body {
 .nav-button:link,
 .nav-button:visited {
   color: #000000;
+}
+
+.nav-button--email {
+  padding: 0.45rem 0.72rem;
+  line-height: 0;
+}
+
+.nav-button__email-icon {
+  display: block;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+}
+
+/* Desktop Play page: nudge board up for optical center */
+@media (min-width: 769px) {
+  body.page-draw .play-snake {
+    margin-top: 0.2rem;
+    transform: translateY(-1.15rem);
+  }
+}
+
+/* Mobile nav: original Gallery / Bio / Email (text) — no Play, no envelope icon */
+@media (max-width: 768px) {
+  .top-actions a.nav-button[href*="draw.html"] {
+    display: none !important;
+  }
+
+  .top-actions .nav-button--email {
+    padding: 0.55rem 1rem;
+    line-height: 1.25;
+  }
+
+  .top-actions .nav-button--email .nav-button__email-icon {
+    display: none;
+  }
+
+  .top-actions .nav-button--email::after {
+    content: "Email";
+  }
+}
+
+/* =========================
+   PLAY PAGE (Snake)
+========================= */
+
+body.page-draw {
+  /* Match viewport under the body top margin so a short page doesn’t force scroll */
+  min-height: calc(100dvh - 1.875rem);
+  display: flex;
+  flex-direction: column;
+}
+
+body.page-draw .play-snake {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(100%, 36rem);
+  margin: 0.75rem auto 0;
+  padding: 0 0.25rem;
+  box-sizing: border-box;
+}
+
+body.page-draw .play-snake__score {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+body.page-draw .play-snake__stage {
+  position: relative;
+  width: 16rem;
+  height: 16rem;
+  margin-inline: auto;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.75rem;
+  background: #f3f3f3;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+body.page-draw .play-snake__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  body.page-draw {
+    min-height: 100dvh;
+  }
+
+  /* Gallery/bio use a full-viewport first fold; Play should not */
+  body.page-draw .top-bar {
+    min-height: 0;
+  }
+
+  body.page-draw .play-snake {
+    margin-top: 0.5rem;
+    width: min(100%, 100%);
+  }
 }
 
 .profile-content {
@@ -1422,7 +1527,9 @@ main.gallery-detail--gardenhouse .gallery-detail__carousel-viewport {
   min-height: 0;
   width: 100%;
   max-width: var(--gallery-detail-carousel-rail-max-w);
-  overflow: hidden;
+  /* clip sides (no neighbor bleed); allow smoke to rise above the media box */
+  overflow: clip;
+  overflow-clip-margin: 5.5rem 0 0;
   opacity: 1;
   cursor: grab;
   touch-action: pan-y;
@@ -1491,22 +1598,22 @@ main.gallery-detail--gardenhouse
   aspect-ratio: auto;
 }
 
-/* Photograph slide — flat 2D PNG */
-main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-photo .gallery-detail__carousel-media {
-  aspect-ratio: 263 / 197;
+/* Process slide — ~3:2 photograph */
+main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-process .gallery-detail__carousel-media {
+  aspect-ratio: 3 / 2;
   width: min(
     100%,
     var(--gallery-detail-media-max-w),
-    calc(var(--gallery-detail-carousel-cap-h) * 263 / 197)
+    calc(var(--gallery-detail-carousel-cap-h) * 3 / 2)
   );
-  max-height: min(66vh, calc(var(--gallery-detail-carousel-cap-h) * 1.12));
+  max-height: var(--gallery-detail-carousel-cap-h);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-main.gallery-detail--gardenhouse .gardenhouse-photo-detail {
+main.gallery-detail--gardenhouse .gardenhouse-process-detail {
   display: block;
   width: 100%;
   height: 100%;
@@ -1514,6 +1621,102 @@ main.gallery-detail--gardenhouse .gardenhouse-photo-detail {
   object-position: center;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+/* Flat house slide — same media footprint as glyph slide (keeps headline / carousel chrome consistent) */
+main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-flat .gallery-detail__carousel-media {
+  aspect-ratio: 1 / 1;
+  width: min(
+    100%,
+    var(--gallery-detail-media-max-w),
+    var(--gallery-detail-carousel-cap-h)
+  );
+  max-height: var(--gallery-detail-carousel-cap-h);
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house {
+  display: block;
+  width: 78%;
+  height: auto;
+  max-width: 78%;
+  max-height: 78%;
+  overflow: visible;
+  /*
+   * Visual scale only — transform does not change layout box, so carousel height
+   * and the “Garden House, 2026…” headline stay aligned with other detail pages.
+   * translateY optically centers (viewBox has smoke headroom).
+   */
+  transform: translateY(-15%) scale(1.48);
+  transform-origin: center center;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams {
+  stroke: #ffeb27;
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams line {
+  stroke: #ffeb27;
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: gardenhouse-smoke 3.6s ease-out infinite both;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--1 {
+  animation-delay: 0s;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--2 {
+  animation-delay: 1.2s;
+}
+
+main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--3 {
+  animation-delay: 2.4s;
+}
+
+@keyframes gardenhouse-smoke {
+  0% {
+    transform: translate(0, 2px) scale(0.4);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.8;
+  }
+  45% {
+    opacity: 0.4;
+  }
+  /* Fully dissolved while still inside the visible frame */
+  70% {
+    transform: translate(5px, -22px) scale(1.1);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(6px, -28px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff {
+    animation: none;
+    opacity: 0.7;
+    transform: none;
+  }
+
+  main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams animateTransform {
+    display: none;
+  }
 }
 
 main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
@@ -1571,7 +1774,8 @@ main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--right {
 
   main.gallery-detail--gardenhouse .gallery-detail__carousel-viewport {
     max-width: none;
-    overflow: hidden;
+    overflow: clip;
+    overflow-clip-margin: 4.5rem 0 0;
   }
 
   /* Wider frame on phones so yaw swing has side room (Three.js aspect follows the box) */
@@ -1597,11 +1801,27 @@ main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--right {
     transform-origin: center center;
   }
 
-  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-photo .gallery-detail__carousel-media {
-    height: min(42svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
-    max-height: min(42svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-flat .gallery-detail__carousel-media {
+    /* Match glyph slide media bounds so stage / headline height stay consistent */
+    height: min(52svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
+    max-height: min(52svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
     width: auto;
-    max-width: 100%;
+    max-width: min(100%, 92vw);
+  }
+
+  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-process .gallery-detail__carousel-media {
+    height: min(48svh, calc(var(--gallery-detail-carousel-cap-h) * 1.15));
+    max-height: min(48svh, calc(var(--gallery-detail-carousel-cap-h) * 1.15));
+    width: auto;
+    max-width: min(100%, 92vw);
+  }
+
+  main.gallery-detail--gardenhouse .gardenhouse-flat-house {
+    width: 78%;
+    max-width: 78%;
+    max-height: 78%;
+    transform: translateY(-13%) scale(1.28);
+    transform-origin: center center;
   }
 
   main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
@@ -5180,7 +5400,7 @@ main.gallery-detail--suneden .gallery-detail__carousel-chevron--right {
   }
 
   .clock:hover {
-    transform: translateY(-0.125rem) scale(var(--mobile-clock-scale));
+    transform: translateY(-0.2rem) scale(var(--mobile-clock-scale));
     box-shadow:
       inset 0 0.0625rem 0 rgba(255, 255, 255, 0.45),
       0 0.375rem 1.375rem rgba(0, 0, 0, 0.12);
