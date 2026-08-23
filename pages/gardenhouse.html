@@ -11,8 +11,9 @@
 <div class="top-bar">
   <div class="top-actions">
     <a href="../index.html" class="nav-button">Gallery</a>
+    <a href="../draw.html" class="nav-button">Play</a>
     <a href="../bio.html" class="nav-button">Bio</a>
-    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button">Email</a>
+    <a href="mailto:kilian.hoeppner@gmail.com?subject=greetings!" class="nav-button nav-button--email" aria-label="Email"><svg class="nav-button__email-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="2.75" y="5.5" width="18.5" height="13" rx="2.25" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.75 L12 14 L20.25 7.75"/></svg></a>
   </div>
   <div class="time">
     <div id="londonClock" class="clock" aria-label="London UTC analog clock">
@@ -42,17 +43,88 @@
                 </div>
               </div>
             </div>
-            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--gardenhouse-photo">
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--gardenhouse-process">
               <div class="gallery-detail__carousel-media">
                 <img
-                  src="../files/gardenhouse-photograph.png"
-                  alt="Garden House — photograph"
-                  class="gardenhouse-photo-detail"
-                  width="263"
-                  height="197"
+                  src="../files/gardenhouse-process.png"
+                  alt="Garden House — process"
+                  class="gardenhouse-process-detail"
+                  width="5136"
+                  height="3425"
                   decoding="async"
-                  loading="eager"
+                  loading="lazy"
                 >
+              </div>
+            </div>
+            <div class="gallery-detail__carousel-slide gallery-detail__carousel-slide--gardenhouse-flat">
+              <div class="gallery-detail__carousel-media">
+                <svg
+                  class="gardenhouse-flat-house"
+                  viewBox="0 -40 200 240"
+                  width="200"
+                  height="240"
+                  role="img"
+                  aria-label="Garden House — child's house drawing"
+                >
+                  <!-- sun (top right) -->
+                  <g class="gardenhouse-flat-house__sun" transform="translate(170, 36)" aria-hidden="true">
+                    <g class="gardenhouse-flat-house__sun-beams">
+                      <animateTransform
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 0 0"
+                        to="360 0 0"
+                        dur="48s"
+                        repeatCount="indefinite"
+                      />
+                      <line x1="0" y1="-13" x2="0" y2="-21"/>
+                      <line x1="9.2" y1="-9.2" x2="14.8" y2="-14.8"/>
+                      <line x1="13" y1="0" x2="21" y2="0"/>
+                      <line x1="9.2" y1="9.2" x2="14.8" y2="14.8"/>
+                      <line x1="0" y1="13" x2="0" y2="21"/>
+                      <line x1="-9.2" y1="9.2" x2="-14.8" y2="14.8"/>
+                      <line x1="-13" y1="0" x2="-21" y2="0"/>
+                      <line x1="-9.2" y1="-9.2" x2="-14.8" y2="-14.8"/>
+                    </g>
+                    <circle cx="0" cy="0" r="9.5" fill="#ffeb27"/>
+                  </g>
+                  <!-- flat ground -->
+                  <rect x="16" y="176" width="168" height="10" rx="1" fill="#2CE02C"/>
+                  <!-- base -->
+                  <rect
+                    x="48"
+                    y="92"
+                    width="104"
+                    height="84"
+                    fill="#f8e8c2"
+                  />
+                  <!-- roof -->
+                  <polygon
+                    points="100,22 43,92 157,92"
+                    fill="#ff2f2a"
+                  />
+                  <!--
+                    Stub chimney: bottom-left / bottom-right sit on the roof slope
+                    so both lower corners are connected to the house.
+                    Roof line: y = 22 + (70/57)*(x-100)
+                  -->
+                  <path
+                    d="M118 30 H134 L134 63.75 L118 44.11 Z"
+                    fill="#a65c2e"
+                  />
+                  <!-- left window -->
+                  <rect x="58" y="106" width="24" height="24" fill="#4eb8f5"/>
+                  <!-- right window -->
+                  <rect x="118" y="106" width="24" height="24" fill="#4eb8f5"/>
+                  <!-- door -->
+                  <rect x="86" y="140" width="28" height="36" fill="#ff7aad"/>
+                  <!-- smoke — fades out before leaving the drawing -->
+                  <g class="gardenhouse-flat-house__smoke" aria-hidden="true">
+                    <circle class="gardenhouse-flat-house__puff gardenhouse-flat-house__puff--1" cx="126" cy="24" r="5.5" fill="#cfcfcf"/>
+                    <circle class="gardenhouse-flat-house__puff gardenhouse-flat-house__puff--2" cx="131" cy="22" r="4.5" fill="#d6d6d6"/>
+                    <circle class="gardenhouse-flat-house__puff gardenhouse-flat-house__puff--3" cx="124" cy="26" r="6" fill="#c8c8c8"/>
+                  </g>
+                </svg>
               </div>
             </div>
           </div>
