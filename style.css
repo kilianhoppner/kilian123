@@ -1623,102 +1623,6 @@ main.gallery-detail--gardenhouse .gardenhouse-process-detail {
   -webkit-user-drag: none;
 }
 
-/* Flat house slide — same media footprint as glyph slide (keeps headline / carousel chrome consistent) */
-main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-flat .gallery-detail__carousel-media {
-  aspect-ratio: 1 / 1;
-  width: min(
-    100%,
-    var(--gallery-detail-media-max-w),
-    var(--gallery-detail-carousel-cap-h)
-  );
-  max-height: var(--gallery-detail-carousel-cap-h);
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house {
-  display: block;
-  width: 78%;
-  height: auto;
-  max-width: 78%;
-  max-height: 78%;
-  overflow: visible;
-  /*
-   * Visual scale only — transform does not change layout box, so carousel height
-   * and the “Garden House, 2026…” headline stay aligned with other detail pages.
-   * translateY optically centers (viewBox has smoke headroom).
-   */
-  transform: translateY(-15%) scale(1.48);
-  transform-origin: center center;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams {
-  stroke: #ffeb27;
-  stroke-width: 2.75;
-  stroke-linecap: round;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams line {
-  stroke: #ffeb27;
-  stroke-width: 2.75;
-  stroke-linecap: round;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff {
-  transform-box: fill-box;
-  transform-origin: center;
-  opacity: 0;
-  animation: gardenhouse-smoke 3.6s ease-out infinite both;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--1 {
-  animation-delay: 0s;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--2 {
-  animation-delay: 1.2s;
-}
-
-main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff--3 {
-  animation-delay: 2.4s;
-}
-
-@keyframes gardenhouse-smoke {
-  0% {
-    transform: translate(0, 2px) scale(0.4);
-    opacity: 0;
-  }
-  18% {
-    opacity: 0.8;
-  }
-  45% {
-    opacity: 0.4;
-  }
-  /* Fully dissolved while still inside the visible frame */
-  70% {
-    transform: translate(5px, -22px) scale(1.1);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(6px, -28px) scale(1.15);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  main.gallery-detail--gardenhouse .gardenhouse-flat-house__puff {
-    animation: none;
-    opacity: 0.7;
-    transform: none;
-  }
-
-  main.gallery-detail--gardenhouse .gardenhouse-flat-house__sun-beams animateTransform {
-    display: none;
-  }
-}
-
 main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
   background: none;
   border: none;
@@ -1801,27 +1705,11 @@ main.gallery-detail--gardenhouse .gallery-detail__carousel-chevron--right {
     transform-origin: center center;
   }
 
-  main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-flat .gallery-detail__carousel-media {
-    /* Match glyph slide media bounds so stage / headline height stay consistent */
-    height: min(52svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
-    max-height: min(52svh, calc(var(--gallery-detail-carousel-cap-h) * 1.18));
-    width: auto;
-    max-width: min(100%, 92vw);
-  }
-
   main.gallery-detail--gardenhouse .gallery-detail__carousel-slide--gardenhouse-process .gallery-detail__carousel-media {
     height: min(48svh, calc(var(--gallery-detail-carousel-cap-h) * 1.15));
     max-height: min(48svh, calc(var(--gallery-detail-carousel-cap-h) * 1.15));
     width: auto;
     max-width: min(100%, 92vw);
-  }
-
-  main.gallery-detail--gardenhouse .gardenhouse-flat-house {
-    width: 78%;
-    max-width: 78%;
-    max-height: 78%;
-    transform: translateY(-13%) scale(1.28);
-    transform-origin: center center;
   }
 
   main.gallery-detail--gardenhouse .gallery-detail__carousel .mobile-scroll-hint__btn {
@@ -2466,10 +2354,14 @@ main.gallery-detail .gallery-detail__carousel-viewport:active {
   cursor: grabbing;
 }
 
-/* TBI: rail tall enough for face-on book + perspective AABB growth during Y rotation (book size unchanged) */
+/*
+ * TBI clip room for the spinning magazine: extra pad is cancelled with negative margin so the
+ * carousel layout height (and therefore the caption) matches other gallery pages.
+ */
 main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
-  min-height: var(--tbi-magazine-clip-min-h);
   overflow: hidden;
+  padding-block: var(--tbi-magazine-clip-pad);
+  margin-block: calc(-1 * var(--tbi-magazine-clip-pad));
 }
 
 main.gallery-detail--facetrack .gallery-detail__carousel-track,
@@ -2597,52 +2489,20 @@ main.gallery-detail--dollhouse .gallery-detail__carousel-media {
 }
 
 /* The Big Issue — first slide: 3D magazine (portrait); not the default 3:2 frame */
-main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine {
-  min-height: var(--tbi-magazine-clip-min-h);
-}
-
 main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .gallery-detail__carousel-media {
   aspect-ratio: auto;
   height: auto;
   max-height: none;
-  min-height: var(--tbi-magazine-clip-min-h);
   overflow: visible;
   width: 100%;
   max-width: var(--gallery-detail-media-max-w);
 }
 
+main.gallery-detail--thebigissue .gallery-detail__carousel,
 main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine,
 main.gallery-detail--thebigissue .thebigissue-magazine,
 main.gallery-detail--thebigissue .thebigissue-magazine .gallery-magazine-3d {
   overflow: visible;
-}
-
-/*
- * Desktop: same bound as Life Cycles slide 1 arrows — max( clip, min(74vh, cap_h * 1.24) ) — gives the
- * 3D magazine a taller media/viewport envelope so perspective / bleed doesn’t clip off the animation top.
- */
-@media (min-width: 769px) {
-  main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
-    min-height: max(
-      var(--tbi-magazine-clip-min-h),
-      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
-    );
-  }
-
-  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine,
-  main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-magazine .gallery-detail__carousel-media {
-    min-height: max(
-      var(--tbi-magazine-clip-min-h),
-      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
-    );
-  }
-
-  main.gallery-detail--thebigissue .thebigissue-magazine .gallery-magazine-3d {
-    min-height: max(
-      var(--tbi-magazine-clip-min-h),
-      min(74vh, calc(var(--gallery-detail-carousel-cap-h) * 1.24))
-    );
-  }
 }
 
 /* Spreads (slides 2–3): keep shadow fully inside each slide so it never bleeds onto slide 1. */
@@ -2715,9 +2575,7 @@ main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy
   }
 }
 
-/* Keep desktop hero/title alignment consistent with other pages; no extra viewport height from TBI carousel. */
 main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
-  padding-block: 0;
   box-sizing: border-box;
 }
 
@@ -2729,11 +2587,6 @@ main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
 }
 
 @media (max-width: 768px) {
-  /* Mobile only: a bit of room for spread shadows without shifting desktop headline position. */
-  main.gallery-detail--thebigissue .gallery-detail__carousel-viewport {
-    padding-block: 0.9rem;
-  }
-
   main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-climate,
   main.gallery-detail--thebigissue .gallery-detail__carousel-slide--tbi-spread-amy {
     padding-inline: 0.9rem;
@@ -4244,26 +4097,8 @@ main.gallery-detail--thebigissue {
   --gallery-detail-media-min-h: min(12.5rem, 36vh);
   /* Midpoint between flat assets and the stronger grade — gallery tile + detail carousel (covers + spreads) */
   --tbi-creative-grade: brightness(1.025) contrast(1.02) saturate(1.04);
-  /*
-   * Clip region for carousel + 3D stage: ≥ book height at max width, plus ~22% for perspective
-   * AABB growth while rotating on Y (corners/edges must stay inside overflow:hidden). Book size unchanged.
-   */
-  --tbi-magazine-clip-min-h: max(
-    min(78vh, 38rem),
-    calc(22rem * 1594 / 1240 * 1.22)
-  );
-}
-
-/*
- * Desktop (≥769px): keep the same rotation headroom (do not shorten below the spinning AABB).
- */
-@media (min-width: 769px) {
-  main.gallery-detail--thebigissue {
-    --tbi-magazine-clip-min-h: max(
-      min(74vh, 36rem),
-      calc(22rem * 1594 / 1240 * 1.22)
-    );
-  }
+  /* Extra paint room around the book for Y-rotation AABB; does not affect caption layout. */
+  --tbi-magazine-clip-pad: 6.5rem;
 }
 
 main.gallery-detail--thebigissue .thebigissue-magazine {
@@ -4278,7 +4113,6 @@ main.gallery-detail--thebigissue .thebigissue-magazine {
 .thebigissue-magazine .gallery-magazine-3d {
   position: relative;
   width: 100%;
-  min-height: var(--tbi-magazine-clip-min-h);
   display: flex;
   align-items: center;
   justify-content: center;
